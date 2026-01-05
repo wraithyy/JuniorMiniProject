@@ -12,7 +12,20 @@ import './styles/main.css';
 
 console.log('Vanilla TypeScript frontend připraven k implementaci!');
 
+
 const app = document.getElementById('app');
+
 if (app) {
-  app.innerHTML = '<p>TODO: Zde implementujte aplikaci pro správu kontaktů</p>';
+  app.innerHTML = `
+    <h1>Contact Manager</h1>
+    <form id="contact-form">
+      <input type="text" id="name" placeholder="Name" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <button type="submit">Add Contact</button>
+    </form>
+    <div id="contact-list">
+      <p>No contacts yet...</p>
+    </div>
+  `;
 }
+
