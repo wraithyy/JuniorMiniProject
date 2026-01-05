@@ -8,12 +8,14 @@
   "private": "true",
   "workspaces": [
     "frontend",
+    "frontend-vanilla",
     "backend"
   ],
-  "scripts":{
-    "start": "yarn concurrently \"yarn workspace frontend start\" \"yarn workspace frontend start\" "
+  "scripts": {
+    "start": "yarn concurrently \"yarn workspace frontend dev\" \"yarn workspace backend start\"",
+    "start:vanilla": "yarn concurrently \"yarn workspace frontend-vanilla dev\" \"yarn workspace backend start\""
   },
   "devDependencies": {
-    "concurrently": "^7.1.0"
+    "concurrently": "^9.1.0"
   }
 }

@@ -1,17 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const swagger = require("swagger-generator-express");
 const morgan = require("morgan");
 var port = process.env.PORT || 3333;
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-);
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(
   morgan("dev", {
     skip: (req, res) => {
@@ -21,7 +16,7 @@ app.use(
 );
 app.use(cors());
 
-mongoose.connect("mongodb://localhost/testApi", { useNewUrlParser: true });
+mongoose.connect("mongodb://localhost/testApi");
 
 var db = mongoose.connection;
 
