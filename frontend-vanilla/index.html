@@ -8,7 +8,51 @@
   <body>
     <h1>Správa kontaktů - Vanilla TypeScript</h1>
 
-    <div id="app"></div>
+    <div id="app">
+
+      <div class="form-container" id="form">
+        <h2>Contact Form</h2>
+        <div class="form-group">
+          <form class="form-horizontal">
+            <label for="firstName">First Name:</label>
+            <input type="text" name="firstName" id="firstName" placeholder="First Name" />
+            <label for="lastName">Last Name:</label>
+            <input type="text" name="lastName" id="lastName" placeholder="Last Name">
+            <label for="email">Email:</label>
+            <input type="text" name="email" id="email" placeholder="Email" />
+
+            <label for="note">Note</label>
+            <textarea name="note" id="note" placeholder="Note"></textarea>
+
+            <button type="submit">Submit</button>
+
+            <!-- TODO všechno, co mi ještě chybí -->
+
+          </form>
+        </div>
+      </div>
+
+
+      <div class="list-panel">
+        <div class="list-view-header">
+          <h2>Contact List</h2>
+          <ul id="contacts-list">
+            <li>
+              <div class="list-view"><div class="contact-name">Person One</div></div>
+              <div class="detail-panel">
+                personone@mail.com
+                <button class="delete-btn">Delete</button>
+              </div>
+            </li>
+            <li>Person Two</li>
+          </ul>
+
+        </div>
+
+      </div>
+
+
+    </div>
 
     <script type="module" src="/src/main.ts"></script>
   </body>
