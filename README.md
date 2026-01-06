@@ -14,10 +14,10 @@ Tento projekt slouží jako výukový materiál pro junior vývojáře. Obsahuje
 
 ```bash
 # Stáhnout MongoDB image
-docker pull mongodb/mongodb-community-server:latest
+docker pull mongo:latest
 
 # Spustit MongoDB kontejner
-docker run --name mongodb -d -p 27017:27017 mongodb/mongodb-community-server:latest
+docker run --name mongodb -d -p 27017:27017 mongo:latest
 
 # Ověřit že běží
 docker ps
@@ -177,29 +177,9 @@ yarn workspace <název> <script>
 yarn workspace frontend dev
 ```
 
-## Doporučený Postup Pro Juniory
-
-### Týden 1: Seznámení
-
-1. Prozkoumat Swagger dokumentaci
-2. Vyzkoušet API endpointy přes Postman/Thunder Client/curl
-3. Pochopit data model (Contact)
-4. Rozběhnout projekt lokálně
-
-### Týden 2-3: Implementace
-
-1. Začít jednoduchým zobrazením seznamu kontaktů
-2. Implementovat formulář pro vytvoření kontaktu
-3. Přidat detail kontaktu
-4. Přidat mazání kontaktu
-5. Styling
-
-### Týden 4: Bonusové úkoly a refactoring
-
-1. Implementovat editaci
-2. Vylepšit UX (loading stavy, hlášky)
-3. Code review vlastního kódu
-4. Refactoring
+## Cíle
+Cílem projektu je naučit se správně pracovat s gitem, gitflow a řešení problémů spojených se standardním vývojem
+Zprovoznění vývojového prostředí a problem solving při poznávání nových technologii
 
 ## Technologie
 
