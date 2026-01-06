@@ -32,6 +32,14 @@ if (app) {
         firstName: e.target.firstName.value,
         lastName: e.target.lastName.value,
         email: e.target.email.value,
+        phone: "",
+        note: "",
+        gender: "",
+        city: "",
+        street: "",
+        houseNumber: "",
+        zipCode: 0,
+        birthDate: "",
       };
 
       console.log(data);
