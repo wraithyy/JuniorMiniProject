@@ -125,3 +125,10 @@ button[type="submit"]:hover {
 }
 
 /* TODO: Junioři přidají vlastní styling podle zadání */
+
+.radio-group {
+  display: flex;
+  gap: 20px; /* space between options */
+}
+
+
