@@ -132,3 +132,15 @@ button[type="submit"]:hover {
 }
 
 
+fieldset {
+  border: 1px solid #ccc; /* Light gray border */
+  padding: 1rem;          /* Space inside */
+  margin-bottom: 1rem;    /* Space outside */
+  border-radius: 4px;     /* Optional rounded corners */
+}
+
+legend {
+  font-weight: 500;
+}
+
+

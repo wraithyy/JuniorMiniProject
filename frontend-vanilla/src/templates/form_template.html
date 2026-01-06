@@ -1,9 +1,5 @@
 <header>
-  <h1>Contact Manager</h1>
-  <nav>
-    <button>Contacts</button>
-    <button>Add</button>
-  </nav>
+  <h1>Contact Manager - Vanilla</h1>
 </header>
 <!-- Name and Surname -->
 <div class="form-container" id="add">
@@ -21,9 +17,7 @@
     </div>
     <!-- Gender -->
     <fieldset>
-      <div class="form-group">
         <legend>Gender</legend>
-      </div>
       <div class="radio-group">
         <label><input type="radio" name="gender" value="male" required /> Male</label>
         <label><input type="radio" name="gender" value="female" /> Female</label>
@@ -44,22 +38,54 @@
     </div>
 
     <!-- - Adresa: Město (city), Ulice (street), Číslo popisné (houseNumber), PSČ (zipCode) -->
-    <h4>Address</h4>
-    <div class="form-group">
-      <label for="city">City</label>
-      <input type="text" id="city" name="city" autocomplete="address-level2" required />
+    
+<fieldset>
+  <legend>Address</legend>
+  <div class="form-group">
+    <label for="city">City</label>
+    <input
+      type="text"
+      id="city"
+      name="city"
+      autocomplete="address-level2"
+      required
+    />
 
-      <label for="street">Street</label>
-      <input type="text" id="street" name="street" autocomplete="street-address" required />
+    <label for="street">Street</label>
+    <input
+      type="text"
+      id="street"
+      name="street"
+      autocomplete="street-address"
+      required
+    />
 
-      <label for="houseNumber">House number</label>
-      <input type="text" id="houseNumber" inputmode="numeric" required />
+    <label for="houseNumber">House number</label>
+    <input
+      type="text"
+      id="houseNumber"
+      name="houseNumber"
+      inputmode="text"
+      required
+    />
 
-      <!-- check czech ZIP format at current implementation -->
-      <label for="zipCode">ZIP Code</label>
-      <input type="text" id="zipCode" name="zipCode" inputmode="numeric" autocomplete="postal-code"
-        pattern="\d{3}\s?\d{2}" placeholder="123 45" required />
-    </div>
+    <!-- check czech ZIP format at current implementation -->
+    <label for="zipCode">ZIP Code</label>
+    <input
+      type="text"
+      id="zipCode"
+      name="zipCode"
+      inputmode="numeric"
+      autocomplete="postal-code"
+      pattern="\d{3}\s?\d{2}"
+      placeholder="123 45"
+      title="Enter ZIP as 12345 or 123 45"
+      required
+    />
+  </div>
+</fieldset>
+
+    
     <!-- - Datum narození (birthDate) - formátované pole -->
     <div class="form-group">
       <label for="birthDate">Date of Birth</label>
@@ -72,17 +98,5 @@
 </div>
 
 <div class="list-view">
-  <section class="list-panel">
-    <h2>Contacts</h2>
-    <ul id="contacts-list">
-      <li>
-        <span class="contact-name">No contacts yet...</span>
-      </li>
-    </ul>
-  </section>
-
-  <section class="detail-panel">
-    <h2>Details</h2>
-    <p>Select a contact to view details.</p>
-  </section>
+  
 </div>
