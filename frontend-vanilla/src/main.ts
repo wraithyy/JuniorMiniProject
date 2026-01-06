@@ -1,4 +1,6 @@
 import './styles/main.css';
+// @ts-ignore -- Vite handles '?raw' HTML imports at build time
+import template from './templates/form_template.html?raw';
 
 // TODO: Implementovat aplikaci pro správu kontaktů
 //
@@ -12,7 +14,11 @@ import './styles/main.css';
 
 console.log('Vanilla TypeScript frontend připraven k implementaci!');
 
+
 const app = document.getElementById('app');
+
 if (app) {
-  app.innerHTML = '<p>TODO: Zde implementujte aplikaci pro správu kontaktů</p>';
+  app.innerHTML = template;
+
 }
+
