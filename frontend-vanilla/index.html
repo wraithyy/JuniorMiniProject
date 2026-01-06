@@ -14,19 +14,72 @@
         <h2>Contact Form</h2>
         <div class="form-group">
           <form class="form-horizontal">
+
+            <!-- TODO veškeré kontroly -->
+
             <label for="firstName">First Name:</label>
-            <input type="text" name="firstName" id="firstName" placeholder="First Name" />
+            <input type="text" name="firstName" id="firstName" placeholder="First Name" required />
+
             <label for="lastName">Last Name:</label>
-            <input type="text" name="lastName" id="lastName" placeholder="Last Name">
+            <input type="text" name="lastName" id="lastName" placeholder="Last Name" required />
+
             <label for="email">Email:</label>
-            <input type="text" name="email" id="email" placeholder="Email" />
+            <input type="text" name="email" id="email" placeholder="Email" required />
+
+            <label for="phone">Phone:</label>
+            <input type="text" name="phone" id="phone" placeholder="Phone" />
 
             <label for="note">Note</label>
             <textarea name="note" id="note" placeholder="Note"></textarea>
 
-            <button type="submit">Submit</button>
 
-            <!-- TODO všechno, co mi ještě chybí -->
+
+            <label for="gender">Gender:</label>
+            <div id="gender">
+
+              <div class="singleGender">
+                <input type="radio" name="gender" id="female" value="female">
+                <label for="female">Female</label>
+
+              </div>
+              <div class="singleGender">
+                <input type="radio" name="gender" id="male" value="male">
+                <label for="male">Male</label>
+
+              </div>
+
+              <div class="singleGender">
+                <input type="radio" name="gender" id="other" value="other">
+                <label for="other">Other</label>
+
+              </div>
+
+
+            </div>
+
+
+            <div class="detail-panel">
+              <p> = Address = </p>
+
+              <label for="city">City:</label>
+              <input type="text" name="city" id="city" placeholder="City" />
+
+              <label for="street">Street:</label>
+              <input type="text" name="street" id="street" placeholder="Street" />
+
+              <label for="houseNumber">House Number:</label>
+              <input type="text" name="houseNumber" id="houseNumber" placeholder="House Number" />
+
+              <label for="zipCode">Zip Code:</label>
+              <input type="number" name="zipCode" id="zipCode" placeholder="Zip Code" />
+
+            </div>
+
+
+            <label for="birthDate">Birthday:</label>
+            <input type="text" name="birthDate" id="birthDate" placeholder="Birthday" />
+
+            <button type="submit">Submit</button>
 
           </form>
         </div>
@@ -38,7 +91,7 @@
           <h2>Contact List</h2>
           <ul id="contacts-list">
             <li>
-              <div class="list-view"><div class="contact-name">Person One</div></div>
+              <div class="contact-name">Person One</div>
               <div class="detail-panel">
                 personone@mail.com
                 <button class="delete-btn">Delete</button>
