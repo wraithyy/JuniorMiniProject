@@ -7,7 +7,7 @@ const input = document.querySelector<HTMLInputElement>('#phone');
 if (input) {
   const iti = intlTelInput(input, {
     initialCountry: 'cz',
-    // customize options as needed
+    loadUtils: () => import('intl-tel-input/utils'),
   });
   // Optionally access iti methods
   // console.log(iti.getNumber());
