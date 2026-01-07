@@ -16,22 +16,20 @@
         <div class="form-group">
           <form class="form-horizontal">
 
-            <!-- TODO veškeré kontroly -->
-
             <!-- TODO TypeScript kontrolu required -->
             <label for="firstName">First Name:</label>
-            <input type="text" name="firstName" id="firstName" placeholder="First Name"  required/>
+            <input type="text" name="firstName" id="firstName" placeholder="Mary"  required/>
 
             <label for="lastName">Last Name:</label>
-            <input type="text" name="lastName" id="lastName" placeholder="Last Name"  required/>
+            <input type="text" name="lastName" id="lastName" placeholder="Sue"  required/>
 
-            <!-- TODO kontrola validity emailu (REGEX) -->
             <label for="email">Email:</label>
-            <input type="text" name="email" id="email" placeholder="Email"  required/>
+            <input type="email" name="email" id="email" placeholder="example@example.com"  required/>
+            <p id="incorrectEmail" style="color: #dd0000"></p>
 
 
             <label for="phone">Phone:</label>
-            <input type="text" name="phone" id="phone" placeholder="Phone" />
+            <input type="tel" name="phone" id="phone" placeholder="+000 123 456 789" /> <!-- Tady by mohlo být ještě pattern pro specifické -->
 
             <label for="note">Note</label>
             <textarea name="note" id="note" placeholder="Note"></textarea>

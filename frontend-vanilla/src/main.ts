@@ -16,10 +16,9 @@ console.log('Vanilla TypeScript frontend připraven k implementaci!');
 const app = document.getElementById('app');
 
 if (app) {
-  //app.innerHTML = '';
 
 
-  //Správa tvorby nvého kontaktu
+  //Správa tvorby nového kontaktu
   const form = document.getElementById('form');
 
   if (form) {
@@ -47,9 +46,9 @@ if (app) {
         //birthDate: e.target.birthDate.value // TODO mám tu nějaký problém, že to nelze "cast to date"
       };
 
+      //TODO cleanup všechno html a css <p>
 
-      //TODO kontrola firstName, lastName, email
-      //Potřebuji zkontrolovat první tři, pokud není, tak hodíme error do promněné errors. Potom pokud errors nejsou prázdné, tak vrátíme na stránku nový <div> s error hláškou
+
       let errors = [];
       if (!data.firstName) {
         errors.push("First Name");
@@ -59,7 +58,13 @@ if (app) {
       }
 
       //TODO kontrola, že email je reálný
+      const emailRegex: RegExp = /^[\w.-]+@([\w-]+\.)+[\w-]{2,}$/gm; //regex na poznání emailu
       if (!data.email) {
+        errors.push("Email");
+      } else if (!emailRegex.test(data.email)) {
+        console.log("Email je špatně: " + data.email);
+        const email = document.getElementById("incorrectEmail");
+        email.innerHTML = "This is not a correct email.";
         errors.push("Email");
       }
 
@@ -84,21 +89,4 @@ if (app) {
     });
   }
 
-
-
-  //List kontaktů
-  const response = await fetch('/api/contacts');
-  const data = await response.json();
-  const contacts = data.data;
-  console.log(contacts);
-
-// Vyrenderovat seznam pomocí DOM manipulace
-/*  contacts.forEach(contact => {
-    const li = document.createElement('li');
-    li.textContent = `${contact.firstName} ${contact.lastName}`;
-    li.addEventListener('click', () => {
-      // Zobrazit detail
-    });
-    list.appendChild(li);
-  });*/
 }
