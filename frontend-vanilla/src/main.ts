@@ -3,47 +3,57 @@ import intlTelInput from 'intl-tel-input';
 import 'intl-tel-input/build/css/intlTelInput.css'; // phone library plugin CSS
 
 
+
 document.addEventListener('DOMContentLoaded', () => {
   const input = document.querySelector<HTMLInputElement>('#phone');
   if (!input) return;
 
-  const errorMsg =
-    input.nextElementSibling instanceof HTMLElement &&
-    input.nextElementSibling.classList.contains('error')
-      ? (input.nextElementSibling as HTMLElement)
-      : input.closest('.field')?.querySelector<HTMLElement>('.error');
-
+  const errorMsg = getErrorElement(input);
   const iti = intlTelInput(input, {
     initialCountry: 'cz',
     loadUtils: () => import('intl-tel-input/utils'),
   });
 
-  let errorShown = false; // Track if error has been displayed
+  let errorShown = false;
 
   const updateError = () => {
     const isValid = iti.isValidNumber();
     if (errorMsg) {
       errorMsg.textContent = isValid ? '' : 'Please enter a valid phone number';
     }
-    errorShown = !isValid; // Update flag
+    errorShown = !isValid;
   };
 
   iti.promise.then(() => {
-    // Validate on blur
     input.addEventListener('blur', updateError);
-
-    // Validate on country change
     input.addEventListener('countrychange', updateError);
-
-    // Validate on input only if error was shown before
-    let t: number | undefined;
-    input.addEventListener('input', () => {
-      if (!errorShown) return; // Skip until error triggered
-      clearTimeout(t);
-      t = window.setTimeout(updateError, 250);
-    });
+    input.addEventListener('input', debounce(() => {if (errorShown) updateError();}));
   });
 });
+
+// Helpers
+
+// reusable function that returns an error element of general input field
+function getErrorElement(input: HTMLInputElement): HTMLElement | null {
+  const next = input.nextElementSibling;
+  if (next instanceof HTMLElement && next.classList.contains('error')) {
+    return next;
+  }
+
+  const field = input.closest('.field');
+  const el = field?.querySelector('.error') ?? null;
+  return el instanceof HTMLElement ? el : null;
+}
+
+// 
+function debounce<T extends (...args: any[]) => void>(fn: T, delay = 300) {
+  let timer: number | undefined;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timer);
+    timer = window.setTimeout(() => fn(...args), delay);
+  };
+}
+
 
 
 
