@@ -1,4 +1,18 @@
 import './styles/main.css';
+import intlTelInput from 'intl-tel-input';
+import 'intl-tel-input/build/css/intlTelInput.css'; // phone library plugin CSS
+
+
+const input = document.querySelector<HTMLInputElement>('#phone');
+if (input) {
+  const iti = intlTelInput(input, {
+    initialCountry: 'cz',
+    // customize options as needed
+  });
+  // Optionally access iti methods
+  // console.log(iti.getNumber());
+}
+
 
 // TODO: Implementovat aplikaci pro správu kontaktů
 //
