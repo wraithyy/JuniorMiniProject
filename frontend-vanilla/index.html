@@ -51,6 +51,7 @@
         </fieldset>
 
         <!-- Phone -->
+         <!-- the regex is a basic check, will be replaced by javasript library checking in later versions -->
         <div class="form-group">
           <label for="phone">Phone</label>
           <input type="tel" id="phone" name="phone" placeholder="+420 123 456 789" autocomplete="tel" inputmode="tel"
@@ -74,6 +75,7 @@
             <input type="text" id="street" name="street" autocomplete="street-address" required />
 
             <label for="houseNumber">House number</label>
+            <!-- the pattern is a basic check, does not guarantee 100% correct input (ex. 12a, 12aa passes too) -->
             <input type="text" id="houseNumber" name="houseNumber" inputmode="text"
               pattern="^[0-9]+([\/\-]?[0-9A-Za-z]+)?$" title="Examples: 123, 123/7, 123a" required />
 
