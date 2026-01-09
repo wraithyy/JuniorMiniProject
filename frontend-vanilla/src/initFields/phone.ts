@@ -1,11 +1,11 @@
-import { getErrorElement, debounce } from '../helpers'; 
+import { getErrorElement, debounce } from '../helpers';
 import intlTelInput from 'intl-tel-input';
 import 'intl-tel-input/build/css/intlTelInput.css'; // phone library plugin CSS
 
-export default function initPhone() { 
+export default function initPhone() {
   // Get the phone input element
   const input = document.querySelector<HTMLInputElement>('#phone');
-  if (!input) return;
+  if (!input) return null;
 
   // Find the error message element for this input
   const errorMsg = getErrorElement(input);
@@ -27,12 +27,25 @@ export default function initPhone() {
     errorShown = !isValid;
   };
 
-  // Attach validation events after plugin is ready
+
+  const onInput = debounce(() => {
+    if (errorShown) updateError();
+  }, 300);
+
   iti.promise.then(() => {
-    input.addEventListener('blur', updateError); // Validate on blur
-    input.addEventListener('countrychange', updateError); // Validate on country change
-    input.addEventListener('input', debounce(() => {
-      if (errorShown) updateError(); // Validate on input only if error was shown
-    }));
+    input.addEventListener('blur', updateError);
+    input.addEventListener('countrychange', updateError);
+    input.addEventListener('input', onInput);
   });
+
+
+  const isValid = () => iti.isValidNumber();
+  const getE164 = () => (iti.isValidNumber() ? iti.getNumber() : null);
+
+
+  return { iti, isValid, getE164 } as {
+    isValid: () => boolean;
+    getE164: () => string | null;
+  };
+
 }

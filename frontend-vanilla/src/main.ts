@@ -1,11 +1,11 @@
 import './styles/main.css';
-import phoneInit from './initFields/phone';
+import initPhone from './initFields/phone';
 
 
 
 // Wait until the DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  phoneInit();
+  const phoneCtrl = initPhone();
 });
 
 
