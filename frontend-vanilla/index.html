@@ -1,15 +1,105 @@
 <!doctype html>
-<html lang="cs">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kontakty - Vanilla TypeScript</title>
-  </head>
-  <body>
-    <h1>Správa kontaktů - Vanilla TypeScript</h1>
+<html lang="en">
 
-    <div id="app"></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kontakty - Vanilla TypeScript</title>
+</head>
 
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+<body>
+  <header>
+    <h1>Contact Manager - Vanilla</h1>
+  </header>
+
+  <main>
+    <!-- Form container -->
+    <div class="form-container" id="add">
+      <form id="contact-form">
+        <!-- Name and Surname -->
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" name="firstName" placeholder="John" autocomplete="given-name" required />
+
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" name="lastName" placeholder="Doe" autocomplete="family-name" required />
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="john@example.com" autocomplete="email" required />
+        </div>
+
+        <!-- Gender -->
+        <fieldset>
+          <legend>Gender</legend>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="gender" value="male" required />
+              Male
+            </label>
+            <label>
+              <input type="radio" name="gender" value="female" />
+              Female
+            </label>
+            <label>
+              <input type="radio" name="gender" value="other" />
+              Other / Undisclosed
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Phone -->
+         <!-- the regex is a basic check, will be replaced by javasript library checking in later versions -->
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" name="phone" placeholder="+420 123 456 789" autocomplete="tel" inputmode="tel"
+            pattern="^\+?[\d\s-]{9,16}$" title="Enter a phone number, e.g., +420 123 456 789" required />
+        </div>
+
+        <!-- Note -->
+        <div class="form-group">
+          <label for="note">Note</label>
+          <textarea id="note" name="note" placeholder="Any additional detail (optional)" rows="3"></textarea>
+        </div>
+
+        <!-- Address -->
+        <fieldset>
+          <legend>Address</legend>
+          <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" id="city" name="city" autocomplete="address-level2" required />
+
+            <label for="street">Street</label>
+            <input type="text" id="street" name="street" autocomplete="street-address" required />
+
+            <label for="houseNumber">House number</label>
+            <!-- the pattern is a basic check, does not guarantee 100% correct input (ex. 12a, 12aa passes too) -->
+            <input type="text" id="houseNumber" name="houseNumber" inputmode="text"
+              pattern="^[0-9]+([\/\-]?[0-9A-Za-z]+)?$" title="Examples: 123, 123/7, 123a" required />
+
+            <!-- Czech ZIP format -->
+            <label for="zipCode">ZIP Code</label>
+            <input type="text" id="zipCode" name="zipCode" inputmode="numeric" autocomplete="postal-code"
+              pattern="\d{3}\s?\d{2}" placeholder="123 45" title="Enter ZIP as 12345 or 123 45" required />
+          </div>
+        </fieldset>
+
+        <!-- Birth date -->
+        <div class="form-group">
+          <label for="birthDate">Date of Birth</label>
+          <input type="date" id="birthDate" name="birthDate" autocomplete="bday" max="2026-01-06" required />
+        </div>
+
+        <button type="submit">Add Contact</button>
+      </form>
+    </div>
+  </main>
+
+  <div id="app"></div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>
