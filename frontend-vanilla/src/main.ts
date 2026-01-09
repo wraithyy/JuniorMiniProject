@@ -18,22 +18,20 @@ const app = document.getElementById('app');
 
 if (app) {
 
-  //Kontrola datummu
-  const birthDateEl = document.getElementById('birthDate');
-  const errorEl = document.getElementById('birthDateError');
+  //Kontrola datummu, použita knihovna date-fns
+  const birthDateEl = document.getElementById('birthDate') as HTMLInputElement;
+  const errorEl = document.getElementById('birthDateError') as HTMLInputElement;
 
-  birthDateEl?.addEventListener('change', () => {
+  birthDateEl.addEventListener('change', () => {
 
-    const raw = birthDateEl.value; //Typescript má problém s value = Property Value does not exist on HTMLElement
+    const raw = birthDateEl.value;
     console.log(raw);
 
     const date = parse(raw, 'yyyy-MM-dd', new Date());
     if (!isValid(date)) {
-      // @ts-ignore
       errorEl.textContent = "Please enter a valid date.";
       return;
     }
-    // @ts-ignore
     errorEl.textContent = "";
 
     const payloadValue = format(date, 'dd-MM-yyyy');
@@ -42,7 +40,7 @@ if (app) {
 
 
   //Správa tvorby nového kontaktu
-  const form = document.getElementById('form');
+  const form = document.getElementById('form') as HTMLFormElement;
 
   if (form) {
 
@@ -55,16 +53,16 @@ if (app) {
       //TODO Opravit tuto část, zajistit správné typy dat pomocí TypeScriptu
 
       const data = {
-        firstName: e.target.firstName.value,
-        lastName: e.target.lastName.value,
-        email: e.target.email.value,
-        phone: e.target.phone.value,
-        note: e.target.note.value,
-        gender: e.target.gender.value,
-        city: e.target.city.value,
-        street: e.target.street.value,
-        houseNumber: e.target.houseNumber.value,
-        zipCode: e.target.zipCode.value,
+        firstName: e?.target?.firstName.value ?? "",
+        lastName: e?.target?.lastName.value  ?? "",
+        email: e?.target?.email.value  ?? "",
+        phone: e?.target?.phone.value ?? "",
+        note: e?.target?.note.value ?? "",
+        gender: e?.target?.gender.value ?? "",
+        city: e?.target?.city.value ?? "",
+        street: e?.target?.street.value ?? "",
+        houseNumber: e?.target?.houseNumber.value ?? "",
+        zipCode: e?.target?.zipCode.value ?? "",
 
         //birthDate: e.target.birthDate.value // TODO mám tu nějaký problém, že to nelze "cast to date"
       };
