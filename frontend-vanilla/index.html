@@ -12,21 +12,76 @@
 
       <div class="form-container" id="form">
         <h2>Contact Form</h2>
+        <p id="errors" style="color: #dd0000"></p>
         <div class="form-group">
-          <form class="form-horizontal">
+          <form class="form-horizontal" id="contactForm">
+
+            <!-- TODO TypeScript kontrolu required -->
             <label for="firstName">First Name:</label>
-            <input type="text" name="firstName" id="firstName" placeholder="First Name" />
+            <input type="text" name="firstName" id="firstName" placeholder="Mary"  required/>
+
             <label for="lastName">Last Name:</label>
-            <input type="text" name="lastName" id="lastName" placeholder="Last Name">
+            <input type="text" name="lastName" id="lastName" placeholder="Sue"  required/>
+
             <label for="email">Email:</label>
-            <input type="text" name="email" id="email" placeholder="Email" />
+            <input type="email" name="email" id="email" placeholder="example@example.com"  required/>
+            <p id="incorrectEmail" style="color: #dd0000"></p>
+
+
+            <label for="phone">Phone:</label>
+            <input type="tel" name="phone" id="phone" placeholder="+000 123 456 789" /> <!-- Tady by mohlo být ještě pattern pro specifické -->
 
             <label for="note">Note</label>
             <textarea name="note" id="note" placeholder="Note"></textarea>
 
-            <button type="submit">Submit</button>
 
-            <!-- TODO všechno, co mi ještě chybí -->
+
+            <fieldset id="gender">
+              <legend>Gender</legend>
+              <div class="gender">
+                <span class="singleGender">
+                  <input type="radio" name="gender" id="female" value="female">
+                  <label for="female">Female</label>
+                </span>
+
+                <span class="singleGender">
+                  <input type="radio" name="gender" id="male" value="male">
+                  <label for="male">Male</label>
+                </span>
+
+                <span class="singleGender">
+                  <input type="radio" name="gender" id="other" value="other">
+                  <label for="other">Other</label>
+                </span>
+              </div>
+
+            </fieldset>
+
+
+
+
+            <fieldset>
+              <legend>Address</legend>
+              <label for="city">City:</label>
+              <input type="text" name="city" id="city" placeholder="City" />
+
+              <label for="street">Street:</label>
+              <input type="text" name="street" id="street" placeholder="Street" />
+
+              <label for="houseNumber">House Number:</label>
+              <input type="text" name="houseNumber" id="houseNumber" placeholder="House Number" />
+
+              <label for="zipCode">Zip Code:</label>
+              <input type="number" name="zipCode" id="zipCode" placeholder="Zip Code" />
+            </fieldset>
+
+
+            <!-- TODO Nějaká kontrola správného datumu a převedení na správnou verzi pro backend -->
+            <label for="birthDate">Birthday:</label>
+            <input type="date" name="birthDate" id="birthDate" max="9999-12-31" min="1900-01-01" />
+            <small id="birthDateError" class="error" aria-live="polite"></small><br>
+
+            <button type="submit">Submit</button>
 
           </form>
         </div>
@@ -38,7 +93,7 @@
           <h2>Contact List</h2>
           <ul id="contacts-list">
             <li>
-              <div class="list-view"><div class="contact-name">Person One</div></div>
+              <div class="contact-name">Person One</div>
               <div class="detail-panel">
                 personone@mail.com
                 <button class="delete-btn">Delete</button>

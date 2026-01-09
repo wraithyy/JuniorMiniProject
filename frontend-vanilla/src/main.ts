@@ -1,4 +1,6 @@
 import './styles/main.css';
+//import * as stream from "node:stream";
+import {parse, isValid, format} from 'date-fns';
 
 // TODO: Implementovat aplikaci pro správu kontaktů
 //
@@ -15,62 +17,110 @@ console.log('Vanilla TypeScript frontend připraven k implementaci!');
 const app = document.getElementById('app');
 
 if (app) {
-  //app.innerHTML = '';
+
+  //Kontrola datummu, použita knihovna date-fns
+  const birthDateEl = document.getElementById('birthDate') as HTMLInputElement;
+  const errorEl = document.getElementById('birthDateError') as HTMLInputElement;
+
+  birthDateEl.addEventListener('change', () => {
+
+    const raw = birthDateEl.value;
+    console.log(raw);
+
+    const date = parse(raw, 'yyyy-MM-dd', new Date());
+    if (!isValid(date)) {
+      errorEl.textContent = "Please enter a valid date.";
+      return;
+    }
+    errorEl.textContent = "";
+
+    const payloadValue = format(date, 'dd-MM-yyyy');
+    console.log(payloadValue);
+  })
 
 
-  //Správa tvorby nvého kontaktu
-  const form = document.getElementById('form');
+  //Správa tvorby nového kontaktu
+  const form = document.getElementById('form') as HTMLFormElement;
 
   if (form) {
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       console.log(e)
       console.log(form)
 
+      //TODO Opravit tuto část, zajistit správné typy dat pomocí TypeScriptu
+
       const data = {
-        firstName: e.target.firstName.value,
-        lastName: e.target.lastName.value,
-        email: e.target.email.value,
-        phone: "",
-        note: "",
-        gender: "",
-        city: "",
-        street: "",
-        houseNumber: "",
-        zipCode: 0,
-        birthDate: "",
+        firstName: e?.target?.firstName.value ?? "",
+        lastName: e?.target?.lastName.value  ?? "",
+        email: e?.target?.email.value  ?? "",
+        phone: e?.target?.phone.value ?? "",
+        note: e?.target?.note.value ?? "",
+        gender: e?.target?.gender.value ?? "",
+        city: e?.target?.city.value ?? "",
+        street: e?.target?.street.value ?? "",
+        houseNumber: e?.target?.houseNumber.value ?? "",
+        zipCode: e?.target?.zipCode.value ?? "",
+
+        //birthDate: e.target.birthDate.value // TODO mám tu nějaký problém, že to nelze "cast to date"
       };
 
-      console.log(data);
 
-      const response = await fetch('/api/contacts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
 
-      const result = await response.json();
+      let errors = [];
+      if (!data.firstName) {
+        errors.push("First Name");
+      }
+      if (!data.lastName) {
+        errors.push("Last Name");
+      }
 
-      console.log(result);
+      //Kontrola, že email je reálný
+      const emailRegex: RegExp = /^[\w.-]+@([\w-]+\.)+[\w-]{2,}$/gm; //regex na poznání emailu
+
+      if (!data.email) {
+        errors.push("Email");
+      } else if (!emailRegex.test(data.email)) {
+        console.log("Email je špatně: " + data.email);
+        const email = document.getElementById("incorrectEmail");
+        if (email) {
+          email.innerHTML = "This is not a correct email.";
+        }
+        errors.push("Email");
+      }
+
+      //Kontrola errorů, buďto error messages anebo se vše pošle a form reset()
+      if (errors.length > 0) {
+        const errorsMessage = document.getElementById("errors");
+        if (errorsMessage) {
+          errorsMessage.innerHTML = `You have forgotten to fill out these things in the form: ${errors.toString()}`;
+        }
+      } else {
+
+        //CleanUp existujících zpráv
+        const errorsMessage = document.getElementById("errors");
+        errorsMessage ? errorsMessage.innerHTML = "" : null;
+
+        const incorrectEmail = document.getElementById("incorrectEmail");
+        incorrectEmail ? incorrectEmail.innerHTML = "" : null;
+
+        const contactForm = document.getElementById("contactForm");
+        contactForm ? contactForm.innerHTML = "" : null;
+
+
+        const response = await fetch('/api/contacts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        console.log(result);
+      }
     });
   }
 
-
-
-  //List kontaktů
-  const response = await fetch('/api/contacts');
-  const data = await response.json();
-  const contacts = data.data;
-  console.log(contacts);
-
-// Vyrenderovat seznam pomocí DOM manipulace
-/*  contacts.forEach(contact => {
-    const li = document.createElement('li');
-    li.textContent = `${contact.firstName} ${contact.lastName}`;
-    li.addEventListener('click', () => {
-      // Zobrazit detail
-    });
-    list.appendChild(li);
-  });*/
 }

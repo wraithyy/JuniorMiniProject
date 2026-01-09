@@ -111,6 +111,8 @@ nav button:hover {
 }
 
 button[type="submit"] {
+  margin-top: 10px;
+
   padding: 10px 30px;
   border: none;
   background: #007bff;
@@ -125,3 +127,30 @@ button[type="submit"]:hover {
 }
 
 /* TODO: Junioři přidají vlastní styling podle zadání */
+
+
+#gender {
+  border: 1px solid #cccccc;
+}
+.gender {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: nowrap;
+}
+
+.singleGender {
+  display: inline-flex;
+  align-items: center;
+}
+
+.singleGender label {
+  padding-left: 5px;
+  font-size: 0.85em;
+}
+
+fieldset {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
+}
