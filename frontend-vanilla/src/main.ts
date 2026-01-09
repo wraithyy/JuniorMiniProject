@@ -1,4 +1,14 @@
 import './styles/main.css';
+import initPhone from './initFields/phone';
+
+
+
+// Wait until the DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  const phoneCtrl = initPhone();
+});
+
+
 
 // TODO: Implementovat aplikaci pro správu kontaktů
 //

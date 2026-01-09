@@ -143,4 +143,10 @@ legend {
   font-weight: 500;
 }
 
+.error {
+  color: #b00020;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
 
