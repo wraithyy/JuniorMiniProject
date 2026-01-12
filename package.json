@@ -17,5 +17,9 @@
   },
   "devDependencies": {
     "concurrently": "^9.1.0"
+  },
+  "dependencies": {
+    "intl-tel-input": "^25.14.1",
+    "just-validate": "^4.3.0"
   }
 }
