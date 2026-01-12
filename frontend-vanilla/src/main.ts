@@ -25,7 +25,6 @@ if (app) {
   birthDateEl.addEventListener('change', () => {
 
     const raw = birthDateEl.value;
-    console.log(raw);
 
     const date = parse(raw, 'yyyy-MM-dd', new Date());
     if (!isValid(date)) {
@@ -33,9 +32,6 @@ if (app) {
       return;
     }
     errorEl.textContent = "";
-
-    const payloadValue = format(date, 'dd-MM-yyyy');
-    console.log(payloadValue);
   })
 
 
@@ -62,9 +58,8 @@ if (app) {
         city: e?.target?.city.value ?? "",
         street: e?.target?.street.value ?? "",
         houseNumber: e?.target?.houseNumber.value ?? "",
-        zipCode: e?.target?.zipCode.value ?? "",
-
-        //birthDate: e.target.birthDate.value // TODO mám tu nějaký problém, že to nelze "cast to date"
+        zipCode: e?.target?.zipCode.value ?? 0,
+        birthDate: e?.target?.birthDate.value ?? "",
       };
 
 
@@ -106,8 +101,8 @@ if (app) {
         const incorrectEmail = document.getElementById("incorrectEmail");
         incorrectEmail ? incorrectEmail.innerHTML = "" : null;
 
-        const contactForm = document.getElementById("contactForm");
-        contactForm ? contactForm.innerHTML = "" : null;
+        const contactForm = document.getElementById("contactForm") as HTMLFormElement;
+        if (contactForm) {contactForm.reset()}
 
 
         const response = await fetch('/api/contacts', {
