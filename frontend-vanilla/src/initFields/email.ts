@@ -1,11 +1,21 @@
 
 import { z } from 'zod';
 import { getErrorElement, debounce } from '../helpers';
+import type { FieldAdapter } from './types';
+
 // Validate email, update error message, return "isValid" if email passes and "getValue" as a  as a normalized email value
-export default function initEmail() {
+export default function initEmail(): FieldAdapter {
     // Find the email input in the DOM and bail if it's not present.
     const input = document.querySelector<HTMLInputElement>('#email');
-    if (!input) return null;
+
+    if (!input) {
+        console.warn('Email input (#email) not found.');
+        return {
+            isValid: () => false,
+            getValue: () => "",
+        };
+    }
+
 
     // Resolve the element where error messages should be displayed using imported helper
     const errorMsg = getErrorElement(input);
@@ -51,26 +61,12 @@ export default function initEmail() {
     // Debounced validation while the user types (conditional on existing error).
     input.addEventListener('input', onInput);
 
-    /**
-     * Public API: check validity of current value.
-     */
-    const isValid = () => validate(input.value);
+    const isValid = (): boolean => validate(input.value);
 
-    /**
-     * Public API: get normalized email value if valid, else null.
-     * - Trims and lowercases the input for consistency.
-     */
-    const getValue = () => {
+    const getValue = (): string => {
         const val = input.value.trim().toLowerCase();
-        return emailSchema.safeParse(val).success ? val : null;
+        return emailSchema.safeParse(val).success ? val : "";
     };
 
-    // Return typed helpers for consumer code.
-    return {
-        isValid,
-        getValue,
-    } as {
-        isValid: () => boolean;
-        getValue: () => string | null;
-    };
+    return { isValid, getValue };
 }

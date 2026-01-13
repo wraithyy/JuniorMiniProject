@@ -19,16 +19,20 @@
         <!-- Name and Surname -->
         <div class="form-group">
           <label for="firstName">First Name</label>
-          <input type="text" id="firstName" name="firstName" placeholder="John" autocomplete="given-name" required />
-
+          <input type="text" id="firstName" name="firstName" placeholder="John" autocomplete="given-name" required
+            aria-describedby="firstName-error" />
+          <p id="firstName-error" class="error" role="alert" aria-live="polite"></p>
           <label for="lastName">Last Name</label>
-          <input type="text" id="lastName" name="lastName" placeholder="Doe" autocomplete="family-name" required />
+          <input type="text" id="lastName" name="lastName" placeholder="Doe" autocomplete="family-name" required
+            aria-describedby="lastName-error" />
+          <p id="lastName-error" class="error" role="alert" aria-live="polite"></p>
         </div>
 
         <!-- Email -->
         <div class="form-group">
           <label for="email">Email</label>
-          <input type="email" id="email" name="email" placeholder="john@example.com" autocomplete="email" required aria-describedby="email-error"/>
+          <input type="email" id="email" name="email" placeholder="john@example.com" autocomplete="email" required
+            aria-describedby="email-error" />
           <p id="email-error" class="error" role="alert" aria-live="polite"></p>
         </div>
 
@@ -54,7 +58,8 @@
         <!-- Phone -->
         <div class="form-group">
           <label for="phone">Phone</label>
-          <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required aria-describedby="phone-error" />
+          <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required
+            aria-describedby="phone-error" />
           <p id="phone-error" class="error" role="alert" aria-live="polite"></p>
         </div>
 
@@ -69,16 +74,17 @@
           <legend>Address</legend>
           <div class="form-group">
             <label for="city">City</label>
-            <input type="text" id="city" name="city" autocomplete="address-level2" required />
-
+            <input type="text" id="city" name="city" autocomplete="address-level2" required
+              aria-describedby="city-error" />
+            <p id="city-error" class="error" role="alert" aria-live="polite"></p>
             <label for="street">Street</label>
-            <input type="text" id="street" name="street" autocomplete="street-address" required />
-
+            <input type="text" id="street" name="street" autocomplete="street-address" required
+              aria-describedby="street-error" />
+            <p id="street-error" class="error" role="alert" aria-live="polite"></p>
             <label for="houseNumber">House number</label>
             <!-- the pattern is a basic check, does not guarantee 100% correct input (ex. 12a, 12aa passes too) -->
-            <input type="text" id="houseNumber" name="houseNumber" inputmode="text"
-              pattern="^[0-9]+([\/\-]?[0-9A-Za-z]+)?$" title="Examples: 123, 123/7, 123a" required />
-
+            <input type="text" id="houseNumber" name="houseNumber" inputmode="text" required  aria-describedby="houseNumber-error"/>
+            <p id="houseNumber-error" class="error" role="alert" aria-live="polite"></p>
             <!-- Czech ZIP format -->
             <label for="zipCode">ZIP Code</label>
             <input type="text" id="zipCode" name="zipCode" inputmode="numeric" autocomplete="postal-code"
