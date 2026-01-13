@@ -11,30 +11,39 @@ body {
   padding: 20px;
 }
 
+
 header {
   max-width: 1200px;
   margin: 0 auto 30px;
 }
 
 header h1 {
-  margin-bottom: 15px;
+  color: #007bff;
 }
 
 nav {
   display: flex;
   gap: 10px;
+  align-items: center;
+  border-bottom: #007bff solid 5px;
+  border-radius: 5px;
 }
 
 nav button {
   padding: 10px 20px;
-  border: 1px solid #ccc;
-  background: #f0f0f0;
+  border: 1px solid #007bff;
+  background-color: transparent;
+  border-radius: 4px;
   cursor: pointer;
 }
 
 nav button:hover {
-  background: #e0e0e0;
+  background: #007bff;
+  color: white;
+
 }
+
+
 
 #app {
   max-width: 1200px;

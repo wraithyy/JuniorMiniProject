@@ -6,6 +6,11 @@
     <title>Kontakty - Vanilla TypeScript</title>
   </head>
   <body>
+
+  <div id="header"></div>
+
+  <script type="module" src="src/header.ts" defer></script>
+
     <h1>Správa kontaktů - Vanilla TypeScript</h1>
 
     <div id="app">
@@ -76,7 +81,6 @@
             </fieldset>
 
 
-            <!-- TODO Nějaká kontrola správného datumu a převedení na správnou verzi pro backend -->
             <label for="birthDate">Birthday:</label>
             <input type="date" name="birthDate" id="birthDate" max="9999-12-31" min="1900-01-01" />
             <small id="birthDateError" class="error" aria-live="polite"></small><br>
@@ -109,6 +113,6 @@
 
     </div>
 
-    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="src/main.ts"></script>
   </body>
 </html>
