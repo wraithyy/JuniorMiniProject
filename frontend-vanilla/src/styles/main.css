@@ -67,21 +67,25 @@ nav button:hover {
   list-style: none;
 }
 
-#contacts-list li {
+.contact-name {
   padding: 10px;
-  border-bottom: 1px solid #eee;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-#contacts-list li:hover {
+.contact-name:hover {
   background: #f5f5f5;
 }
 
 .contact-name {
   flex: 1;
+}
+
+.contact {
+
+  border-bottom: 1px solid #eee;
 }
 
 .delete-btn {

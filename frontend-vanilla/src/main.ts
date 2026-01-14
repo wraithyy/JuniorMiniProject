@@ -1,6 +1,6 @@
 import './styles/main.css';
 //import * as stream from "node:stream";
-import {parse, isValid, format} from 'date-fns';
+import {parse, isValid} from 'date-fns';
 
 // TODO: Implementovat aplikaci pro správu kontaktů
 //

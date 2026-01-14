@@ -22,13 +22,13 @@
           <form class="form-horizontal" id="contactForm">
 
             <!-- TODO TypeScript kontrolu required -->
-            <label for="firstName">First Name:</label>
+            <label for="firstName">First Name:*</label>
             <input type="text" name="firstName" id="firstName" placeholder="Mary"  required/>
 
-            <label for="lastName">Last Name:</label>
+            <label for="lastName">Last Name:*</label>
             <input type="text" name="lastName" id="lastName" placeholder="Sue"  required/>
 
-            <label for="email">Email:</label>
+            <label for="email">Email:*</label>
             <input type="email" name="email" id="email" placeholder="example@example.com"  required/>
             <p id="incorrectEmail" style="color: #dd0000"></p>
 
@@ -90,26 +90,6 @@
           </form>
         </div>
       </div>
-
-
-      <div class="list-panel">
-        <div class="list-view-header">
-          <h2>Contact List</h2>
-          <ul id="contacts-list">
-            <li>
-              <div class="contact-name">Person One</div>
-              <div class="detail-panel">
-                personone@mail.com
-                <button class="delete-btn">Delete</button>
-              </div>
-            </li>
-            <li>Person Two</li>
-          </ul>
-
-        </div>
-
-      </div>
-
 
     </div>
 
