@@ -1,22 +1,87 @@
-import './styles/main.css';
+import '/src/styles/main.css';
 //import * as stream from "node:stream";
-import {parse, isValid} from 'date-fns';
+import {parse, isValid, formatDate} from 'date-fns';
+import {Contact} from "./Contact.ts";
 
-// TODO: Implementovat aplikaci pro správu kontaktů
-//
-// 1. Vytvořit formulář pro vytvoření kontaktu
-// 2. Vytvořit seznam kontaktů
-// 3. Implementovat zobrazení detailu kontaktu
-// 4. Přidat možnost smazat kontakt
-//
-// API endpointy jsou dostupné na: http://localhost:3333/api/contacts
-// Dokumentace API: http://localhost:3333/swagger
+
 
 console.log('Vanilla TypeScript frontend připraven k implementaci!');
 
 const app = document.getElementById('app');
 
+const paramsString = window.location.search;
+const searchParams = new URLSearchParams(paramsString);
+const id = searchParams.get("id") ?? null;
+console.log("ID: " + id);
+
+
 if (app) {
+
+  if (id) {
+    try {
+      const response = await fetch(`/api/contacts/${id}`)
+      const data = await response.json();
+      const contact = data.data as Contact;
+
+
+
+      for (const key of Object.keys(contact) as Array<keyof Contact>) {
+        const value = contact[key];
+        if (value == null) continue;
+
+        if (key === 'note') {
+          const el = document.getElementById('note');
+          if (el) el.textContent = String(value);
+          continue;
+        }
+
+        if (key === 'gender') {
+          const radio = document.getElementById(String(value)) as HTMLInputElement | null;
+          radio?.setAttribute('checked', 'checked');
+          continue;
+        }
+
+        if (key === 'birthDate') {
+          const date = formatDate(String(value), 'yyyy-MM-dd');
+          document.getElementById('birthDate')?.setAttribute('value', date);
+          continue;
+        }
+
+        const el = document.getElementById(key as string);
+        if (el) el.setAttribute('value', String(value));
+
+      }
+
+
+
+
+        /*for (let key in contact) {
+          console.log(key);
+          const element = document.getElementById(key);
+
+
+          //TODO přihodit kontrolu existujících dat
+          if (element && contact[key]) {
+            if ( key === "note") {
+              element.innerHTML = contact[key];
+            } else if (key === "gender") {
+              document.getElementById(contact[key])?.setAttribute("checked", "checked");
+
+            } else if (key === "birthDate") {
+              const date = formatDate(contact[key], "yyyy-MM-dd");
+              document.getElementById(key)?.setAttribute("value", date);
+
+            } else {
+              element.setAttribute("value", contact[key]);
+            }
+
+          }
+        }*/
+    }
+    catch (e) {
+
+    }
+  }
 
   //Kontrola datummu, použita knihovna date-fns
   const birthDateEl = document.getElementById('birthDate') as HTMLInputElement;
@@ -42,9 +107,6 @@ if (app) {
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-
-      console.log(e)
-      console.log(form)
 
       //TODO Opravit tuto část, zajistit správné typy dat pomocí TypeScriptu
 
@@ -101,17 +163,44 @@ if (app) {
         const incorrectEmail = document.getElementById("incorrectEmail");
         incorrectEmail ? incorrectEmail.innerHTML = "" : null;
 
+        //TODO tady možná úpravu při existujícím uživateli
         const contactForm = document.getElementById("contactForm") as HTMLFormElement;
         if (contactForm) {contactForm.reset()}
 
 
-        const response = await fetch('/api/contacts', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
+        const message = document.getElementById("message") as HTMLElement;
+        message.innerText = "Saving your contact...";
+        message.style.color = "blue";
+
+        let response: Response;
+
+        if (id){
+          response = await fetch(`/api/contacts/${id}`, {
+            method: "PATCH",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          })
+
+        } else {
+          response = await fetch('/api/contacts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          });
+        }
 
         const result = await response.json();
+
+
+          message.style.color = "green";
+          message.innerText = "Contact was successfully saved;";
+          message.style.opacity = "1";
+          message.style.transition = "opacity 1s ease"
+
+          setTimeout(() =>{
+            message.style.opacity = "0";
+          }, 5000)
+
 
         console.log(result);
       }

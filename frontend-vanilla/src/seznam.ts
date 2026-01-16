@@ -1,4 +1,6 @@
-import './styles/main.css';
+import '/src/styles/main.css';
+import {Contact} from "./Contact.ts";
+import {formatDate} from "date-fns";
 
 
 const app = document.getElementById('app');
@@ -22,27 +24,15 @@ if (app){
 
 
 
-
-        type Contact = {
-            firstName : string,
-            lastName : string,
-            email : string,
-            phone : string,
-            note: string,
-            gender : string,
-            birthday: string,
-            city : string,
-            street: string,
-            houseNumber: string,
-            zipCode: number,
-            _id: string
-        }
-
         contacts.forEach((contact: Contact) => {
             const li = document.createElement('li');
             li.setAttribute('class', 'contact');
             li.setAttribute('id', 'id_'+contact._id);
 
+            let date = ""
+            if (contact.birthDate) {
+                date = formatDate(contact.birthDate, "yyyy-MM-dd") ?? "";
+            }
 
             li.innerHTML = `<div class="contact-name">${contact.firstName ?? ""} ${contact.lastName ?? ""}</div>
                             <div class="detail-panel" style="display: none">
@@ -50,7 +40,7 @@ if (app){
                                 Phone: ${contact.phone ?? ""} <br>
                                 Note: ${contact.note ?? ""} <br>
                                 Gender: ${contact.gender ?? "Preferred not to say"} <br>
-                                Birthday: ${contact.birthday ?? ""} <br>
+                                Birthday: ${date ?? ""} <br>
                                 
                                 <fieldset>
                                     <legend>Adress</legend>
@@ -61,7 +51,9 @@ if (app){
                                 </fieldset> 
                                 
                                 <br>
-                                <div id="delete-${contact._id}"></div>
+                                <div id="delete-${contact._id}">
+                                    <button class="submit"><a href="/index.html?id=${contact._id}" >Edit</a></button>
+                                </div>
                           </div>
                         `;
 

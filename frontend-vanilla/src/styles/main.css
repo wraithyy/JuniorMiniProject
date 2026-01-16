@@ -123,7 +123,7 @@ nav button:hover {
   border-radius: 3px;
 }
 
-button[type="submit"] {
+button.submit {
   margin-top: 10px;
 
   padding: 10px 30px;
@@ -135,8 +135,13 @@ button[type="submit"] {
   font-size: 16px;
 }
 
-button[type="submit"]:hover {
+button.submit:hover {
   background: #0056b3;
+}
+
+.submit a {
+  color: #eeeeee;
+  text-decoration: none;
 }
 
 /* TODO: Junioři přidají vlastní styling podle zadání */
