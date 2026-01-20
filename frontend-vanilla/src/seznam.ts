@@ -15,6 +15,8 @@ if (app){
         if (!response.ok) {
             console.log('Contact not found!');
             throw Error(response.statusText);
+        } else {
+            document.getElementById("message")?.setAttribute("style", "display: none;");
         }
 
         console.log(response);
@@ -129,7 +131,7 @@ if (app){
         console.error(errors);
         let app = document.getElementById('app');
         if (app){ // @ts-ignore
-            app.innerText = errors;
+            app.innerHTML = "Ups something went wrong (╥﹏╥)<br>"
         app.setAttribute('style', 'color: red');}
     }
 

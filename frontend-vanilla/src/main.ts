@@ -52,31 +52,6 @@ if (app) {
 
       }
 
-
-
-
-        /*for (let key in contact) {
-          console.log(key);
-          const element = document.getElementById(key);
-
-
-          //TODO přihodit kontrolu existujících dat
-          if (element && contact[key]) {
-            if ( key === "note") {
-              element.innerHTML = contact[key];
-            } else if (key === "gender") {
-              document.getElementById(contact[key])?.setAttribute("checked", "checked");
-
-            } else if (key === "birthDate") {
-              const date = formatDate(contact[key], "yyyy-MM-dd");
-              document.getElementById(key)?.setAttribute("value", date);
-
-            } else {
-              element.setAttribute("value", contact[key]);
-            }
-
-          }
-        }*/
     }
     catch (e) {
 
@@ -85,7 +60,9 @@ if (app) {
 
   //Kontrola datummu, použita knihovna date-fns
   const birthDateEl = document.getElementById('birthDate') as HTMLInputElement;
-  const errorEl = document.getElementById('birthDateError') as HTMLInputElement;
+  const errorEl = document.getElementById('birthDateError') as HTMLElement;
+
+  birthDateEl.max = formatDate(new Date(), "yyyy-MM-dd");
 
   birthDateEl.addEventListener('change', () => {
 
@@ -191,7 +168,10 @@ if (app) {
 
         const result = await response.json();
 
-
+        if (!result.ok) {
+          message.innerText = "There has been an error while saving the contact (╥﹏╥)"
+          message.style.color = "red";
+        } else {
           message.style.color = "green";
           message.innerText = "Contact was successfully saved;";
           message.style.opacity = "1";
@@ -200,7 +180,7 @@ if (app) {
           setTimeout(() =>{
             message.style.opacity = "0";
           }, 5000)
-
+        }
 
         console.log(result);
       }
