@@ -1,22 +1,12 @@
-import type { FieldAdapter } from "./types";
+export default function initGenderField() {
+    function func(){
+        const selected = document.querySelector<HTMLInputElement>('input[name="gender"]:checked');
 
-export default function initGenderField(): FieldAdapter {
-    const inputs = document.querySelectorAll<HTMLInputElement>('input[name="gender"]')
-
-    if (!inputs.length) {
-        console.warn("Gender radio buttons not found.");
-        return {
-            isValid: () => false,
-            getValue: () => '',
-        };
+        if (!selected) {
+            console.warn("No gender selected");
+            return  "";
+        }
+        return  selected.value;
     }
-
-    const isValid = (): boolean => {
-        return Array.from(inputs).some(input => input.checked)
-    };
-    const getValue = (): string => {
-        const selected = Array.from(inputs).find(input => input.checked)
-        return selected ? selected.value : "";
-    }
-    return {isValid, getValue};
+    return () => func();
 }

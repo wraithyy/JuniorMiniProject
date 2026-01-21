@@ -1,7 +1,6 @@
 
 import { z } from 'zod';
 import { getErrorElement, debounce } from '../helpers';
-import type { FieldAdapter } from './types';
 
 // Only require non-empty after trimming
 const nonEmptyNameSchema = z
@@ -9,17 +8,15 @@ const nonEmptyNameSchema = z
   .trim()
   .min(1, 'This field is required');
 
-export function initNotEmptyField(selector: string): FieldAdapter {
+export function initNotEmptyField(selector: string) {
   const input = document.querySelector<HTMLInputElement>(selector);
-
-  if (!input) {
-    console.warn(`Name input (${selector}) not found.`);
-    return {
-      isValid: () => false,
-      getValue: () => '',
-    };
-  }
-
+ if (!input) {
+        console.warn('Email input (#email) not found.');
+        return () => "";
+    }
+  input.required = true;
+    
+  // Resolve the element where error messages should be displayed using imported helper
   const errorMsg = getErrorElement(input);
   let errorShown = false;
 
@@ -45,27 +42,13 @@ export function initNotEmptyField(selector: string): FieldAdapter {
   input.addEventListener('blur', updateError);
   input.addEventListener('input', onInput);
 
-  const isValid = (): boolean => validate(input.value);
-
-  const getValue = (): string => {
-    // Return normalized (trimmed) value if valid; otherwise empty string
-    const trimmed = input.value.trim();
-    return nonEmptyNameSchema.safeParse(trimmed).success ? trimmed : '';
-  };
-
-  return { isValid, getValue };
+  return () => input.value;
 }
 
 // Convenience wrappers
-export function initFirstName(): FieldAdapter {
+export function initFirstName() {
   return initNotEmptyField('#firstName');
 }
-export function initLastName(): FieldAdapter {
+export function initLastName() {
   return initNotEmptyField('#lastName');
-}
-export function initCity(): FieldAdapter {
-  return initNotEmptyField('#city');
-}
-export function initStreet(): FieldAdapter {
-  return initNotEmptyField('#street');
 }

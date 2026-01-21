@@ -1,19 +1,15 @@
 
 import { z } from 'zod';
 import { getErrorElement, debounce } from '../helpers';
-import type { FieldAdapter } from './types';
 
 // Validate email, update error message, return "isValid" if email passes and "getValue" as a  as a normalized email value
-export default function initEmail(): FieldAdapter {
+export default function initEmail() {
     // Find the email input in the DOM and bail if it's not present.
     const input = document.querySelector<HTMLInputElement>('#email');
 
     if (!input) {
         console.warn('Email input (#email) not found.');
-        return {
-            isValid: () => false,
-            getValue: () => "",
-        };
+        return () => "";
     }
 
 
@@ -37,10 +33,12 @@ export default function initEmail(): FieldAdapter {
             const msg = result.error.issues[0]?.message ?? 'Invalid email';
             if (errorMsg) errorMsg.textContent = msg;
             errorShown = true;
+            input.setCustomValidity("Invalid email");
             return false;
         }
         if (errorMsg) errorMsg.textContent = '';
         errorShown = false;
+        input.setCustomValidity("");
         return true;
     };
 
@@ -61,12 +59,10 @@ export default function initEmail(): FieldAdapter {
     // Debounced validation while the user types (conditional on existing error).
     input.addEventListener('input', onInput);
 
-    const isValid = (): boolean => validate(input.value);
+    return () => input.value.trim().toLowerCase();
 
-    const getValue = (): string => {
-        const val = input.value.trim().toLowerCase();
-        return emailSchema.safeParse(val).success ? val : "";
-    };
-
-    return { isValid, getValue };
+    // const getValue = (): string => {
+    //     const val = input.value.trim().toLowerCase();
+    //     return emailSchema.safeParse(val).success ? val : "";
+    // };
 }
