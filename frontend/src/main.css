@@ -1,0 +1,174 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    padding: 20px;
+}
+
+
+header {
+    max-width: 1200px;
+    margin: 0 auto 30px;
+}
+
+header h1 {
+    color: #007bff;
+}
+
+nav {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    border-bottom: #007bff solid 5px;
+    border-radius: 5px;
+}
+
+nav button {
+    padding: 10px 20px;
+    border: 1px solid #007bff;
+    background-color: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+nav button:hover {
+    background: #007bff;
+    color: white;
+
+}
+
+
+
+#app {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.list-view {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.list-panel,
+.detail-panel {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+#contacts-list {
+    list-style: none;
+}
+
+.contact-name {
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.contact-name:hover {
+    background: #f5f5f5;
+}
+
+.contact-name {
+    flex: 1;
+}
+
+.contact {
+
+    border-bottom: 1px solid #eee;
+}
+
+.delete-btn {
+    padding: 5px 10px;
+    border: 1px solid #d00;
+    background: #fee;
+    color: #d00;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.delete-btn:hover {
+    background: #fdd;
+}
+
+.form-container {
+    max-width: 600px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+button.submit {
+    margin-top: 10px;
+
+    padding: 10px 30px;
+    border: none;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 16px;
+}
+
+button.submit:hover {
+    background: #0056b3;
+}
+
+.submit a {
+    color: #eeeeee;
+    text-decoration: none;
+}
+
+/* TODO: Junioři přidají vlastní styling podle zadání */
+
+
+#gender {
+    border: 1px solid #cccccc;
+}
+.gender {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: nowrap;
+}
+
+.singleGender {
+    display: inline-flex;
+    align-items: center;
+}
+
+.singleGender label {
+    padding-left: 5px;
+    font-size: 0.85em;
+}
+
+fieldset {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+}
