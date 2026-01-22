@@ -7,16 +7,19 @@ import initHouseNumber from './initFields/houseNumber';
 import initZipCode from './initFields/zipCode';
 import initBirthDate from './initFields/birthDate';
 
-export default{
-    getFirstName : initFirstName(),
-    getLastName : initLastName(),
-    getEmail : initEmail(),
-    getGender : initGender(),
-    getBirthDate : initBirthDate(),
-    getPhone : initPhone(),
-    getCity : initCity(),
-    getStreet : initStreet(),
-    getHouseNumber : initHouseNumber(),
-    getZipCode : initZipCode(),
-    getNote : initNote()
+
+export function initializeInputFields(root: ParentNode) {
+    return {
+        getFirstName: initFirstName(root),
+        getLastName: initLastName(root),
+        getEmail: initEmail(root),
+        getGender: initGender(root),
+        getBirthDate: initBirthDate(root),
+        getPhone: initPhone(root),
+        getCity: initCity(root),
+        getStreet: initStreet(root),
+        getHouseNumber: initHouseNumber(root),
+        getZipCode: initZipCode(root),
+        getNote: initNote(root),
+    };
 }

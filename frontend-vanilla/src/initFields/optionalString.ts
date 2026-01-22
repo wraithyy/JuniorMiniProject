@@ -1,5 +1,5 @@
-export function initOptionalString(selector: string) {
-    const input = document.querySelector<HTMLInputElement | HTMLTextAreaElement>(selector);
+export function initOptionalString(root: ParentNode, selector: string) {
+    const input = root.querySelector<HTMLInputElement | HTMLTextAreaElement>(selector);
 
     if (!input) {
         console.warn(`Name input (${selector}) not found.`);
@@ -8,12 +8,12 @@ export function initOptionalString(selector: string) {
     return () => input.value.trim();
 };
 
-export function initCity() {
-    return initOptionalString('#city');
+export function initCity(root: ParentNode) {
+    return initOptionalString(root, '#city');
 }
-export function initStreet() {
-    return initOptionalString('#street');
+export function initStreet(root: ParentNode) {
+    return initOptionalString(root, '#street');
 }
-export function initNote() {
-    return initOptionalString('#note');
+export function initNote(root: ParentNode) {
+    return initOptionalString(root, '#note');
 }

@@ -8,8 +8,8 @@ const nonEmptyNameSchema = z
   .trim()
   .min(1, 'This field is required');
 
-export function initNotEmptyField(selector: string) {
-  const input = document.querySelector<HTMLInputElement>(selector);
+export function initNotEmptyField(root: ParentNode, selector: string) {
+  const input = root.querySelector<HTMLInputElement>(selector);
  if (!input) {
         console.warn('Email input (#email) not found.');
         return () => "";
@@ -46,9 +46,9 @@ export function initNotEmptyField(selector: string) {
 }
 
 // Convenience wrappers
-export function initFirstName() {
-  return initNotEmptyField('#firstName');
+export function initFirstName(root: ParentNode) {
+  return initNotEmptyField(root, '#firstName');
 }
-export function initLastName() {
-  return initNotEmptyField('#lastName');
+export function initLastName(root: ParentNode) {
+  return initNotEmptyField(root, '#lastName');
 }

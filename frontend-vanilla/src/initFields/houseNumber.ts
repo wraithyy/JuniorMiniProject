@@ -11,8 +11,8 @@ const houseNumberSchema = z
   .trim()
   .regex(houseNumberRegex, 'Use formats like 123, 123/7, 123-7a');
 
-export default function initHouseNumber() {
-  const input = document.querySelector<HTMLInputElement>('#houseNumber');
+export default function initHouseNumber(root: ParentNode) {
+  const input = root.querySelector<HTMLInputElement>('#houseNumber');
 
   if (!input) {
     console.warn('House number input (#houseNumber) not found.');

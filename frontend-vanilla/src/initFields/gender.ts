@@ -1,6 +1,6 @@
-export default function initGenderField() {
+export default function initGenderField(root: ParentNode) {
     function func(){
-        const selected = document.querySelector<HTMLInputElement>('input[name="gender"]:checked');
+        const selected = root.querySelector<HTMLInputElement>('input[name="gender"]:checked');
 
         if (!selected) {
             console.warn("No gender selected");

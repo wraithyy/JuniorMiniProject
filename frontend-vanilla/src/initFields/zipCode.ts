@@ -11,8 +11,8 @@ const zipCodeSchema = z
 
 const normalizeZip = (zipInput: string) => zipInput.replace(/\D+/g, "");
 
-export default function initZip() {
-  const input = document.querySelector<HTMLInputElement>('#zipCode');
+export default function initZip(root: ParentNode) {
+  const input = root.querySelector<HTMLInputElement>('#zipCode');
 
   if (!input) {
     console.warn('Zip code input (#zipCode) not found.');

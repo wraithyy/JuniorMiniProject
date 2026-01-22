@@ -3,9 +3,9 @@ import { z } from 'zod';
 import { getErrorElement, debounce } from '../helpers';
 
 // Validate email, update error message, return "isValid" if email passes and "getValue" as a  as a normalized email value
-export default function initEmail() {
+export default function initEmail(root: ParentNode) {
     // Find the email input in the DOM and bail if it's not present.
-    const input = document.querySelector<HTMLInputElement>('#email');
+    const input = root.querySelector<HTMLInputElement>('#email');
 
     if (!input) {
         console.warn('Email input (#email) not found.');

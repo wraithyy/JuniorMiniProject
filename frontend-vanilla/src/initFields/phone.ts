@@ -2,9 +2,9 @@ import { getErrorElement, debounce } from '../helpers';
 import intlTelInput from 'intl-tel-input';
 import 'intl-tel-input/build/css/intlTelInput.css'; // phone library plugin CSS
 
-export default function initPhone() {
+export default function initPhone(root: ParentNode) {
   // Get the phone input element
-  const input = document.querySelector<HTMLInputElement>('#phone');
+  const input = root.querySelector<HTMLInputElement>('#phone');
 
   if (!input) {
     console.warn('Phone input (#phone) not found.');

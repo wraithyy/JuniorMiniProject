@@ -4,8 +4,8 @@ function setMaxDate(input: HTMLInputElement){
     input.max = dateToday;
 }
 
-export default function initBirthDate() {
-    const input = document.querySelector<HTMLInputElement>('#birthDate');
+export default function initBirthDate(root: ParentNode) {
+    const input = root.querySelector<HTMLInputElement>('#birthDate');
     if (!input) {
         console.warn('Birth date input (#birthDate) not found.');
         return () => "";
