@@ -158,4 +158,9 @@ legend {
   font-size: 0.8rem;
 }
 
+.success{
+  color: green;
+  font-weight: 500;
+}
+
 
