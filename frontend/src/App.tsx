@@ -4,6 +4,7 @@ import { ContactList } from './components/ContactList';
 import { ContactDetail } from './components/ContactDetail';
 import type { Contact } from './types/contact';
 import './App.css';
+import { contactsApi } from './api/contactsApi'
 
 type Page = 'form' | 'list';
 
@@ -32,7 +33,7 @@ function App() {
         {currentPage === 'form' ? (
           <ContactForm
             onSubmit={(contact) => {
-              console.log('TODO: Implementovat vytvoření kontaktu', contact);
+              contactsApi.createContact(contact).then(r => console.log(r));
             }}
           />
         ) : (

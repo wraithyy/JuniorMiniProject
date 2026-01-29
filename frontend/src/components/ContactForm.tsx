@@ -6,7 +6,6 @@ import FieldSet from "./FieldSet.tsx";
 import InputComponent from "./InputComponent.tsx";
 import {useState} from "react";
 import * as React from "react";
-import {contactsApi} from "../api/contactsApi.ts";
 
 type ContactFormProps = {
     onSubmit: (contact: Omit<Contact, '_id' | 'create_date'>) => void;
@@ -65,7 +64,7 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
 
     //submit working like this nice
     function handleSubmit() {
-        contactsApi.createContact(value).then(r => console.log(r));
+        onSubmit(value);
     }
 
 
