@@ -1,14 +1,10 @@
-import type { FC } from 'react';
 import type { Contact } from '../types/contact';
 import '../main.css';
-import TextInput from "./TextInput.tsx";
-import NumberInput from "./NumberInput.tsx";
 import TextArea from "./TextArea.tsx";
-import TelInput from "./TelInput.tsx";
-import DateInput from "./DateInput.tsx";
 import RadioInput from "./RadioInput.tsx";
 import FieldSet from "./FieldSet.tsx";
 import InputComponent from "./InputComponent.tsx";
+import {useState} from "react";
 
 type ContactFormProps = {
     onSubmit: (contact: Omit<Contact, '_id' | 'create_date'>) => void;
@@ -48,6 +44,10 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
   // - Použít připravený contactsApi.createContact() nebo contactsApi.updateContact()
   // - Pro přístup k API klientu: import { contactsApi } from '../api/contactsApi'
 
+
+    //{ _id ? (<InputComponent id={"_id"} type={"hidden"} name={"_id"} label={"ID:"} />) : null } //TODO tohle přidat, až budu mít _id
+
+
   return (
       <div>
           <h2>{initialData ? 'Editovat kontakt' : 'Vytvořit nový kontakt'}</h2>
@@ -60,7 +60,7 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
 
                   <InputComponent id={"lastName"} label={"Last Name"} type={"text"} name={"text"} placeholder={"Smith"}  required/>
 
-                  <InputComponent id={"email"} label={"Email"} type={"email"} name={"email"} placeholder={"john.smith@tardic.uk"} required/>
+                  <InputComponent id={"email"} label={"Email"} type={"email"} name={"email"} placeholder={"john.smith@tardis.uk"} required/>
 
 
                   <InputComponent id={"phone"} label={"Phone"} type={"tel"} name={"phone"} placeholder={"+420 123 456 789"} />
