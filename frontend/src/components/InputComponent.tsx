@@ -11,11 +11,12 @@ type InputComponentProps = {
     required?: boolean,
 
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void,
+    onBlur?: (e: ChangeEvent<HTMLInputElement>) => void,
 
 
 }
 
-export default function InputComponent({id, label, type, name, placeholder, value, onChange }: InputComponentProps) {
+export default function InputComponent({id, label, type, name, placeholder, value, onChange, onBlur }: InputComponentProps) {
 
     //TODO kontrola pokud type=date, tak kontrola, že se člověk nenarodil v budoucnosti
 
@@ -23,7 +24,7 @@ export default function InputComponent({id, label, type, name, placeholder, valu
     return (
         <>
             <label htmlFor={id}>{label}</label>
-            <input type={type} name={name} id={id} value={value} placeholder={placeholder} onChange={onChange} />
+            <input type={type} name={name} id={id} value={value} placeholder={placeholder} onChange={onChange}  onBlur={onBlur}/>
         </>
     )
 }

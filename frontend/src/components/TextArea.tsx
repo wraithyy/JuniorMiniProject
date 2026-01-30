@@ -16,9 +16,7 @@ export default function TextArea({idName, name, placeholder, rows, required, val
     return (
         <>
             <label htmlFor={idName}>{name}</label>
-            <textarea name={idName} id={idName} placeholder={placeholder} rows={rows} required={required}  onChange={onChange}>
-                {value}
-            </textarea>
+            <textarea name={idName} id={idName} placeholder={placeholder} rows={rows} required={required}  onChange={onChange} value={value} />
         </>
     )
 }
