@@ -87,6 +87,22 @@ nav button:hover {
 .delete-btn:hover {
   background: #fdd;
 }
+.update-btn {
+  padding: 5px 10px;
+  border: 1px solid #007BFF;
+  background: #eef;
+  color: #007BFF;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.update-btn:hover {
+  background: #ddf;
+}
+
+.update-btns {
+margin-top: 1em;
+}
 
 .form-container {
   max-width: 600px;
@@ -163,4 +179,6 @@ legend {
   font-weight: 500;
 }
 
-
+.contact-details dt {
+  font-weight: 600;
+}

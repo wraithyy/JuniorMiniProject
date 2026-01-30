@@ -7,10 +7,14 @@
   <title>Kontakty - Vanilla TypeScript</title>
   <script type="module" src="/src/main.ts"></script>
 </head>
+
 <body>
   <header>
     <h1>Contact Manager - Vanilla</h1>
-    <nav id="nav-btns"></nav>
+    <nav id="nav-btns">
+      <button id="new-contact-btn">New Contact</button>
+      <button id="contact-list-btn">Contact List</button>
+    </nav>
   </header>
 
   <main>
@@ -59,14 +63,13 @@
         <!-- Birth date -->
         <div class="form-group">
           <label for="birthDate">Date of Birth</label>
-          <input type="date" id="birthDate" name="birthDate" autocomplete="bday"  min="1900-01-01"  />
+          <input type="date" id="birthDate" name="birthDate" autocomplete="bday" min="1900-01-01" />
         </div>
 
         <!-- Phone -->
         <div class="form-group">
           <label for="phone">Phone</label>
-          <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" 
-            aria-describedby="phone-error" />
+          <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" aria-describedby="phone-error" />
           <p id="phone-error" class="error" role="alert" aria-live="polite"></p>
         </div>
 
@@ -75,26 +78,26 @@
           <legend>Address</legend>
           <div class="form-group">
             <label for="city">Place <span class="disclaimer">(City, Village)</span></label>
-            <input type="text" id="city" name="city" autocomplete="address-level2" 
-              aria-describedby="city-error" />
+            <input type="text" id="city" name="city" autocomplete="address-level2" aria-describedby="city-error" />
             <p id="city-error" class="error" role="alert" aria-live="polite"></p>
             <label for="street">Street</label>
-            <input type="text" id="street" name="street" placeholder="leave blank for villages with none" autocomplete="street-address"
-              aria-describedby="street-error" />
+            <input type="text" id="street" name="street" placeholder="leave blank for villages with none"
+              autocomplete="street-address" aria-describedby="street-error" />
             <p id="street-error" class="error" role="alert" aria-live="polite"></p>
             <label for="houseNumber">House number</label>
-           
-            <input type="text" id="houseNumber" name="houseNumber" inputmode="text" placeholder="12/1"   aria-describedby="houseNumber-error"/>
+
+            <input type="text" id="houseNumber" name="houseNumber" inputmode="text" placeholder="12/1"
+              aria-describedby="houseNumber-error" />
             <p id="houseNumber-error" class="error" role="alert" aria-live="polite"></p>
             <!-- Czech ZIP format -->
             <label for="zipCode">ZIP Code</label>
             <input type="text" id="zipCode" name="zipCode" inputmode="numeric" autocomplete="postal-code"
-               placeholder="123 45"  aria-describedby="zipCode-error"/>
-              <p id="zipCode-error" class="error" role="alert" aria-live="polite"></p>
+              placeholder="123 45" aria-describedby="zipCode-error" />
+            <p id="zipCode-error" class="error" role="alert" aria-live="polite"></p>
           </div>
         </fieldset>
 
-         <!-- Note -->
+        <!-- Note -->
         <div class="form-group">
           <label for="note">Note</label>
           <textarea id="note" name="note" placeholder="Any additional detail (optional)" rows="3"></textarea>
@@ -104,9 +107,62 @@
         <p id="submit-message" aria-live="polite"></p>
       </form>
     </div>
-    <div id="contacts-list">
-    </div>
-    
+
+    <ul id="contacts-list">
+
+      <template id="contact-item-tpl">
+        <li>
+          <details>
+            <summary></summary>
+            <dl class="contact-details">
+              <div>
+                <dt>E-mail</dt>
+                <dd id="field-email"></dd>
+              </div>
+              <div>
+                <dt>Gender</dt>
+                <dd id="field-gender"></dd>
+              </div>
+              <div>
+                <dt>Date of Birth</dt>
+                <dd id="field-birthDate"></dd>
+              </div>
+              <div>
+                <dt>Phone</dt>
+                <dd id="field-phone"></dd>
+              </div>
+              <div>
+                <dt>City</dt>
+                <dd id="field-city"></dd>
+              </div>
+              <div>
+                <dt>Street</dt>
+                <dd id="field-street"></dd>
+              </div>
+              <div>
+                <dt>House number</dt>
+                <dd id="field-houseNumber"></dd>
+              </div>
+              <div>
+                <dt>ZIP Code</dt>
+                <dd id="field-zipCode"></dd>
+              </div>
+              <div>
+                <dt>Note</dt>
+                <dd id="field-note"></dd>
+              </div>
+              <div class="update-btns">
+                <button class="update-btn">update</button>
+                <button class="delete-btn">delete</button>
+              </div>
+        
+            </dl>
+          </details>
+        </li>
+      </template>
+    </ul>
+
+
   </main>
 </body>
 
