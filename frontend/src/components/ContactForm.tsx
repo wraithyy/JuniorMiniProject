@@ -1,3 +1,4 @@
+import * as React from "react";
 import type { Contact } from '../types/contact';
 import '../main.css';
 import TextArea from "./TextArea.tsx";
@@ -5,7 +6,7 @@ import RadioInput from "./RadioInput.tsx";
 import FieldSet from "./FieldSet.tsx";
 import InputComponent from "./InputComponent.tsx";
 import {useState} from "react";
-import * as React from "react";
+
 
 type ContactFormProps = {
     onSubmit: (contact: Omit<Contact, '_id' | 'create_date'>) => void;
@@ -48,23 +49,53 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
 
     //{ _id ? (<InputComponent id={"_id"} type={"hidden"} name={"_id"} label={"ID:"} />) : null } //TODO tohle přidat, až budu mít _id
 
-    const [value, setValue] = useState<Contact>(initialData);
+    const [value, setValue] = useState<Contact>(
+        initialData ?
+            initialData
+            : {
+                _id: "",
+                firstName: "",
+                lastName: "",
+                email: "",
+                gender: "",
+                phone: "",
+                note: "",
+                city: "",
+                street: "",
+                houseNumber: "",
+                zipCode: 0,
+                birthDate: "",
+            }
+    );
 
     function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
 
         //TODO kontrola emailu
-        //TODO kontrola vyplněných povinných dat
+        //TODo ZOD
+        //TODO onBlur
 
         setValue({
             ...value,
-            [e.target.id]: e.target.value,
+            [e.target.name]: e.target.value,
         })
 
     }
 
     //submit working like this nice
     function handleSubmit() {
-        onSubmit(value);
+        //TODO kontrola vyplněných povinných dat
+        //TODO kontrola validních dat
+
+        if(!value.firstName) {
+
+        } else if(!value.lastName) {
+
+        } else if(!value.email) {
+
+        } else {
+            onSubmit(value);
+        }
+
     }
 
 
@@ -76,7 +107,7 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
           <div className="form-group">
               <form className="form-horizontal" id="contactForm" action={handleSubmit}>
 
-                  <InputComponent id={"firstName"} label={"First Name"} type={"text"} name={"firstName"} placeholder={"John"} value={value?.firstName} onChange={(e) => handleInputChange(e)} required/>
+                  <InputComponent id={"firstName"} label={"First Name"} type={"text"} name={"firstName"} placeholder={"John"} value={value?.firstName} onChange={(e) => handleInputChange(e)} />
 
                   <InputComponent id={"lastName"} label={"Last Name"} type={"text"} name={"text"} placeholder={"Smith"} value={value?.lastName} onChange={(e) => handleInputChange(e)}  required/>
 
