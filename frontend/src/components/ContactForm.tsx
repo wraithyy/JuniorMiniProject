@@ -1,4 +1,4 @@
-import * as React from "react";
+
 import type { Contact } from '../types/contact';
 import '../main.css';
 import TextArea from "./TextArea.tsx";
@@ -7,7 +7,8 @@ import FieldSet from "./FieldSet.tsx";
 import InputComponent from "./InputComponent.tsx";
 import {useState} from "react";
 
-import * as z from "zod"
+import z from "zod"
+import {ContactSchema} from "./ContactSchema.ts";
 
 
 type ContactFormProps = {
@@ -85,105 +86,27 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
 
     });
 
-    //TODO funkce na validaci dat a setování/unsetování error messages, bude používána jak v handleOnBlur tak v handleOnSubmit
-    function validate(name: string, value: string | number){
+    //tohle funguje, alenechápu jak
+    const fieldSchema = <K extends keyof z.infer<typeof ContactSchema>>(key: K) =>
+        ContactSchema.shape[key];
 
-        switch (name) {
-        case "firstName":
-            if (!value) {
-                setErrors({
-                    ...errors,
-                    firstName: "First Name is required",
-                })
-            } else if (!z.string().min(2).safeParse(value).success){
-                setErrors({
-                    ...errors,
-                    firstName: "First Name has to be at least 2 characters long",
-                })
-            } else {
-                setErrors({
-                    ...errors,
-                    firstName: "",
-                })
-            }
-            break;
 
-        case "lastName":
-            if (!value) {
-                setErrors({
-                    ...errors,
-                    lastName: "Last Name is required",
-                })
-            } else if (!z.string().min(2).safeParse(value).success){
-                setErrors({
-                    ...errors,
-                    lastName: "Last Name has to be at least 2 characters long",
-                })
-            } else {
-                setErrors({
-                    ...errors,
-                    lastName: "",
-                })
-            }
-            break;
+    function validate(name: keyof Omit<Contact, "_id" | "create_date" | "gender">, data: string | number){
 
-        case "email":
-            if(!value) {
-                setErrors({
-                    ...errors,
-                    email: "Email is required",
-                })
-            } else if (z.email().safeParse(value).success) {
-                setErrors({
-                    ...errors,
-                    email: "",
-                })
-            } else {
-                setErrors({
-                    ...errors,
-                    email: "This is not a valid email",
-                })
-            }
-            break;
+        const result = fieldSchema(name).safeParse(data);
 
-        case "phone":
-            //pravděpodobně přidej lepší regex, ale so far so good
-            if (!value || z.e164().safeParse(value).success) {
-                setErrors({
-                    ...errors,
-                    phone: "",
-                })
-            } else {
-                setErrors({
-                    ...errors,
-                    phone: "This is not a valid phone number. Please write phone number in a +420123456789 way.",
-                })
-            }
-            break;
-
-        case "note":
-            if (!value || z.string().max(1000).safeParse(value).success) {
-                setErrors({
-                    ...errors,
-                    note: "",
-                })
-            } else {
-                setErrors({
-                    ...errors,
-                    note: "The note is too long (╥﹏╥)",
-                })
-            }
-            break;
-
-        case "city": break;
-
-        case "street": break;
-
-        case "houseNumber": break;
-
-        case "birthDate": break;
-
+        if (!result.success) {
+            setErrors({
+                ...errors,
+                [name] : result.error.issues[0].message,
+            });
+        } else {
+            setErrors({
+                ...errors,
+                [name] : "",
+            })
         }
+
 
     }
 
@@ -204,20 +127,30 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
 
     //submit working like this nice
     function handleSubmit() {
-        //TODO kontrola vyplněných povinných dat
-        //TODO kontrola validních dat
-        //tady tu kontrolu udělat pomocí value.foreach, takže budu validate volat několikrát (což je ok) a pokaždé
-        //respektive tady lze akorát zkontrolovat, že errors je prázdný a potom pokračovat s onSubmit
+        ContactSchema.safeParse(value)
+        //potom handlit errory a ukázat je
 
-        if(!value.firstName) {
 
-        } else if(!value.lastName) {
+        //fieldSchema dělá problémy
+        /*//TODO projet všechna data a zkontrolovat, že jsou ok
+        for (const [name, data] of Object.entries(value)){
+            validate(name, data)
+            console.log(name)
+            console.log(data)
 
-        } else if(!value.email) {
-
-        } else {
-            onSubmit(value);
         }
+
+        let submit = true
+
+        Object.values(errors).forEach((error) => {
+            error !== "" ? (submit = false) : null
+            console.log(error)
+        })
+
+        if (submit) {
+            onSubmit(value);
+            console.log("submitted")
+        } else {console.log("not submitted")}*/
 
     }
 
