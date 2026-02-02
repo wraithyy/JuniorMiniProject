@@ -2,7 +2,6 @@ import * as React from "react";
 import type { Contact } from '../types/contact';
 import '../main.css';
 import TextArea from "./TextArea.tsx";
-import RadioInput from "./RadioInput.tsx";
 import FieldSet from "./FieldSet.tsx";
 import InputComponent from "./InputComponent.tsx";
 import {useState} from "react";
@@ -53,23 +52,25 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
 
     //{ _id ? (<InputComponent id={"_id"} type={"hidden"} name={"_id"} label={"ID:"} />) : null } //TODO tohle přidat, až budu mít _id
 
+    const emptyValues = {
+        _id: "",
+        firstName: "",
+        lastName: "",
+        email: "",
+        gender: "",
+        phone: "",
+        note: "",
+        city: "",
+        street: "",
+        houseNumber: "",
+        zipCode: 0,
+        birthDate: "",
+    }
+
     const [value, setValue] = useState<Contact>(
         initialData ?
             initialData
-            : {
-                _id: "",
-                firstName: "",
-                lastName: "",
-                email: "",
-                gender: "",
-                phone: "",
-                note: "",
-                city: "",
-                street: "",
-                houseNumber: "",
-                zipCode: 0,
-                birthDate: "",
-            }
+            : emptyValues
     );
 
     //TODO chybí gender
@@ -79,6 +80,7 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
         email: "",
         phone: "",
         note: "",
+        gender: "",
         city: "",
         street: "",
         houseNumber: "",
@@ -92,8 +94,7 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
         ContactSchema.shape[key];
 
 
-    //TODO tady eventuelně se zbavit genderu
-    function validate(name: keyof Omit<Contact, "_id" | "create_date" | "gender">, data: string | number){
+    function validate(name: keyof Omit<Contact, "_id" | "create_date">, data: string | number){
 
         const result = fieldSchema(name).safeParse(data);
 
@@ -115,14 +116,16 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
 
     function handleOnBlur(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>){
         e.preventDefault();
-        validate(e.target.id, e.target.value)
+        validate(e.target.name, e.target.value)
 
     }
 
     function handleInputChange(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
+        const data = e.target.name === "zipCode" ? parseInt(e.target.value) : e.target.value;
+
         setValue({
             ...value,
-            [e.target.name]: e.target.value,
+            [e.target.name]: data,
         })
 
     }
@@ -135,14 +138,12 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
         if (!result.success) {
             console.log("not okay")
 
-            for (let i = 0; i < result.error.issues.length; i++) {
-                console.log(result.error.issues[i].message)
-
+            result.error.issues.forEach((element) => {
                 setErrors(errors => ({
                     ...errors,
-                    [result.error.issues[i].path[0]] : result.error.issues[i].message,
+                    [element.path[0]] : element.message,
                 }));
-            }
+            })
 
 
 
@@ -150,20 +151,7 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
             onSubmit(value)
             console.log("submitted")
 
-            setValue({
-                _id: "",
-                firstName: "",
-                lastName: "",
-                email: "",
-                gender: "",
-                phone: "",
-                note: "",
-                city: "",
-                street: "",
-                houseNumber: "",
-                zipCode: 0,
-                birthDate: "",
-            })
+            setValue(emptyValues)
         }
 
 
@@ -212,9 +200,17 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
 
                   {/* TODO udělat a vyřešit radio input fieldset, momentálně ho ignoruji, přidat error */}
                   <FieldSet id={"gender"} legend={"Gender"} className={"gender"} >
-                      <RadioInput idName={"female"} name={"gender"} />
-                      <RadioInput idName={"male"} name={"gender"} />
-                      <RadioInput idName={"other"} name={"gender"} />
+                      <InputComponent id={"female"} label={"Female"} type={"radio"} name={"gender"} value={"female"}
+                      onChange={(e) => handleInputChange(e)}
+                      onBlur={(e) => handleOnBlur(e)}/>
+
+                      <InputComponent id={"male"} label={"Male"} type={"radio"} name={"gender"} value={"male"}
+                      onChange={(e) => handleInputChange(e)}
+                      onBlur={(e) => handleOnBlur(e)}/>
+
+                      <InputComponent id={"other"} label={"Other"} type={"radio"} name={"gender"} value={"other"}
+                      onChange={(e) => handleInputChange(e)}
+                      onBlur={(e) => handleOnBlur(e)}/>
                   </FieldSet>
 
                   <FieldSet id={"address"} legend={"Address"} >

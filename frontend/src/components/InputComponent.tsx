@@ -21,12 +21,14 @@ export default function InputComponent({id, label, type, name, placeholder, valu
 
     //TODO kontrola pokud type=date, tak kontrola, že se člověk nenarodil v budoucnosti
 
-    // @ts-ignore //value dělá problémy, kvůli string readonly
+
     return (
         <>
-            <label htmlFor={id}>{label}</label>
-            <input type={type} name={name} id={id} value={value} placeholder={placeholder} onChange={onChange}  onBlur={onBlur}/>
-            { error && <div style={{color: "red"}}>{error}</div> }
+            <div className={name === "gender" ? "singleGender" : undefined}>
+                <label htmlFor={id}>{label}</label>
+                <input type={type} name={name} id={id} value={value} placeholder={placeholder} onChange={onChange}  onBlur={onBlur}/>
+                { error && <div style={{color: "red"}}>{error}</div> }
+            </div>
         </>
     )
 }
