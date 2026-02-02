@@ -246,9 +246,8 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
                   </FieldSet>
 
 
-                  {/* TODO opravit type date, aby se vše ve skutečnosti zobrazovalo */}
                   <InputComponent
-                      id={"birthDate"} label={"Birthday"} type={"date"} name={"birthdate"} error={errors?.birthDate}
+                      id={"birthDate"} label={"Birthday"} type={"date"} name={"birthDate"} error={errors?.birthDate}
                       value={value?.birthDate} onChange={(e) => handleInputChange(e)}
                       onBlur={(e) => handleOnBlur(e)}
                   />
