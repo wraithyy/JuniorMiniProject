@@ -1,4 +1,4 @@
-
+import * as React from "react";
 import type { Contact } from '../types/contact';
 import '../main.css';
 import TextArea from "./TextArea.tsx";
@@ -8,7 +8,8 @@ import InputComponent from "./InputComponent.tsx";
 import {useState} from "react";
 
 import z from "zod"
-import {ContactSchema} from "./ContactSchema.ts";
+import {ContactSchema} from "./ContactSchema.tsx";
+
 
 
 type ContactFormProps = {
@@ -91,6 +92,7 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
         ContactSchema.shape[key];
 
 
+    //TODO tady eventuelně se zbavit genderu
     function validate(name: keyof Omit<Contact, "_id" | "create_date" | "gender">, data: string | number){
 
         const result = fieldSchema(name).safeParse(data);
@@ -127,30 +129,43 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
 
     //submit working like this nice
     function handleSubmit() {
-        ContactSchema.safeParse(value)
-        //potom handlit errory a ukázat je
+
+        const result = ContactSchema.safeParse(value)
+
+        if (!result.success) {
+            console.log("not okay")
+
+            for (let i = 0; i < result.error.issues.length; i++) {
+                console.log(result.error.issues[i].message)
+
+                setErrors(errors => ({
+                    ...errors,
+                    [result.error.issues[i].path[0]] : result.error.issues[i].message,
+                }));
+            }
 
 
-        //fieldSchema dělá problémy
-        /*//TODO projet všechna data a zkontrolovat, že jsou ok
-        for (const [name, data] of Object.entries(value)){
-            validate(name, data)
-            console.log(name)
-            console.log(data)
 
+        } else {
+            onSubmit(value)
+            console.log("submitted")
+
+            setValue({
+                _id: "",
+                firstName: "",
+                lastName: "",
+                email: "",
+                gender: "",
+                phone: "",
+                note: "",
+                city: "",
+                street: "",
+                houseNumber: "",
+                zipCode: 0,
+                birthDate: "",
+            })
         }
 
-        let submit = true
-
-        Object.values(errors).forEach((error) => {
-            error !== "" ? (submit = false) : null
-            console.log(error)
-        })
-
-        if (submit) {
-            onSubmit(value);
-            console.log("submitted")
-        } else {console.log("not submitted")}*/
 
     }
 
@@ -166,19 +181,19 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
                       id={"firstName"} label={"First Name"} type={"text"} name={"firstName"} placeholder={"John"} error={errors?.firstName}
                       value={value?.firstName} onChange={(e) => handleInputChange(e)}
                       onBlur={(e) => handleOnBlur(e)}
-                      required />
+                       />
 
                   <InputComponent
                       id={"lastName"} label={"Last Name"} type={"text"} name={"lastName"} placeholder={"Smith"} error={errors?.lastName}
                       value={value?.lastName} onChange={(e) => handleInputChange(e)}
                       onBlur={(e) => handleOnBlur(e)}
-                      required/>
+                      />
 
                   <InputComponent
                       id={"email"} label={"Email"} type={"email"} name={"email"} placeholder={"john.smith@tardis.uk"} error={errors?.email}
                       value={value?.email} onChange={(e) => handleInputChange(e)}
                       onBlur={(e) => handleOnBlur(e)}
-                      required/>
+                      />
 
 
                   <InputComponent
@@ -238,7 +253,8 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
                       onBlur={(e) => handleOnBlur(e)}
                   />
 
-                  <button type="button" onClick={() => console.log(value)} >Console.Log()</button>
+                  <button type="button" onClick={() => console.log(value)} >Console.Log(value)</button>
+                  <button type="button" onClick={() => console.log(errors)}> Console.log(errors) </button>
 
 
                   <button type="submit" className="submit">Submit</button>
