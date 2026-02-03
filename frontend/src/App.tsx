@@ -60,7 +60,7 @@ function App() {
               />
             </div>
             <div className="detail-panel">
-              <ContactDetail contact={selectedContact} />
+              <ContactDetail contact={selectedContact} onEdit={() => setCurrentPage('form')} />
             </div>
           </div>
         )}

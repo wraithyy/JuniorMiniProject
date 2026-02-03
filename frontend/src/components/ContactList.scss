@@ -1,0 +1,12 @@
+.contact {
+    padding: 8px 12px;
+    background-color: #eee;
+    border-radius: 6px;
+    transition: background-color 200ms ease;
+    cursor: pointer;
+    margin-bottom: 6px;
+
+    &:hover {
+        background-color: #ddd;
+    }
+}

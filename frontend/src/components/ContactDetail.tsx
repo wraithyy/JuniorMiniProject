@@ -1,11 +1,12 @@
-import type { FC } from 'react';
+import { useMemo, type FC } from 'react';
 import type { Contact } from '../types/contact';
 
 interface ContactDetailProps {
   contact: Contact | null;
+  onEdit?: () => void,
 }
 
-export const ContactDetail: FC<ContactDetailProps> = ({ contact }) => {
+export const ContactDetail: FC<ContactDetailProps> = ({ contact, onEdit }) => {
   // TODO: Implementovat detail kontaktu:
   //
   // 1. Zobrazit všechny informace o kontaktu
@@ -24,6 +25,20 @@ export const ContactDetail: FC<ContactDetailProps> = ({ contact }) => {
   // Bonusový úkol:
   // - Tlačítko "Editovat" které otevře formulář s předvyplněnými daty
 
+  function handleEdit() {
+    if (!onEdit) return;
+
+    onEdit();
+  }
+
+  const bod = useMemo(() => {
+    if (!contact?.birthDate) return null;
+    if (typeof contact?.birthDate === "string")
+      return contact.birthDate;
+
+    return contact?.birthDate?.toLocaleDateString();
+  }, [contact?.birthDate]);
+
   if (!contact) {
     return (
       <div>
@@ -35,8 +50,15 @@ export const ContactDetail: FC<ContactDetailProps> = ({ contact }) => {
   return (
     <div>
       <h2>Detail kontaktu</h2>
-      <p>TODO: Implementovat zobrazení detailu</p>
       <p>Vybraný kontakt: {contact.firstName} {contact.lastName}</p>
+      <p>Email: {contact.email ?? '-'}</p>
+      <p>Telefon: {contact.phone ?? '-'}</p>
+      <p>Pohlaví: {contact.gender ?? '-'}</p>
+      <p>Poznámka: {contact.note ?? '-'}</p>
+      <p>Adresa: {contact.city} {contact.street} {contact.houseNumber} {contact.zipCode}</p>
+      <p>Datum narození: {bod ?? '-'}</p>
+
+      <button onClick={handleEdit}>Upravit</button>
     </div>
   );
 };
