@@ -3,7 +3,7 @@ import { ContactForm } from './components/ContactForm';
 import { ContactList } from './components/ContactList';
 import { ContactDetail } from './components/ContactDetail';
 import type { Contact } from './types/contact';
-import './App.css';
+import './App.scss';
 
 type Page = 'form' | 'list';
 
