@@ -68,12 +68,10 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
     }
 
     const [value, setValue] = useState<Contact>(
-        initialData ?
-            initialData
-            : emptyValues
+        initialData ? initialData : emptyValues
     );
 
-    //TODO chybí gender
+
     const [errors, setErrors] = useState({
         firstName: "",
         lastName: "",
@@ -89,7 +87,7 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
 
     });
 
-    //tohle funguje, alenechápu jak
+    //tohle funguje, ale nechápu jak
     const fieldSchema = <K extends keyof z.infer<typeof ContactSchema>>(key: K) =>
         ContactSchema.shape[key];
 
@@ -198,7 +196,7 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
                   />
 
 
-                  {/* TODO udělat a vyřešit radio input fieldset, momentálně ho ignoruji, přidat error */}
+
                   <FieldSet id={"gender"} legend={"Gender"} className={"gender"} >
                       <InputComponent id={"female"} label={"Female"} type={"radio"} name={"gender"} value={"female"}
                       onChange={(e) => handleInputChange(e)}
@@ -248,6 +246,7 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
                       onBlur={(e) => handleOnBlur(e)}
                   />
 
+                  {/*TODO eventuelně odstranit*/}
                   <button type="button" onClick={() => console.log(value)} >Console.Log(value)</button>
                   <button type="button" onClick={() => console.log(errors)}> Console.log(errors) </button>
 
