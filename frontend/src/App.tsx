@@ -6,6 +6,20 @@ import type { Contact } from './types/contact';
 import './App.scss';
 
 type Page = 'form' | 'list';
+const EMPTY_CONTACT: Contact = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  gender: undefined,
+  phone: '',
+  note: '',
+  city: '',
+  street: '',
+  houseNumber: '',
+  zipCode: 0,
+  birthDate: '',
+};
+
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('form');
@@ -34,6 +48,7 @@ function App() {
             onSubmit={(contact) => {
               console.log('TODO: Implementovat vytvoření kontaktu', contact);
             }}
+            initialData={selectedContact ?? EMPTY_CONTACT}
           />
         ) : (
           <div className="list-view">
