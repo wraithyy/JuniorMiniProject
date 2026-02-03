@@ -17,6 +17,8 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
   const [data, setData] = useState<Contact>({ ...initialData });
   const [errors, setErrors] = useState<ContactFormErrors>({});
   const [submitError, setSubmitError] = useState<string | null>();
+  const [loading, setLoading] = useState<boolean>();
+  const [successMessage, setSuccessMessage] = useState<string | null>();
 
   function validateField (name: keyof ContactFormErrors, value: unknown): string | undefined {
     switch (name) {
@@ -32,8 +34,7 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
         break;
 
       case 'zipCode':
-        if (value == null) return 'Povinné pole';
-        if (String(value).length < 5)
+        if (!!value && String(value).length < 5)
           return 'ZIP musí mít alespoň 5 číslic';
         break;
     }
@@ -67,20 +68,30 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
 
     if (!validateForm()) return;
 
+    setLoading(true);
+
     try {
       let response;
+
       if (data._id) {
         response = await contactsApi.updateContact(data._id, data);
+        setSuccessMessage("Kontakt byl upraven");
       }
       else {
         response = await contactsApi.createContact(data);
+        setSuccessMessage("Kontakt byl vytvořen");
       }
-      
+
+      setSubmitError(null);
       onSubmit(response);
+
     }
     catch {
       setSubmitError("Nepodařilo se dokončit požadavek");
+      setSuccessMessage(null);
     }
+
+    setLoading(false);
   }
 
   function handleBlur(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -216,8 +227,13 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
         </div>
 
         {submitError && <p className="error">{submitError}</p>}
+        {successMessage && <p className="success">{successMessage}</p>}
+
         <button type="submit" className="submit">
-          {data._id ? 'Upravit kontakt' : 'Vytořit kontakt'}
+          {loading 
+            ? <span className="loader"></span> 
+            : data._id ? 'Upravit kontakt' : 'Vytořit kontakt'
+          }
         </button>
       </form>
     </div>
