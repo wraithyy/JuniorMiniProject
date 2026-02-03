@@ -29,15 +29,13 @@ function App() {
   // TODO: Implementovat handlery pro vytvoření/editaci kontaktu
   // TODO: Implementovat výběr kontaktu ze seznamu
   //
-  // Tato kostra ukazuje základní strukturu aplikace.
-  // Junioři mohou implementovat detaily podle zadání.
 
   return (
     <div className="app">
       <header>
         <h1>Správa kontaktů</h1>
         <nav>
-          <button onClick={() => setCurrentPage('form')}>Vytvořit kontakt</button>
+          <button onClick={() => { setSelectedContact(null); setCurrentPage('form')} }>Vytvořit kontakt</button>
           <button onClick={() => setCurrentPage('list')}>Seznam kontaktů</button>
         </nav>
       </header>

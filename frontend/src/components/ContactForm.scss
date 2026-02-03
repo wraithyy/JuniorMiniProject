@@ -47,13 +47,13 @@
         flex-basis: 100%;
         margin: 16px 0;
     }
-
-    .error {
-        font-size: 14px;
-        color: rgb(169, 19, 19);
-    }
 }
 
 .submit {
     margin: 16px auto;
+}
+
+.error {
+    font-size: 14px;
+    color: rgb(169, 19, 19);
 }

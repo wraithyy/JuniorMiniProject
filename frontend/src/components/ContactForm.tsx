@@ -1,7 +1,8 @@
-import { useState, type FC } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import type { Contact } from '../types/contact';
 import "./ContactForm.scss";
 import { contactsApi } from '../api/contactsApi';
+import { formatDate } from '../helpers';
 
 interface ContactFormProps {
   onSubmit: (contact: Omit<Contact, '_id' | 'create_date'>) => void;
@@ -15,38 +16,7 @@ type ContactFormErrors = Partial<
 export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => {
   const [data, setData] = useState<Contact>({ ...initialData });
   const [errors, setErrors] = useState<ContactFormErrors>({});
-
-  // TODO: Implementovat formulář s těmito prvky:
-  //
-  // Povinná pole:
-  // - firstName (text input)
-  // - lastName (text input)
-  // - email (email input)
-  //
-  // Radio buttons pro pohlaví:
-  // - gender (mužské/ženské/jiné)
-  //
-  // Volitelná pole:
-  // - phone (tel input)
-  // - note (textarea)
-  // - city (text input)
-  // - street (text input)
-  // - houseNumber (text input)
-  // - zipCode (number input)
-  // - birthDate (date input) - hezky naformátované
-  //
-  // Funkcionality:
-  // - Validace (povinná pole, validní email)
-  // - Zobrazení chybových hlášek
-  // - Styling pomocí CSS/SCSS
-  //
-  // Bonusové úkoly:
-  // - Loading indikátor při odesílání
-  // - Zobrazení úspěšné/chybové hlášky po odeslání
-  //
-  // Použití:
-  // - Použít připravený contactsApi.createContact() nebo contactsApi.updateContact()
-  // - Pro přístup k API klientu: import { contactsApi } from '../api/contactsApi'
+  const [submitError, setSubmitError] = useState<string | null>();
 
   function validateField (name: keyof ContactFormErrors, value: unknown): string | undefined {
     switch (name) {
@@ -98,12 +68,18 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
     if (!validateForm()) return;
 
     try {
-      const response = await contactsApi.createContact(data);
+      let response;
+      if (data._id) {
+        response = await contactsApi.updateContact(data._id, data);
+      }
+      else {
+        response = await contactsApi.createContact(data);
+      }
       
       onSubmit(response);
     }
     catch {
-
+      setSubmitError("Nepodařilo se dokončit požadavek");
     }
   }
 
@@ -119,9 +95,13 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
     }));
   };
 
+  useEffect(() => {
+    setData({ ...initialData });
+  }, [initialData]);
+
   return data ? (
     <div>
-      <h2>{data ? 'Editovat kontakt' : 'Vytvořit nový kontakt'}</h2>
+      <h2>{data._id ? 'Editovat kontakt' : 'Vytvořit nový kontakt'}</h2>
       <form className="contact-form" onSubmit={handleSubmit}>
         <h3>Základní údaje</h3>
 
@@ -230,13 +210,14 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
         <div className="field-group">
           <label htmlFor="birthDate">Datum narození</label>
           <input type="date" name="birthDate" id="birthDate" 
-            value={data.birthDate?.toLocaleString()} onChange={handleChange} onBlur={handleBlur}
+            value={formatDate(data.birthDate)} onChange={handleChange} onBlur={handleBlur}
           />
           {errors.birthDate && <span className="error">{errors.birthDate}</span>}
         </div>
 
+        {submitError && <p className="error">{submitError}</p>}
         <button type="submit" className="submit">
-          Vytvořit
+          {data._id ? 'Upravit kontakt' : 'Vytořit kontakt'}
         </button>
       </form>
     </div>
