@@ -6,6 +6,7 @@
     .form-row {
         display: flex;
         gap: 24px;
+        flex-wrap: wrap;
     }
 
     .field-group {
@@ -46,6 +47,13 @@
     hr {
         flex-basis: 100%;
         margin: 16px 0;
+    }
+
+    @media (max-width: 768px) {
+        .field-group {
+            max-width: unset;
+            min-width: 250px;
+        }
     }
 }
 

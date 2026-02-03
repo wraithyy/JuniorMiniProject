@@ -25,10 +25,6 @@ function App() {
   const [currentPage, setCurrentPage] = useState<Page>('form');
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
 
-  // TODO: Implementovat navigaci mezi stránkami
-  // TODO: Implementovat handlery pro vytvoření/editaci kontaktu
-  // TODO: Implementovat výběr kontaktu ze seznamu
-  //
 
   return (
     <div className="app">

@@ -17,17 +17,6 @@ nav {
   gap: 10px;
 }
 
-button {
-  padding: 10px 20px;
-  border: 1px solid #ccc;
-  background: #f0f0f0;
-  cursor: pointer;
-
-  &:hover {
-    background: #e0e0e0;
-  }
-}
-
 .list-view {
   display: grid;
   grid-template-columns: 1fr 1fr;

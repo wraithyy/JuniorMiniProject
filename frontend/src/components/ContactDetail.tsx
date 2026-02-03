@@ -7,24 +7,6 @@ interface ContactDetailProps {
 }
 
 export const ContactDetail: FC<ContactDetailProps> = ({ contact, onEdit }) => {
-  // TODO: Implementovat detail kontaktu:
-  //
-  // 1. Zobrazit všechny informace o kontaktu
-  //    - Jméno a příjmení
-  //    - Email
-  //    - Pohlaví
-  //    - Telefon
-  //    - Poznámka
-  //    - Adresa (město, ulice, číslo popisné, PSČ)
-  //    - Datum narození
-  //
-  // 2. Styling pomocí CSS/SCSS
-  //
-  // 3. Pokud contact je null, zobrazit výzvu k výběru kontaktu
-  //
-  // Bonusový úkol:
-  // - Tlačítko "Editovat" které otevře formulář s předvyplněnými daty
-
   function handleEdit() {
     if (!onEdit) return;
 
@@ -50,13 +32,14 @@ export const ContactDetail: FC<ContactDetailProps> = ({ contact, onEdit }) => {
   return (
     <div>
       <h2>Detail kontaktu</h2>
-      <p>Vybraný kontakt: {contact.firstName} {contact.lastName}</p>
-      <p>Email: {contact.email ?? '-'}</p>
-      <p>Telefon: {contact.phone ?? '-'}</p>
-      <p>Pohlaví: {contact.gender ?? '-'}</p>
-      <p>Poznámka: {contact.note ?? '-'}</p>
-      <p>Adresa: {contact.city} {contact.street} {contact.houseNumber} {contact.zipCode}</p>
-      <p>Datum narození: {bod ?? '-'}</p>
+      <p>Vybraný kontakt: <b>{contact.firstName} {contact.lastName}</b></p>
+      <p>Email: <b>{contact.email ?? '-'}</b></p>
+      <p>Telefon: <b>{contact.phone ?? '-'}</b></p>
+      <p>Pohlaví: <b>{contact.gender ?? '-'}</b></p>
+      <p>Poznámka: <b>{contact.note ?? '-'}</b></p>
+      <p>Adresa: <b>{contact.city} {contact.street} {contact.houseNumber} {contact.zipCode}</b></p>
+      <p>Datum narození: <b>{bod ?? '-'}</b></p>
+      <br />
 
       <button onClick={handleEdit}>Upravit</button>
     </div>

@@ -10,6 +10,19 @@ body {
   color: #333;
 }
 
+button {
+  padding: 10px 20px;
+  border: 0;
+  background: #3498db;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 200ms ease;
+
+  &:hover {
+    background: #1b76b3;
+  }
+}
+
 .loader {
   display: inline-block;
   width: 14px;
