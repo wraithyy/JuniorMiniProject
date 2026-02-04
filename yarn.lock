@@ -1873,3 +1873,8 @@ yargs@17.7.2:
     string-width "^4.2.3"
     y18n "^5.0.5"
     yargs-parser "^21.1.1"
+
+zod@^4.3.6:
+  version "4.3.6"
+  resolved "https://registry.npmjs.org/zod/-/zod-4.3.6.tgz"
+  integrity sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==

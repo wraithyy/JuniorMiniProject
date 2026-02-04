@@ -6,19 +6,21 @@ import type { Contact } from './types/contact';
 import './App.scss';
 
 type Page = 'form' | 'list';
+
 const EMPTY_CONTACT: Contact = {
   firstName: '',
   lastName: '',
   email: '',
-  gender: undefined,
+  gender: '',
   phone: '',
   note: '',
   city: '',
   street: '',
   houseNumber: '',
-  zipCode: 0,
+  zipCode: undefined,
   birthDate: '',
 };
+
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('form');

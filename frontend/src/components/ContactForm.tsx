@@ -2,7 +2,8 @@ import { useEffect, useState, type FC } from 'react';
 import type { Contact } from '../types/contact';
 import "./ContactForm.scss";
 import { contactsApi } from '../api/contactsApi';
-import { formatDate } from '../helpers';
+import { formatDate, mapZodErrors } from '../helpers';
+import ContactSchema from '../validation/contact';
 
 interface ContactFormProps {
   onSubmit: (contact: Omit<Contact, '_id' | 'create_date'>) => void;
@@ -20,38 +21,23 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
   const [loading, setLoading] = useState<boolean>();
   const [successMessage, setSuccessMessage] = useState<string | null>();
 
-  function validateField (name: keyof ContactFormErrors, value: unknown): string | undefined {
-    switch (name) {
-      case 'firstName':
-      case 'lastName':
-        if (!String(value).trim()) return 'Povinné pole';
-        break;
+  function validateField<K extends keyof typeof ContactSchema.shape>( fieldName: K, value: unknown): string | undefined {
+    const fieldSchema = ContactSchema.shape[fieldName];
+    const result = fieldSchema.safeParse(value);
 
-      case 'email':
-        if (!String(value).trim()) return 'Povinné pole';
-        if (!/^\S+@\S+\.\S+$/.test(String(value)))
-          return 'Neplatný email';
-        break;
+    if (result.success) return undefined;
 
-      case 'zipCode':
-        if (!!value && String(value).length < 5)
-          return 'ZIP musí mít alespoň 5 číslic';
-        break;
-    }
-  };
+    return result.error.issues[0].message;
+  }
 
   function validateForm(): boolean {
-    const newErrors: ContactFormErrors = {};
+    const result = ContactSchema.safeParse(data);
+    if (result.success) return true;
+   
+    const mappedErrors = mapZodErrors(result.error);
+    setErrors(mappedErrors);
 
-    (Object.keys(data) as Array<keyof ContactFormErrors>).forEach(
-      (key) => {
-        const error = validateField(key, data[key]);
-        if (error) newErrors[key] = error;
-      }
-    );
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return false;
   };
 
   function handleChange (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -210,7 +196,7 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
           <div className="field-group">
             <label htmlFor="zipCode">ZIP</label>
             <input type="number" name="zipCode" id="zipCode" className={errors.zipCode ? 'error' : ''}
-              value={data.zipCode} onChange={handleChange} onBlur={handleBlur}
+              value={data.zipCode ?? 0} onChange={handleChange} onBlur={handleBlur}
             />
             {errors.zipCode && <span className="error-message">{errors.zipCode}</span>}
           </div>
@@ -237,7 +223,7 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
         </button>
       </form>
     </div>
-  ) : (
+  ): (
     <span className="loader"></span>
-  );
+  );;
 };
