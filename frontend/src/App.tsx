@@ -39,9 +39,7 @@ function App() {
       <main>
         {currentPage === 'form' ? (
           <ContactForm
-            onSubmit={(contact) => {
-              console.log('TODO: Implementovat vytvoření kontaktu', contact);
-            }}
+            onSubmit={() => {}}
             initialData={selectedContact ?? EMPTY_CONTACT}
           />
         ) : (

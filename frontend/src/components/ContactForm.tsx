@@ -141,16 +141,16 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
         <div className="field-group grow radio-group">
           <p>Pohlaví</p>
           <label htmlFor="male">Muž</label>
-          <input type="radio" name="gender" id="male" 
-            value={data.gender} onChange={handleChange} onBlur={handleBlur}
+          <input type="radio" name="gender" id="male" checked={data.gender === 'on'}
+            value="on" onChange={handleChange} onBlur={handleBlur}
           />
           <label htmlFor="female">Žena</label>
-          <input type="radio" name="gender" id="female" 
-            value={data.gender} onChange={handleChange} onBlur={handleBlur}
+          <input type="radio" name="gender" id="female" checked={data.gender === 'ona'}
+            value="ona" onChange={handleChange} onBlur={handleBlur}
           />
           <label htmlFor="other">Jiné</label>
-          <input type="radio" name="gender" id="other" 
-            value={data.gender} onChange={handleChange} onBlur={handleBlur}
+          <input type="radio" name="gender" id="other" checked={data.gender === 'ono'}
+            value="ono" onChange={handleChange} onBlur={handleBlur}
           />
           {errors.gender && <span className="error-message">{errors.gender}</span>}
         </div>
