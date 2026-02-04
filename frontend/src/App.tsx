@@ -19,6 +19,21 @@ function App() {
   // Tato kostra ukazuje základní strukturu aplikace.
   // Junioři mohou implementovat detaily podle zadání.
 
+
+
+    //TODO delete
+    function handleDelete(contact: Contact){
+
+        window.confirm(`Are you sure you want to delete contact: ${contact.firstName} ${contact.lastName}` )
+
+        if (contact._id) {
+            contactsApi.deleteContact(contact._id).then(r => {
+                console.log(r);
+                setSelectedContact(null)
+            })
+        }
+    }
+
   return (
     <div className="app">
       <header>
@@ -46,7 +61,9 @@ function App() {
               />
             </div>
             <div className="detail-panel">
-              <ContactDetail contact={selectedContact} />
+              <ContactDetail contact={selectedContact} onContactSelect={(contact) => setSelectedContact(contact)}
+                  handleDelete={(contact: Contact) => handleDelete(contact)}
+              />
             </div>
           </div>
         )}

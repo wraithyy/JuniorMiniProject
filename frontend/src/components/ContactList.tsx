@@ -3,7 +3,7 @@ import type { Contact } from '../types/contact';
 import {contactsApi} from "../api/contactsApi.ts";
 
 type ContactListProps = {
-  onContactSelect?: (contact: Contact) => void;
+  onContactSelect: (contact: Contact) => void;
 }
 
 export const ContactList = ({ onContactSelect }: ContactListProps) => {
