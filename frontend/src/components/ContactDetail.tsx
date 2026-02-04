@@ -7,13 +7,7 @@ interface ContactDetailProps {
 }
 
 export const ContactDetail: FC<ContactDetailProps> = ({ contact, onEdit }) => {
-  function handleEdit() {
-    if (!onEdit) return;
-
-    onEdit();
-  }
-
-  const bod = useMemo(() => {
+  const dateOfBirth = useMemo(() => {
     if (!contact?.birthDate) return null;
     if (typeof contact?.birthDate === "string")
       return contact.birthDate;
@@ -21,13 +15,12 @@ export const ContactDetail: FC<ContactDetailProps> = ({ contact, onEdit }) => {
     return contact?.birthDate?.toLocaleDateString();
   }, [contact?.birthDate]);
 
-  if (!contact) {
+  if (!contact)
     return (
       <div>
         <p>Vyberte kontakt ze seznamu pro zobrazení detailu</p>
       </div>
     );
-  }
 
   return (
     <div>
@@ -38,10 +31,10 @@ export const ContactDetail: FC<ContactDetailProps> = ({ contact, onEdit }) => {
       <p>Pohlaví: <b>{contact.gender ?? '-'}</b></p>
       <p>Poznámka: <b>{contact.note ?? '-'}</b></p>
       <p>Adresa: <b>{contact.city} {contact.street} {contact.houseNumber} {contact.zipCode}</b></p>
-      <p>Datum narození: <b>{bod ?? '-'}</b></p>
+      <p>Datum narození: <b>{dateOfBirth ?? '-'}</b></p>
       <br />
 
-      <button onClick={handleEdit}>Upravit</button>
+      <button onClick={() => onEdit?.()}>Upravit</button>
     </div>
   );
 };
