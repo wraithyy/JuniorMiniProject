@@ -49,7 +49,7 @@ export const ContactList: FC<ContactListProps> = ({ onContactSelect }) => {
   }, []);
 
   return loading ? (
-    <p>TODO LOADER</p>
+    <span className="loader"></span>
   ) : (
     <>
       {error && <p>{error}</p>}

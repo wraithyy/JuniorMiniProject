@@ -238,6 +238,6 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
       </form>
     </div>
   ) : (
-    <p>Todo: LOADER</p>
+    <span className="loader"></span>
   );
 };
