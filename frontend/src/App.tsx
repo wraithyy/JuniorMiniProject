@@ -11,6 +11,7 @@ type Page = 'form' | 'list';
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('form');
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+    const [reload, setReload] = useState(0);
 
   // TODO: Implementovat navigaci mezi stránkami
   // TODO: Implementovat handlery pro vytvoření/editaci kontaktu
@@ -30,6 +31,7 @@ function App() {
             contactsApi.deleteContact(contact._id).then(r => {
                 console.log(r);
                 setSelectedContact(null)
+                setReload(prev => prev+1)
             })
         }
     }
@@ -58,6 +60,8 @@ function App() {
                 onContactSelect={(contact) => {
                   setSelectedContact(contact);
                 }}
+                selectedContact={selectedContact}
+                reload={reload}
               />
             </div>
             <div className="detail-panel">

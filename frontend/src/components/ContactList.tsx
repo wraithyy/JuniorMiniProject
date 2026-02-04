@@ -4,9 +4,11 @@ import {contactsApi} from "../api/contactsApi.ts";
 
 type ContactListProps = {
   onContactSelect: (contact: Contact) => void;
+  selectedContact: Contact | null;
+  reload: number;
 }
 
-export const ContactList = ({ onContactSelect }: ContactListProps) => {
+export const ContactList = ({ onContactSelect, reload }: ContactListProps) => {
   // TODO: Implementovat seznam kontaktů:
   //
   // 1. Načíst všechny kontakty pomocí contactsApi.getAllContacts()
@@ -39,7 +41,7 @@ export const ContactList = ({ onContactSelect }: ContactListProps) => {
             setContacts(result);
         }
         load();
-    }, []);
+    }, [reload]);
 
     console.log(contacts? contacts : "nope")
 
