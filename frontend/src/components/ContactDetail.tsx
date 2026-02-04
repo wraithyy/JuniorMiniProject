@@ -34,15 +34,19 @@ export const ContactDetail = ({ contact, onContactSelect, handleDelete } : Conta
     );
   }
 
-  let date = ""
-  if (contact.birthDate) {
-      const dateLong = new Date(contact.birthDate)
+  function calculateDate(date: string | undefined){
+      if (date){
+          const dateLong = new Date(date)
 
-      const den = String(dateLong.getDate()).padStart(2, "0")
-      const mesic = String(dateLong.getMonth()+1).padStart(2,"0")
-      const rok = dateLong.getFullYear();
+          const den = String(dateLong.getDate()).padStart(2, "0")
+          const mesic = String(dateLong.getMonth()+1).padStart(2,"0")
+          const rok = dateLong.getFullYear();
 
-      date = `${den}-${mesic}-${rok}`
+          return`${den}-${mesic}-${rok}`
+
+      } else {
+          return ""
+      }
   }
 
 
@@ -51,7 +55,7 @@ export const ContactDetail = ({ contact, onContactSelect, handleDelete } : Conta
       <h2>Contact detail - {contact.firstName} {contact.lastName}</h2>
         <p><b>Email: </b>{contact.email}</p>
         <p><b>Phone: </b>{contact.phone}</p>
-        <p><b>Birthday: </b>{date}</p>
+        <p><b>Birthday: </b>{calculateDate(contact.birthDate)}</p>
         <p><b>Note: </b>{contact.note}</p>
         <p><b>Gender: </b>{contact.gender}</p>
         <fieldset>
