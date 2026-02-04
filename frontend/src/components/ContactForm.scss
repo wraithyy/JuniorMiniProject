@@ -18,9 +18,14 @@
             width: 100%;
             font-size: 16px;
             border: none;
+            border: 1px solid #000f;
             box-shadow: 0 0 1px 0 #000f;
             padding: 12px 16px;
             border-radius: 6px;
+
+            &.error {
+                border-color: rgb(187, 12, 12);
+            }
         }
 
         &.grow {
@@ -61,7 +66,7 @@
     margin: 16px auto;
 }
 
-.error {
+.error-message {
     font-size: 14px;
     color: rgb(169, 19, 19);
 }

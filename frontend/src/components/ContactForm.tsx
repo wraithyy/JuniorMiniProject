@@ -119,36 +119,36 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
         <div className="form-row">
           <div className="field-group">
             <label htmlFor="firstName">Jméno</label>
-            <input type="text" id="firstName" required name="firstName"
+            <input type="text" id="firstName" required name="firstName" className={errors.firstName ? 'error' : ''}
               value={data.firstName} onChange={handleChange} onBlur={handleBlur}
             />
-            {errors.firstName && <span className="error">{errors.firstName}</span>}
+            {errors.firstName && <span className="error-message">{errors.firstName}</span>}
           </div>
 
           <div className="field-group">
             <label htmlFor="lastName">Příjmení</label>
-            <input type="text" id="lastName" required name="lastName" 
+            <input type="text" id="lastName" required name="lastName" className={errors.lastName ? 'error' : ''}
               value={data.lastName} onChange={handleChange} onBlur={handleBlur}
             />
-            {errors.lastName && <span className="error">{errors.lastName}</span>}
+            {errors.lastName && <span className="error-message">{errors.lastName}</span>}
           </div>
         </div>
 
         <div className="form-row">
           <div className="field-group">
             <label htmlFor="email">Email</label>
-            <input type="text" id="email" required name="email" 
+            <input type="text" id="email" required name="email" className={errors.email ? 'error' : ''}
               value={data.email} onChange={handleChange} onBlur={handleBlur}
             />
-            {errors.email && <span className="error">{errors.email}</span>}
+            {errors.email && <span className="error-message">{errors.email}</span>}
           </div>
 
           <div className="field-group">
             <label htmlFor="phone">Telefonní číslo</label>
-            <input type="text" id="phone" name="phone" 
+            <input type="text" id="phone" name="phone" className={errors.phone ? 'error' : ''}
               value={data.phone} onChange={handleChange} onBlur={handleBlur}
             />
-            {errors.phone && <span className="error">{errors.phone}</span>}
+            {errors.phone && <span className="error-message">{errors.phone}</span>}
           </div>
         </div>
         
@@ -158,23 +158,23 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
           <input type="radio" name="gender" id="male" 
             value={data.gender} onChange={handleChange} onBlur={handleBlur}
           />
-          <label htmlFor="male">Žena</label>
+          <label htmlFor="female">Žena</label>
           <input type="radio" name="gender" id="female" 
             value={data.gender} onChange={handleChange} onBlur={handleBlur}
           />
-          <label htmlFor="male">Jiné</label>
+          <label htmlFor="other">Jiné</label>
           <input type="radio" name="gender" id="other" 
             value={data.gender} onChange={handleChange} onBlur={handleBlur}
           />
-          {errors.gender && <span className="error">{errors.gender}</span>}
+          {errors.gender && <span className="error-message">{errors.gender}</span>}
         </div>
 
         <div className="field-group">
           <label htmlFor="note">Poznámka</label>
-          <textarea name="note" id="note"
+          <textarea name="note" id="note" className={errors.note ? 'error' : ''}
             value={data.note} onChange={handleChange} onBlur={handleBlur}
           ></textarea>
-          {errors.note && <span className="error">{errors.note}</span>}
+          {errors.note && <span className="error-message">{errors.note}</span>}
         </div>
 
         <hr />
@@ -183,36 +183,36 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
         <div className="form-row">
           <div className="field-group">
             <label htmlFor="city">Město</label>
-            <input type="text" name="city" id="city" 
+            <input type="text" name="city" id="city" className={errors.city ? 'error' : ''}
               value={data.city} onChange={handleChange} onBlur={handleBlur}
             />
-            {errors.city && <span className="error">{errors.city}</span>}
+            {errors.city && <span className="error-message">{errors.city}</span>}
           </div>
 
           <div className="field-group">
             <label htmlFor="street">Ulice</label>
-            <input type="text" name="street" id="street" 
+            <input type="text" name="street" id="street" className={errors.street ? 'error' : ''}
               value={data.street} onChange={handleChange} onBlur={handleBlur}
             />
-            {errors.street && <span className="error">{errors.street}</span>}
+            {errors.street && <span className="error-message">{errors.street}</span>}
           </div>
         </div>
         
         <div className="form-row">
           <div className="field-group">
             <label htmlFor="houseNumber">Číslo popisné</label>
-            <input type="text" name="houseNumber" id="houseNumber"
+            <input type="text" name="houseNumber" id="houseNumber" className={errors.houseNumber ? 'error' : ''}
               value={data.houseNumber} onChange={handleChange} onBlur={handleBlur}
             />
-            {errors.houseNumber && <span className="error">{errors.houseNumber}</span>}
+            {errors.houseNumber && <span className="error-message">{errors.houseNumber}</span>}
           </div>
 
           <div className="field-group">
             <label htmlFor="zipCode">ZIP</label>
-            <input type="number" name="zipCode" id="zipCode" 
+            <input type="number" name="zipCode" id="zipCode" className={errors.zipCode ? 'error' : ''}
               value={data.zipCode} onChange={handleChange} onBlur={handleBlur}
             />
-            {errors.zipCode && <span className="error">{errors.zipCode}</span>}
+            {errors.zipCode && <span className="error-message">{errors.zipCode}</span>}
           </div>
         </div>
         
@@ -220,10 +220,10 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
 
         <div className="field-group">
           <label htmlFor="birthDate">Datum narození</label>
-          <input type="date" name="birthDate" id="birthDate" 
+          <input type="date" name="birthDate" id="birthDate" className={errors.birthDate ? 'error' : ''}
             value={formatDate(data.birthDate)} onChange={handleChange} onBlur={handleBlur}
           />
-          {errors.birthDate && <span className="error">{errors.birthDate}</span>}
+          {errors.birthDate && <span className="error-message">{errors.birthDate}</span>}
         </div>
 
         {submitError && <p className="error">{submitError}</p>}

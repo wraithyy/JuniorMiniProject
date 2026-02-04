@@ -20,11 +20,9 @@ const EMPTY_CONTACT: Contact = {
   birthDate: '',
 };
 
-
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('form');
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
-
 
   return (
     <div className="app">
