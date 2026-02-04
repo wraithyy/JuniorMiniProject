@@ -10,6 +10,7 @@ import Button from '@mui/material/Button';
 import { DateGroup } from './form/DateGroup';
 import Snackbar from '@mui/material/Snackbar';
 import { SnackbarData } from '../types/snackbar';
+import Alert from '@mui/material/Alert';
 
 interface ContactFormProps {
   onSubmit: (contact: Omit<Contact, '_id' | 'create_date'>) => void;
@@ -186,10 +187,12 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
         <Snackbar
           open={!!snackbar}
           autoHideDuration={6000}
-          message={snackbar?.text}
-          color={snackbar?.type}
           onClose={() => setSnackbar(null)}
-        />
+        >
+          <Alert severity={snackbar?.type ?? 'success'}>
+            {snackbar?.text}
+          </Alert>
+        </Snackbar>
 
         <Button type="submit" loading={loading} variant="contained">
             {data._id ? 'Upravit kontakt' : 'Vytořit kontakt'}
