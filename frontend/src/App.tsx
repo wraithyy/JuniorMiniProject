@@ -47,6 +47,7 @@ function App() {
           <div className="list-view">
             <div className="list-panel">
               <ContactList
+                selectedContact={selectedContact}
                 onContactSelect={(contact) => {
                   setSelectedContact(contact);
                 }}

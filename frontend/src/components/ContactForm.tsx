@@ -2,11 +2,12 @@ import { useEffect, useState, type FC } from 'react';
 import type { Contact } from '../types/contact';
 import "./ContactForm.scss";
 import { contactsApi } from '../api/contactsApi';
-import { formatDate, mapZodErrors } from '../helpers';
+import { mapZodErrors } from '../helpers';
 import ContactSchema from '../validation/contact';
 import { FieldGroup } from './form/FieldGroup';
 import { RadioGroup } from './form/RadioGroup';
 import Button from '@mui/material/Button';
+import { DateGroup } from './form/DateGroup';
 
 interface ContactFormProps {
   onSubmit: (contact: Omit<Contact, '_id' | 'create_date'>) => void;
@@ -176,9 +177,11 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
         
         <hr />
 
-        <FieldGroup name="birthDate" label="Datum narození" value={formatDate(data.birthDate)}
-          error={errors.birthDate} onChange={handleChange}
-          onBlur={handleBlur} type={'date'}
+       <DateGroup name="birthDate" label="Datum narození" value={data.birthDate}
+          error={errors.birthDate}
+          onChange={value =>
+            setData(prev => ({ ...prev, birthDate: value }))
+          }
         />
 
         {submitError && <p className="error">{submitError}</p>}

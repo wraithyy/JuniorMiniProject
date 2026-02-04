@@ -15,16 +15,24 @@ export function formatDate(date?: string | Date): string {
 };
 
 export function mapZodErrors<T>(error: z.ZodError<T>): Partial<Record<keyof T, string>> {
-    const fieldErrors: Partial<Record<keyof T, string>> = {};
+  const fieldErrors: Partial<Record<keyof T, string>> = {};
 
-    for (const issue of error.issues) {
-      const fieldName = issue.path[0] as keyof T;
+  for (const issue of error.issues) {
+    const fieldName = issue.path[0] as keyof T;
 
-      // keep first error per field
-      if (!fieldErrors[fieldName]) {
-        fieldErrors[fieldName] = issue.message;
-      }
+    // keep first error per field
+    if (!fieldErrors[fieldName]) {
+      fieldErrors[fieldName] = issue.message;
     }
-
-    return fieldErrors;
   }
+
+  return fieldErrors;
+}
+
+export function toDate(value: string | Date | undefined): Date | null {
+  if (!value) return null;
+  if (value instanceof Date) return value;
+
+  const parsed = new Date(value);
+  return isNaN(parsed.getTime()) ? null : parsed;
+}

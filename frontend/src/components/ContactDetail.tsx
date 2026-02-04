@@ -1,5 +1,6 @@
 import { useMemo, type FC } from 'react';
 import type { Contact } from '../types/contact';
+import Button from '@mui/material/Button';
 
 interface ContactDetailProps {
   contact: Contact | null;
@@ -34,7 +35,7 @@ export const ContactDetail: FC<ContactDetailProps> = ({ contact, onEdit }) => {
       <p>Datum narození: <b>{dateOfBirth ?? '-'}</b></p>
       <br />
 
-      <button onClick={() => onEdit?.()}>Upravit</button>
+      <Button variant="contained" onClick={() => onEdit?.()}>Upravit</Button>
     </div>
   );
 };

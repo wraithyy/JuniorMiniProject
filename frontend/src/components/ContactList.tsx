@@ -4,12 +4,17 @@ import { contactsApi } from '../api/contactsApi';
 import './ContactList.scss';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
 
 interface ContactListProps {
-  onContactSelect?: (contact: Contact) => void;
+  selectedContact: Contact | null,
+  onContactSelect?: (contact: Contact | null) => void;
 }
 
-export const ContactList: FC<ContactListProps> = ({ onContactSelect }) => {
+export const ContactList: FC<ContactListProps> = ({ onContactSelect, selectedContact }) => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState<boolean>();
   const [error, setError] = useState<string | null>(null);
@@ -26,6 +31,9 @@ export const ContactList: FC<ContactListProps> = ({ onContactSelect }) => {
     try {
       await contactsApi.deleteContact(contact._id);
       await loadContacts();
+
+      if (selectedContact?._id === contact._id)
+        onContactSelect?.(null);
     }
     catch {
       setError("Nepodařilo se odstranit kontakt")
@@ -58,19 +66,20 @@ export const ContactList: FC<ContactListProps> = ({ onContactSelect }) => {
       {error && <p>{error}</p>}
       <div>
         <h2>Seznam kontaktů</h2>
-        {contacts.map(contact => (
-          <div className="contact-wrapper" key={contact._id}>
-             <div
-              className="contact"
-              onClick={() => handleClick(contact)}
-            >
-              <p>{contact.firstName} {contact.lastName}</p>
-            </div>
-            <IconButton onClick={() => handleDelete(contact)}>
-              <CloseIcon />
-            </IconButton>
-          </div>
-        ))}
+        <List>
+          {contacts.map(contact => (
+            <ListItemButton selected={selectedContact === contact} key={contact._id} onClick={() => handleClick(contact)}>
+              <ListItemText>
+                {contact.firstName} {contact.lastName}
+              </ListItemText>
+              <ListItemIcon>
+                <IconButton onClick={() => handleDelete(contact)} color="error">
+                  <CloseIcon />
+                </IconButton>
+              </ListItemIcon>
+            </ListItemButton>
+          ))}
+        </List>
       </div>
     </>
   );
