@@ -4,6 +4,7 @@ import { ContactList } from './components/ContactList';
 import { ContactDetail } from './components/ContactDetail';
 import type { Contact } from './types/contact';
 import './App.scss';
+import Button from '@mui/material/Button';
 
 type Page = 'form' | 'list';
 
@@ -31,8 +32,8 @@ function App() {
       <header>
         <h1>Správa kontaktů</h1>
         <nav>
-          <button onClick={() => { setSelectedContact(null); setCurrentPage('form')} }>Vytvořit kontakt</button>
-          <button onClick={() => setCurrentPage('list')}>Seznam kontaktů</button>
+          <Button variant="contained" onClick={() => { setSelectedContact(null); setCurrentPage('form')} }>Vytvořit kontakt</Button>
+          <Button variant="contained" onClick={() => setCurrentPage('list')}>Seznam kontaktů</Button>
         </nav>
       </header>
 

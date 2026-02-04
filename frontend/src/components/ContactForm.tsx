@@ -6,6 +6,7 @@ import { formatDate, mapZodErrors } from '../helpers';
 import ContactSchema from '../validation/contact';
 import { FieldGroup } from './form/FieldGroup';
 import { RadioGroup } from './form/RadioGroup';
+import Button from '@mui/material/Button';
 
 interface ContactFormProps {
   onSubmit: (contact: Omit<Contact, '_id' | 'create_date'>) => void;
@@ -183,12 +184,9 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
         {submitError && <p className="error">{submitError}</p>}
         {successMessage && <p className="success">{successMessage}</p>}
 
-        <button type="submit" className="submit">
-          {loading 
-            ? <span className="loader"></span> 
-            : data._id ? 'Upravit kontakt' : 'Vytořit kontakt'
-          }
-        </button>
+        <Button type="submit" loading={loading} variant="contained">
+            {data._id ? 'Upravit kontakt' : 'Vytořit kontakt'}
+        </Button>
       </form>
     </div>
   );

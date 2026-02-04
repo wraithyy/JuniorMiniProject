@@ -1,7 +1,9 @@
 import { useEffect, useState, type FC } from 'react';
 import type { Contact } from '../types/contact';
 import { contactsApi } from '../api/contactsApi';
-import "./ContactList.scss";
+import './ContactList.scss';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface ContactListProps {
   onContactSelect?: (contact: Contact) => void;
@@ -64,7 +66,9 @@ export const ContactList: FC<ContactListProps> = ({ onContactSelect }) => {
             >
               <p>{contact.firstName} {contact.lastName}</p>
             </div>
-            <button onClick={() => handleDelete(contact)} className="close">×</button>
+            <IconButton onClick={() => handleDelete(contact)}>
+              <CloseIcon />
+            </IconButton>
           </div>
         ))}
       </div>
