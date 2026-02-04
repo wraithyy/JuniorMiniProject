@@ -8,6 +8,8 @@ import { FieldGroup } from './form/FieldGroup';
 import { RadioGroup } from './form/RadioGroup';
 import Button from '@mui/material/Button';
 import { DateGroup } from './form/DateGroup';
+import Snackbar from '@mui/material/Snackbar';
+import { SnackbarData } from '../types/snackbar';
 
 interface ContactFormProps {
   onSubmit: (contact: Omit<Contact, '_id' | 'create_date'>) => void;
@@ -25,11 +27,10 @@ const GENDER_ITEMS = [
 ];
 
 export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => {
+  const [snackbar, setSnackbar] = useState<SnackbarData | null>();
   const [data, setData] = useState<Contact>({ ...initialData });
   const [errors, setErrors] = useState<ContactFormErrors>({});
-  const [submitError, setSubmitError] = useState<string | null>();
   const [loading, setLoading] = useState<boolean>();
-  const [successMessage, setSuccessMessage] = useState<string | null>();
 
   function validateField<K extends keyof typeof ContactSchema.shape>( fieldName: K, value: unknown): string | undefined {
     const fieldSchema = ContactSchema.shape[fieldName];
@@ -62,20 +63,18 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
 
       if (data._id) {
         response = await contactsApi.updateContact(data._id, data);
-        setSuccessMessage("Kontakt byl upraven");
+        setSnackbar({ text: 'Kontakt byl upraven', type: 'success'});
       }
       else {
         response = await contactsApi.createContact(data);
-        setSuccessMessage("Kontakt byl vytvořen");
+        setSnackbar({ text: 'Kontakt byl upraven', type: 'success'});
       }
 
-      setSubmitError(null);
       onSubmit(response);
 
     }
     catch {
-      setSubmitError("Nepodařilo se dokončit požadavek");
-      setSuccessMessage(null);
+      setSnackbar({ text: 'Nepodařilo se dokončit požadavek', type: 'error'});
     }
 
     setLoading(false);
@@ -184,8 +183,13 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
           }
         />
 
-        {submitError && <p className="error">{submitError}</p>}
-        {successMessage && <p className="success">{successMessage}</p>}
+        <Snackbar
+          open={!!snackbar}
+          autoHideDuration={6000}
+          message={snackbar?.text}
+          color={snackbar?.type}
+          onClose={() => setSnackbar(null)}
+        />
 
         <Button type="submit" loading={loading} variant="contained">
             {data._id ? 'Upravit kontakt' : 'Vytořit kontakt'}
