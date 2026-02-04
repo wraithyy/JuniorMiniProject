@@ -1,13 +1,14 @@
-import {contactsApi} from "../api/co;ntactsApi.ts";
+
 import type { Contact } from '../types/contact';
 
 type ContactDetailProps = {
   contact: Contact | null;
   onContactSelect?: (contact: Contact) => void;
-  handleDelete: (contact: Contact) => Promise<any>;
+  handleDelete: (contact: Contact) => void;
+  handleEditPage: (contact: Contact) => void;
 }
 
-export const ContactDetail = ({ contact, onContactSelect, handleDelete } : ContactDetailProps) => {
+export const ContactDetail = ({ contact,  handleDelete, handleEditPage } : ContactDetailProps) => {
   // TODO: Implementovat detail kontaktu:
   //
   // 1. Zobrazit všechny informace o kontaktu
@@ -67,6 +68,8 @@ export const ContactDetail = ({ contact, onContactSelect, handleDelete } : Conta
         </fieldset>
 
         <button className={"delete-btn"} type={"button"} onClick={()=> handleDelete(contact)} >DELETE</button>
+
+        <button type={"button"} className={"edit-btn"} onClick={() => handleEditPage(contact)} >EDIT</button>
 
         {/* TODO buttons for edit */}
     </div>

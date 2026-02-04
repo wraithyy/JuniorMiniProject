@@ -11,7 +11,8 @@ type Page = 'form' | 'list';
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('form');
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
-    const [reload, setReload] = useState(0);
+  const [reload, setReload] = useState(0);
+  const [initialData, setInitialData] = useState<Contact | null>(null)
 
   // TODO: Implementovat navigaci mezi stránkami
   // TODO: Implementovat handlery pro vytvoření/editaci kontaktu
@@ -21,8 +22,9 @@ function App() {
   // Junioři mohou implementovat detaily podle zadání.
 
 
+    //TODO sem jednou hodit useeffect pro načtení dat
 
-    //TODO delete
+
     function handleDelete(contact: Contact){
 
         window.confirm(`Are you sure you want to delete contact: ${contact.firstName} ${contact.lastName}` )
@@ -36,13 +38,22 @@ function App() {
         }
     }
 
+    function handleEditPage(contact: Contact){
+      setInitialData(contact);
+      setCurrentPage("form");
+      setSelectedContact(null);
+    }
+
   return (
     <div className="app">
       <header>
         <h1>Správa kontaktů</h1>
         <nav>
-          <button onClick={() => setCurrentPage('form')}>Vytvořit kontakt</button>
-          <button onClick={() => setCurrentPage('list')}>Seznam kontaktů</button>
+          <button type={"button"} onClick={() => {
+              setCurrentPage('form')
+              setInitialData(null)
+          }}>Vytvořit kontakt</button>
+          <button type={"button"} onClick={() => setCurrentPage('list')}>Seznam kontaktů</button>
         </nav>
       </header>
 
@@ -50,23 +61,30 @@ function App() {
         {currentPage === 'form' ? (
           <ContactForm
             onSubmit={(contact) => {
-              contactsApi.createContact(contact).then(r => console.log(r));
+
+                if(contact._id){
+                    contactsApi.updateContact(contact._id, contact).then(r => console.log(r))
+                } else {
+                    contactsApi.createContact(contact).then(r => console.log(r));
+                }
+
             }}
+            initialData={initialData}
           />
         ) : (
           <div className="list-view">
             <div className="list-panel">
-              <ContactList
+              <ContactList key={reload}
                 onContactSelect={(contact) => {
                   setSelectedContact(contact);
                 }}
                 selectedContact={selectedContact}
-                reload={reload}
               />
             </div>
             <div className="detail-panel">
               <ContactDetail contact={selectedContact} onContactSelect={(contact) => setSelectedContact(contact)}
-                  handleDelete={(contact: Contact) => handleDelete(contact)}
+                 handleDelete={(contact: Contact) => handleDelete(contact)}
+                 handleEditPage={(contact: Contact) => handleEditPage(contact)}
               />
             </div>
           </div>

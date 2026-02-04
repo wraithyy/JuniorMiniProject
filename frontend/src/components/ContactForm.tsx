@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 import type { Contact } from '../types/contact';
 import '../main.css';
 import TextArea from "./TextArea.tsx";
@@ -6,14 +6,15 @@ import FieldSet from "./FieldSet.tsx";
 import InputComponent from "./InputComponent.tsx";
 import {useState} from "react";
 
-import z from "zod"
+import type z from "zod"
 import {ContactSchema} from "./ContactSchema.tsx";
+import RadioComponent from "./RadioComponent.tsx";
 
 
 
 type ContactFormProps = {
-    onSubmit: (contact: Omit<Contact, '_id' | 'create_date'>) => void;
-    initialData?: Contact,
+    onSubmit: (contact: Omit<Contact, 'create_date'>) => void;
+    initialData?: Contact | null,
 }
 
 export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
@@ -50,7 +51,6 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
   // - Pro přístup k API klientu: import { contactsApi } from '../api/contactsApi'
 
 
-    //{ _id ? (<InputComponent id={"_id"} type={"hidden"} name={"_id"} label={"ID:"} />) : null } //TODO tohle přidat, až budu mít _id
 
     const emptyValues = {
         _id: "",
@@ -163,6 +163,8 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
           <div className="form-group">
               <form className="form-horizontal" id="contactForm" action={handleSubmit}>
 
+                  { value._id ? (<InputComponent id={"_id"} type={"hidden"} name={"_id"} label={"ID:"} />) : null }
+
                   <InputComponent
                       id={"firstName"} label={"First Name"} type={"text"} name={"firstName"} placeholder={"John"} error={errors?.firstName}
                       value={value?.firstName} onChange={(e) => handleInputChange(e)}
@@ -197,18 +199,25 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
 
 
 
+
                   <FieldSet id={"gender"} legend={"Gender"} className={"gender"} >
-                      <InputComponent id={"female"} label={"Female"} type={"radio"} name={"gender"} value={"female"}
-                      onChange={(e) => handleInputChange(e)}
-                      onBlur={(e) => handleOnBlur(e)}/>
 
-                      <InputComponent id={"male"} label={"Male"} type={"radio"} name={"gender"} value={"male"}
-                      onChange={(e) => handleInputChange(e)}
-                      onBlur={(e) => handleOnBlur(e)}/>
+                      <RadioComponent id={"female"} label={"Female"} name={"gender"} value={"female"} data={value.gender}
+                                      onChange={(e) => handleInputChange(e)}
+                                      onBlur={(e) => handleOnBlur(e)}
+                      />
 
-                      <InputComponent id={"other"} label={"Other"} type={"radio"} name={"gender"} value={"other"}
-                      onChange={(e) => handleInputChange(e)}
-                      onBlur={(e) => handleOnBlur(e)}/>
+                      <RadioComponent id={"male"} label={"Male"} name={"gender"} value={"male"} data={value.gender}
+                                      onChange={(e) => handleInputChange(e)}
+                                      onBlur={(e) => handleOnBlur(e)}
+                      />
+
+                      <RadioComponent id={"other"} label={"Other"} name={"gender"} value={"other"} data={value.gender}
+                                      onChange={(e) => handleInputChange(e)}
+                                      onBlur={(e) => handleOnBlur(e)}
+                      />
+
+
                   </FieldSet>
 
                   <FieldSet id={"address"} legend={"Address"} >
@@ -240,6 +249,7 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
                   </FieldSet>
 
 
+                  {/* TODO upravit date, aby fungoval s přednastavenými */}
                   <InputComponent
                       id={"birthDate"} label={"Birthday"} type={"date"} name={"birthDate"} error={errors?.birthDate}
                       value={value?.birthDate} onChange={(e) => handleInputChange(e)}

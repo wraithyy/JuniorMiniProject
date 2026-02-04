@@ -1,4 +1,4 @@
-import {ChangeEvent} from "react";
+import type {ChangeEvent} from "react";
 
 type InputComponentProps = {
 
@@ -23,12 +23,10 @@ export default function InputComponent({id, label, type, name, placeholder, valu
 
 
     return (
-        <>
-            <div className={name === "gender" ? "singleGender" : undefined}>
-                <label htmlFor={id}>{label}</label>
-                <input type={type} name={name} id={id} value={value} placeholder={placeholder} onChange={onChange}  onBlur={onBlur}/>
-                { error && <div style={{color: "red"}}>{error}</div> }
-            </div>
-        </>
+        <div className={name === "gender" ? "singleGender" : undefined}>
+            {type === "hidden" ? null : <label htmlFor={id}>{label}</label>}
+            <input type={type} name={name} id={id} value={value} placeholder={placeholder} onChange={onChange}  onBlur={onBlur}/>
+            { error && <div style={{color: "red"}}>{error}</div> }
+        </div>
     )
 }
