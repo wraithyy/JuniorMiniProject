@@ -66,7 +66,7 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
       }
       else {
         response = await contactsApi.createContact(data);
-        setSnackbar({ text: 'Kontakt byl upraven', type: 'success'});
+        setSnackbar({ text: 'Kontakt byl vytvořen', type: 'success'});
       }
 
       onSubmit(response);
