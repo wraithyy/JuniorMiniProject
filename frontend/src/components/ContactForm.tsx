@@ -9,6 +9,8 @@ import { RadioGroup } from './form/RadioGroup';
 import { DateGroup } from './form/DateGroup';
 import { SnackbarData } from '../types/snackbar';
 import { Alert, CircularProgress, Typography, Button, Snackbar } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
+import { queryClient } from '../queryClient';
 
 interface ContactFormProps {
   onSubmit: (contact: Omit<Contact, '_id' | 'create_date'>) => void;
@@ -29,7 +31,6 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
   const [snackbar, setSnackbar] = useState<SnackbarData | null>();
   const [data, setData] = useState<Contact>({ ...initialData });
   const [errors, setErrors] = useState<ContactFormErrors>({});
-  const [loading, setLoading] = useState<boolean>();
 
   function validateField<K extends keyof typeof ContactSchema.shape>( fieldName: K, value: unknown): string | undefined {
     const fieldSchema = ContactSchema.shape[fieldName];
@@ -50,33 +51,41 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
     return false;
   };
 
+  const createContactMutation = useMutation({
+    mutationFn: (contact: Omit<Contact, '_id' | 'create_date'>) => contactsApi.createContact(contact),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['contacts'] });
+      setSnackbar({ text: 'Kontakt byl vytvořen', type: 'success'});
+      onSubmit(data);
+    },
+    onError: () => {
+      setSnackbar({ text: 'Nepodařilo se vytvořit kontakt', type: 'error' });
+    },
+  });
+
+  const updateContactMutation = useMutation({
+    mutationFn: (contact: Contact) =>
+      contactsApi.updateContact(contact._id!, contact),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['contacts'] });
+      setSnackbar({ text: 'Kontakt byl upraven', type: 'success' });
+      onSubmit(data);
+    },
+    onError: () => {
+      setSnackbar({ text: 'Nepodařilo se upravit kontakt', type: 'error' });
+    },
+  });
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
     if (!validateForm()) return;
 
-    setLoading(true);
-
-    try {
-      let response;
-
-      if (data._id) {
-        response = await contactsApi.updateContact(data._id, data);
-        setSnackbar({ text: 'Kontakt byl upraven', type: 'success'});
-      }
-      else {
-        response = await contactsApi.createContact(data);
-        setSnackbar({ text: 'Kontakt byl vytvořen', type: 'success'});
-      }
-
-      onSubmit(response);
-
+    if (data._id) {
+      updateContactMutation.mutate(data);
+    } else {
+      createContactMutation.mutate(data);
     }
-    catch {
-      setSnackbar({ text: 'Nepodařilo se dokončit požadavek', type: 'error'});
-    }
-
-    setLoading(false);
   }
 
   function handleBlur(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -104,6 +113,8 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
   useEffect(() => {
     setData({ ...initialData });
   }, [initialData]);
+
+  const isSubmitting = createContactMutation.isPending || updateContactMutation.isPending;
 
   if (!data)
     return (<CircularProgress />)
@@ -176,7 +187,7 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
         
         <hr />
 
-       <DateGroup name="birthDate" label="Datum narození" value={data.birthDate}
+        <DateGroup name="birthDate" label="Datum narození" value={data.birthDate}
           error={errors.birthDate}
           onChange={value =>
             setData(prev => ({ ...prev, birthDate: value }))
@@ -193,7 +204,7 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
           </Alert>
         </Snackbar>
 
-        <Button type="submit" loading={loading} variant="contained">
+        <Button type="submit" loading={isSubmitting} variant="contained">
             {data._id ? 'Upravit kontakt' : 'Vytořit kontakt'}
         </Button>
       </form>

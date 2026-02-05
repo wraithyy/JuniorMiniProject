@@ -1,9 +1,11 @@
-import { useEffect, useState, type FC } from 'react';
+import { type FC } from 'react';
 import type { Contact } from '../types/contact';
 import { contactsApi } from '../api/contactsApi';
 import './ContactList.scss';
 import CloseIcon from '@mui/icons-material/Close';
 import { IconButton, CircularProgress, Typography, List, ListItemButton, ListItemText, ListItemIcon } from '@mui/material';
+import { useQuery, useMutation} from '@tanstack/react-query';
+import { queryClient } from '../queryClient';
 
 interface ContactListProps {
   selectedContact: Contact | null,
@@ -11,9 +13,7 @@ interface ContactListProps {
 }
 
 export const ContactList: FC<ContactListProps> = ({ onContactSelect, selectedContact }) => {
-  const [contacts, setContacts] = useState<Contact[]>([]);
-  const [loading, setLoading] = useState<boolean>();
-  const [error, setError] = useState<string | null>(null);
+  const { data: contacts, isLoading, error } = useQuery({ queryKey: ['contacts'], queryFn: contactsApi.getAllContacts })
 
   function handleClick(contact: Contact) {
     if (!onContactSelect) return;
@@ -21,62 +21,45 @@ export const ContactList: FC<ContactListProps> = ({ onContactSelect, selectedCon
     onContactSelect(contact);
   }
 
-  async function handleDelete(contact: Contact) {
-    if (!contact._id) return;
+  const deleteContactMutation = useMutation({
+    mutationFn: (id: string) => contactsApi.deleteContact(id),
+    onSuccess: (_, deletedId) => {
+      queryClient.invalidateQueries({ queryKey: ['contacts'] });
 
-    try {
-      await contactsApi.deleteContact(contact._id);
-      await loadContacts();
-
-      if (selectedContact?._id === contact._id)
+      if (selectedContact?._id === deletedId) {
         onContactSelect?.(null);
-    }
-    catch {
-      setError("Nepodařilo se odstranit kontakt")
-    }
+      }
+    },
+  });
+
+  function handleDelete(contact: Contact) {
+    if (!contact._id) return;
+    deleteContactMutation.mutate(contact._id);
   }
 
-  async function loadContacts() {
-    setLoading(true);
-
-    try {
-      const response = await contactsApi.getAllContacts();
-      setContacts(response);
-    }
-    catch {
-      setError("Nepodařilo se načíst kontakty");
-    }
-    
-    setLoading(false);
-  }
-
-  useEffect(() => {
-    loadContacts();
-  }, []);
-
-  if (loading)
+  if (isLoading || !contacts)
     return (<CircularProgress />)
+  
+  if (error)
+    return (<Typography variant="subtitle1" color="error">Nepodařilo se načíst list</Typography>)
 
   return (
-    <>
-      {error && <p>{error}</p>}
-      <div>
-        <Typography variant="h2">Seznam kontaktů</Typography>
-        <List>
-          {contacts.map(contact => (
-            <ListItemButton selected={selectedContact === contact} key={contact._id} onClick={() => handleClick(contact)}>
-              <ListItemText>
-                {contact.firstName} {contact.lastName}
-              </ListItemText>
-              <ListItemIcon>
-                <IconButton onClick={() => handleDelete(contact)} color="error">
-                  <CloseIcon />
-                </IconButton>
-              </ListItemIcon>
-            </ListItemButton>
-          ))}
-        </List>
-      </div>
-    </>
+    <div>
+      <Typography variant="h2">Seznam kontaktů</Typography>
+      <List>
+        {contacts.map(contact => (
+          <ListItemButton selected={selectedContact === contact} key={contact._id} onClick={() => handleClick(contact)}>
+            <ListItemText>
+              {contact.firstName} {contact.lastName}
+            </ListItemText>
+            <ListItemIcon>
+              <IconButton onClick={() => handleDelete(contact)} color="error">
+                <CloseIcon />
+              </IconButton>
+            </ListItemIcon>
+          </ListItemButton>
+        ))}
+      </List>
+    </div>
   );
 };

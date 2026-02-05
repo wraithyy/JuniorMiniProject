@@ -5,6 +5,8 @@ import { ContactDetail } from './components/ContactDetail';
 import type { Contact } from './types/contact';
 import './App.scss';
 import { Tabs, Tab, Typography, ThemeProvider, createTheme, THEME_ID } from '@mui/material';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './queryClient';
 
 type Page = 'form' | 'list';
 
@@ -42,40 +44,42 @@ function App() {
   }
 
   return (
-    <ThemeProvider theme={{ [THEME_ID]: materialTheme }}>
-      <div className="app">
-        <header>
-          <Typography variant="h1">Správa kontaktů</Typography>
-          <Tabs value={currentPage} onChange={handlePageChange}>
-            <Tab label="Vytvořit kontakt" value="form" onClick={() => setSelectedContact(null)} />
-            <Tab label="Seznam kontaktů" value="list" />
-          </Tabs>
-        </header>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={{ [THEME_ID]: materialTheme }}>
+        <div className="app">
+          <header>
+            <Typography variant="h1">Správa kontaktů</Typography>
+            <Tabs value={currentPage} onChange={handlePageChange}>
+              <Tab label="Vytvořit kontakt" value="form" onClick={() => setSelectedContact(null)} />
+              <Tab label="Seznam kontaktů" value="list" />
+            </Tabs>
+          </header>
 
-        <main>
-          {currentPage === 'form' ? (
-            <ContactForm
-              onSubmit={() => {}}
-              initialData={selectedContact ?? EMPTY_CONTACT}
-            />
-          ) : (
-            <div className="list-view">
-              <div className="list-panel">
-                <ContactList
-                  selectedContact={selectedContact}
-                  onContactSelect={(contact) => {
-                    setSelectedContact(contact);
-                  }}
-                />
+          <main>
+            {currentPage === 'form' ? (
+              <ContactForm
+                onSubmit={() => {}}
+                initialData={selectedContact ?? EMPTY_CONTACT}
+              />
+            ) : (
+              <div className="list-view">
+                <div className="list-panel">
+                  <ContactList
+                    selectedContact={selectedContact}
+                    onContactSelect={(contact) => {
+                      setSelectedContact(contact);
+                    }}
+                  />
+                </div>
+                <div className="detail-panel">
+                  <ContactDetail contact={selectedContact} onEdit={() => setCurrentPage('form')} />
+                </div>
               </div>
-              <div className="detail-panel">
-                <ContactDetail contact={selectedContact} onEdit={() => setCurrentPage('form')} />
-              </div>
-            </div>
-          )}
-        </main>
-      </div>
-    </ThemeProvider>
+            )}
+          </main>
+        </div>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 
