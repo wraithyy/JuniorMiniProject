@@ -7,7 +7,7 @@ type InputComponentProps = {
     type: string,
     name: string,
     placeholder?: string
-    value?: string | number,
+    value?: string | number ,
     required?: boolean,
     error?: string,
 
@@ -20,6 +20,12 @@ type InputComponentProps = {
 export default function InputComponent({id, label, type, name, placeholder, value, error, onChange, onBlur }: InputComponentProps) {
 
     //TODO kontrola pokud type=date, tak kontrola, že se člověk nenarodil v budoucnosti
+
+
+    if (type === "date") {
+        value = String(value).substring(0, 10)
+    }
+
 
 
     return (
