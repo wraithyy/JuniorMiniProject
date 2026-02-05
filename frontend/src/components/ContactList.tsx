@@ -8,6 +8,7 @@ import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import { CircularProgress, Typography } from '@mui/material';
 
 interface ContactListProps {
   selectedContact: Contact | null,
@@ -59,13 +60,13 @@ export const ContactList: FC<ContactListProps> = ({ onContactSelect, selectedCon
   }, []);
 
   if (loading)
-    return (<span className="loader"></span>)
+    return (<CircularProgress />)
 
   return (
     <>
       {error && <p>{error}</p>}
       <div>
-        <h2>Seznam kontaktů</h2>
+        <Typography variant="h2">Seznam kontaktů</Typography>
         <List>
           {contacts.map(contact => (
             <ListItemButton selected={selectedContact === contact} key={contact._id} onClick={() => handleClick(contact)}>

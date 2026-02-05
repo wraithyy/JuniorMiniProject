@@ -11,6 +11,7 @@ import { DateGroup } from './form/DateGroup';
 import Snackbar from '@mui/material/Snackbar';
 import { SnackbarData } from '../types/snackbar';
 import Alert from '@mui/material/Alert';
+import { CircularProgress, Typography } from '@mui/material';
 
 interface ContactFormProps {
   onSubmit: (contact: Omit<Contact, '_id' | 'create_date'>) => void;
@@ -108,13 +109,14 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
   }, [initialData]);
 
   if (!data)
-    return (<span className="loader"></span>)
+    return (<CircularProgress />)
 
   return (
     <div>
-      <h2>{data._id ? 'Editovat kontakt' : 'Vytvořit nový kontakt'}</h2>
+      <Typography variant="h2">{data._id ? 'Editovat kontakt' : 'Vytvořit nový kontakt'}</Typography>
+      <hr />
       <form className="contact-form" onSubmit={handleSubmit}>
-        <h3>Základní údaje</h3>
+        <Typography variant="h3">Základní údaje</Typography>
 
         <div className="form-row">
           <FieldGroup name="firstName" label="Jméno" value={data.firstName}
@@ -151,7 +153,7 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
         />
         
         <hr />
-        <h3>Adresa</h3>
+        <Typography variant="h3">Adresa</Typography>
 
         <div className="form-row">
           <FieldGroup name="city" label="Město" value={data.city}
@@ -169,7 +171,7 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
             error={errors.houseNumber} onChange={handleChange}
             onBlur={handleBlur}
           />
-          <FieldGroup name="zipCode" label="ZIP" value={data.zipCode}
+          <FieldGroup name="zipCode" label="ZIP" value={data.zipCode ?? 0}
             error={errors.zipCode} onChange={handleChange}
             onBlur={handleBlur}
           />

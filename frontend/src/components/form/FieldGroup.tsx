@@ -17,7 +17,7 @@ interface FieldGroupProps {
 export const FieldGroup : FC<FieldGroupProps> = ({ name, value, label, required, type, error, textarea, onChange, onBlur }) => {
   return (
     <div className="field-group">
-      <TextField type={type ?? 'text'} id={name} label={label} variant="outlined" value={value}
+      <TextField type={type ?? 'text'} id={name} label={label} variant="outlined" value={value ?? ''}
         required={required} name={name} onChange={e => onChange?.(e)} onBlur={e => onBlur?.(e)}
         className="text-field" error={!!error} helperText={error ?? ' '}
         multiline={textarea} maxRows={4}

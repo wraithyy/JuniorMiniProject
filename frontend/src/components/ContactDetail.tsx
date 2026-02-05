@@ -1,6 +1,7 @@
 import { useMemo, type FC } from 'react';
 import type { Contact } from '../types/contact';
 import Button from '@mui/material/Button';
+import { Typography } from '@mui/material';
 
 interface ContactDetailProps {
   contact: Contact | null;
@@ -19,20 +20,20 @@ export const ContactDetail: FC<ContactDetailProps> = ({ contact, onEdit }) => {
   if (!contact)
     return (
       <div>
-        <p>Vyberte kontakt ze seznamu pro zobrazení detailu</p>
+        <Typography variant="subtitle1">Vyberte kontakt ze seznamu pro zobrazení detailu</Typography>
       </div>
     );
 
   return (
     <div>
-      <h2>Detail kontaktu</h2>
-      <p>Vybraný kontakt: <b>{contact.firstName} {contact.lastName}</b></p>
-      <p>Email: <b>{contact.email ?? '-'}</b></p>
-      <p>Telefon: <b>{contact.phone ?? '-'}</b></p>
-      <p>Pohlaví: <b>{contact.gender ?? '-'}</b></p>
-      <p>Poznámka: <b>{contact.note ?? '-'}</b></p>
-      <p>Adresa: <b>{contact.city} {contact.street} {contact.houseNumber} {contact.zipCode}</b></p>
-      <p>Datum narození: <b>{dateOfBirth ?? '-'}</b></p>
+      <Typography variant="h2">Detail kontaktu</Typography>
+      <Typography variant="subtitle1">Vybraný kontakt: <b>{contact.firstName} {contact.lastName}</b></Typography>
+      <Typography variant="subtitle1">Email: <b>{contact.email ?? '-'}</b></Typography>
+      <Typography variant="subtitle1">Telefon: <b>{contact.phone ?? '-'}</b></Typography>
+      <Typography variant="subtitle1">Pohlaví: <b>{contact.gender ?? '-'}</b></Typography>
+      <Typography variant="subtitle1">Poznámka: <b>{contact.note ?? '-'}</b></Typography>
+      <Typography variant="subtitle1">Adresa: <b>{contact.city} {contact.street} {contact.houseNumber} {contact.zipCode}</b></Typography>
+      <Typography variant="subtitle1">Datum narození: <b>{dateOfBirth ?? '-'}</b></Typography>
       <br />
 
       <Button variant="contained" onClick={() => onEdit?.()}>Upravit</Button>
