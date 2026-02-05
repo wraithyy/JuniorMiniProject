@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 import type { Contact } from '../types/contact';
 import '../main.css';
 import TextArea from "./TextArea.tsx";
@@ -6,14 +6,15 @@ import FieldSet from "./FieldSet.tsx";
 import InputComponent from "./InputComponent.tsx";
 import {useState} from "react";
 
-import z from "zod"
+import type z from "zod"
 import {ContactSchema} from "./ContactSchema.tsx";
+import RadioGroup from "./RadioGroup.tsx";
 
 
 
 type ContactFormProps = {
-    onSubmit: (contact: Omit<Contact, '_id' | 'create_date'>) => void;
-    initialData?: Contact,
+    onSubmit: (contact: Omit<Contact, 'create_date'>) => void;
+    initialData?: Contact | null,
 }
 
 export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
@@ -50,7 +51,6 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
   // - Pro přístup k API klientu: import { contactsApi } from '../api/contactsApi'
 
 
-    //{ _id ? (<InputComponent id={"_id"} type={"hidden"} name={"_id"} label={"ID:"} />) : null } //TODO tohle přidat, až budu mít _id
 
     const emptyValues = {
         _id: "",
@@ -68,12 +68,10 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
     }
 
     const [value, setValue] = useState<Contact>(
-        initialData ?
-            initialData
-            : emptyValues
+        initialData ? initialData : emptyValues
     );
 
-    //TODO chybí gender
+
     const [errors, setErrors] = useState({
         firstName: "",
         lastName: "",
@@ -89,7 +87,7 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
 
     });
 
-    //tohle funguje, alenechápu jak
+    //tohle funguje, ale nechápu jak
     const fieldSchema = <K extends keyof z.infer<typeof ContactSchema>>(key: K) =>
         ContactSchema.shape[key];
 
@@ -158,12 +156,22 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
     }
 
 
+    const options = [
+        {value:"female", label:"Female", name:"gender"},
+        {value:"male", label:"Male", name:"gender"},
+        {value:"other", label:"Other", name:"gender"},
+        {value:"trekkie", label:"Trekkie", name:"gender"},
+
+    ]
+
   return (
       <div>
           <h2>{initialData ? 'Editovat kontakt' : 'Vytvořit nový kontakt'}</h2>
 
           <div className="form-group">
               <form className="form-horizontal" id="contactForm" action={handleSubmit}>
+
+                  { value._id ? (<InputComponent id={"_id"} type={"hidden"} name={"_id"} label={"ID:"} />) : null }
 
                   <InputComponent
                       id={"firstName"} label={"First Name"} type={"text"} name={"firstName"} placeholder={"John"} error={errors?.firstName}
@@ -198,19 +206,17 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
                   />
 
 
-                  {/* TODO udělat a vyřešit radio input fieldset, momentálně ho ignoruji, přidat error */}
+
+
                   <FieldSet id={"gender"} legend={"Gender"} className={"gender"} >
-                      <InputComponent id={"female"} label={"Female"} type={"radio"} name={"gender"} value={"female"}
-                      onChange={(e) => handleInputChange(e)}
-                      onBlur={(e) => handleOnBlur(e)}/>
 
-                      <InputComponent id={"male"} label={"Male"} type={"radio"} name={"gender"} value={"male"}
-                      onChange={(e) => handleInputChange(e)}
-                      onBlur={(e) => handleOnBlur(e)}/>
+                      <RadioGroup options={options}
+                                  value={value?.gender}
+                                  onChange={(e) => handleInputChange(e)}
+                                  onBlur={(e) => handleOnBlur(e)}
+                      />
 
-                      <InputComponent id={"other"} label={"Other"} type={"radio"} name={"gender"} value={"other"}
-                      onChange={(e) => handleInputChange(e)}
-                      onBlur={(e) => handleOnBlur(e)}/>
+
                   </FieldSet>
 
                   <FieldSet id={"address"} legend={"Address"} >
@@ -242,12 +248,14 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
                   </FieldSet>
 
 
+
                   <InputComponent
                       id={"birthDate"} label={"Birthday"} type={"date"} name={"birthDate"} error={errors?.birthDate}
                       value={value?.birthDate} onChange={(e) => handleInputChange(e)}
                       onBlur={(e) => handleOnBlur(e)}
                   />
 
+                  {/*TODO eventuelně odstranit*/}
                   <button type="button" onClick={() => console.log(value)} >Console.Log(value)</button>
                   <button type="button" onClick={() => console.log(errors)}> Console.log(errors) </button>
 

@@ -1,11 +1,13 @@
-import type { FC } from 'react';
+import {useEffect, useState} from 'react';
 import type { Contact } from '../types/contact';
+import {contactsApi} from "../api/contactsApi.ts";
 
-interface ContactListProps {
-  onContactSelect?: (contact: Contact) => void;
+type ContactListProps = {
+  onContactSelect: (contact: Contact) => void;
+  selectedContact: Contact | null;
 }
 
-export const ContactList: FC<ContactListProps> = ({ onContactSelect }) => {
+export const ContactList = ({ onContactSelect }: ContactListProps) => {
   // TODO: Implementovat seznam kontaktů:
   //
   // 1. Načíst všechny kontakty pomocí contactsApi.getAllContacts()
@@ -29,10 +31,31 @@ export const ContactList: FC<ContactListProps> = ({ onContactSelect }) => {
   // Použití API klientu:
   // import { contactsApi } from '../api/contactsApi'
 
-  return (
+    const [contacts, setContacts] = useState<Contact[]>([])
+
+
+    useEffect(() => {
+        async function load() {
+            const result = await contactsApi.getAllContacts();
+            setContacts(result);
+        }
+        load();
+    }, []);
+
+    console.log(contacts? contacts : "nope")
+
+
+    return (
     <div>
-      <h2>Seznam kontaktů</h2>
-      <p>TODO: Implementovat seznam</p>
+      <h2>List of Contacts</h2>
+
+        {contacts.map(contact => (
+                <div key={contact._id}>
+                    <div className={"contact-name"} onClick={() => onContactSelect(contact)} >
+                        {contact.firstName} {contact.lastName}
+                    </div>
+                </div>
+            ))}
     </div>
   );
 };

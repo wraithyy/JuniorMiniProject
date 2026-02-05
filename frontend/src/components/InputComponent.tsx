@@ -1,4 +1,4 @@
-import {ChangeEvent} from "react";
+import type {ChangeEvent} from "react";
 
 type InputComponentProps = {
 
@@ -7,7 +7,7 @@ type InputComponentProps = {
     type: string,
     name: string,
     placeholder?: string
-    value?: string | number,
+    value?: string | number ,
     required?: boolean,
     error?: string,
 
@@ -22,13 +22,17 @@ export default function InputComponent({id, label, type, name, placeholder, valu
     //TODO kontrola pokud type=date, tak kontrola, že se člověk nenarodil v budoucnosti
 
 
+    if (type === "date") {
+        value = String(value).substring(0, 10)
+    }
+
+
+
     return (
-        <>
-            <div className={name === "gender" ? "singleGender" : undefined}>
-                <label htmlFor={id}>{label}</label>
-                <input type={type} name={name} id={id} value={value} placeholder={placeholder} onChange={onChange}  onBlur={onBlur}/>
-                { error && <div style={{color: "red"}}>{error}</div> }
-            </div>
-        </>
+        <div className={name === "gender" ? "singleGender" : undefined}>
+            {type === "hidden" ? null : <label htmlFor={id}>{label}</label>}
+            <input type={type} name={name} id={id} value={value} placeholder={placeholder} onChange={onChange}  onBlur={onBlur}/>
+            { error && <div style={{color: "red"}}>{error}</div> }
+        </div>
     )
 }

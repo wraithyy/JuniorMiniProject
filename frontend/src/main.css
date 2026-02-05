@@ -89,6 +89,7 @@ nav button:hover {
 }
 
 .delete-btn {
+    margin: 5px;
     padding: 5px 10px;
     border: 1px solid #d00;
     background: #fee;
@@ -99,6 +100,20 @@ nav button:hover {
 
 .delete-btn:hover {
     background: #fdd;
+}
+
+.edit-btn {
+    margin: 5px;
+    padding: 5px 10px;
+    border: 1px solid #007bff;
+    background: #eeeeee;
+    color: #007bff;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.edit-btn:hover {
+    background: lightsteelblue;
 }
 
 .form-container {
