@@ -8,7 +8,7 @@ import {useState} from "react";
 
 import type z from "zod"
 import {ContactSchema} from "./ContactSchema.tsx";
-import RadioComponent from "./RadioComponent.tsx";
+import RadioGroup from "./RadioGroup.tsx";
 
 
 
@@ -156,6 +156,14 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
     }
 
 
+    const options = [
+        {value:"female", label:"Female", name:"gender"},
+        {value:"male", label:"Male", name:"gender"},
+        {value:"other", label:"Other", name:"gender"},
+        {value:"trekkie", label:"Trekkie", name:"gender"},
+
+    ]
+
   return (
       <div>
           <h2>{initialData ? 'Editovat kontakt' : 'Vytvořit nový kontakt'}</h2>
@@ -202,19 +210,10 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
 
                   <FieldSet id={"gender"} legend={"Gender"} className={"gender"} >
 
-                      <RadioComponent id={"female"} label={"Female"} name={"gender"} value={"female"} data={value.gender}
-                                      onChange={(e) => handleInputChange(e)}
-                                      onBlur={(e) => handleOnBlur(e)}
-                      />
-
-                      <RadioComponent id={"male"} label={"Male"} name={"gender"} value={"male"} data={value.gender}
-                                      onChange={(e) => handleInputChange(e)}
-                                      onBlur={(e) => handleOnBlur(e)}
-                      />
-
-                      <RadioComponent id={"other"} label={"Other"} name={"gender"} value={"other"} data={value.gender}
-                                      onChange={(e) => handleInputChange(e)}
-                                      onBlur={(e) => handleOnBlur(e)}
+                      <RadioGroup options={options}
+                                  value={value?.gender}
+                                  onChange={(e) => handleInputChange(e)}
+                                  onBlur={(e) => handleOnBlur(e)}
                       />
 
 
@@ -249,7 +248,7 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
                   </FieldSet>
 
 
-                  {/* TODO upravit date, aby fungoval s přednastavenými */}
+
                   <InputComponent
                       id={"birthDate"} label={"Birthday"} type={"date"} name={"birthDate"} error={errors?.birthDate}
                       value={value?.birthDate} onChange={(e) => handleInputChange(e)}
