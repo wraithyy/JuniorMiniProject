@@ -6,12 +6,9 @@ import { mapZodErrors } from '../helpers';
 import ContactSchema from '../validation/contact';
 import { FieldGroup } from './form/FieldGroup';
 import { RadioGroup } from './form/RadioGroup';
-import Button from '@mui/material/Button';
 import { DateGroup } from './form/DateGroup';
-import Snackbar from '@mui/material/Snackbar';
 import { SnackbarData } from '../types/snackbar';
-import Alert from '@mui/material/Alert';
-import { CircularProgress, Typography } from '@mui/material';
+import { Alert, CircularProgress, Typography, Button, Snackbar } from '@mui/material';
 
 interface ContactFormProps {
   onSubmit: (contact: Omit<Contact, '_id' | 'create_date'>) => void;

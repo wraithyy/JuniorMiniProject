@@ -1,7 +1,6 @@
 import { useMemo, type FC } from 'react';
 import type { Contact } from '../types/contact';
-import Button from '@mui/material/Button';
-import { Typography } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 
 interface ContactDetailProps {
   contact: Contact | null;

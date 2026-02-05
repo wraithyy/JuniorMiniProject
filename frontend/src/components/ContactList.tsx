@@ -2,13 +2,8 @@ import { useEffect, useState, type FC } from 'react';
 import type { Contact } from '../types/contact';
 import { contactsApi } from '../api/contactsApi';
 import './ContactList.scss';
-import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import { CircularProgress, Typography } from '@mui/material';
+import { IconButton, CircularProgress, Typography, List, ListItemButton, ListItemText, ListItemIcon } from '@mui/material';
 
 interface ContactListProps {
   selectedContact: Contact | null,
