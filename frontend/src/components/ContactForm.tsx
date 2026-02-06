@@ -1,8 +1,8 @@
 import { useEffect, useState, type FC } from 'react';
-import type { Contact } from '../types/contact';
+import type { Contact, ContactOmitted } from '../types/contact';
 import "./ContactForm.scss";
 import { contactsApi } from '../api/contactsApi';
-import { mapZodErrors } from '../helpers';
+import { mapZodErrors, shallowEqual } from '../helpers';
 import ContactSchema from '../validation/contact';
 import { FieldGroup } from './form/FieldGroup';
 import { RadioGroup } from './form/RadioGroup';
@@ -13,7 +13,7 @@ import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '../queryClient';
 
 interface ContactFormProps {
-  onSubmit: (contact: Omit<Contact, '_id' | 'create_date'>) => void;
+  onSubmit: (contact: ContactOmitted) => void;
   initialData: Contact;
 }
 
@@ -30,7 +30,13 @@ const GENDER_ITEMS = [
 export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => {
   const [snackbar, setSnackbar] = useState<SnackbarData | null>();
   const [data, setData] = useState<Contact>({ ...initialData });
+  const [prevInitialData, sePrevInitialData] = useState<Contact>({ ...initialData });
   const [errors, setErrors] = useState<ContactFormErrors>({});
+
+  if (!shallowEqual(initialData, prevInitialData)) {
+    setData({ ...initialData });
+    sePrevInitialData({ ...initialData });
+  }
 
   function validateField<K extends keyof typeof ContactSchema.shape>( fieldName: K, value: unknown): string | undefined {
     const fieldSchema = ContactSchema.shape[fieldName];

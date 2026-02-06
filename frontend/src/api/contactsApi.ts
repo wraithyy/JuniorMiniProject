@@ -1,4 +1,4 @@
-import type { Contact, ContactsResponse, ContactResponse } from '../types/contact';
+import type { Contact, ContactsResponse, ContactResponse, ContactOmitted } from '../types/contact';
 
 const API_BASE_URL = '/api';
 
@@ -21,7 +21,7 @@ export const contactsApi = {
     return data.data;
   },
 
-  createContact: async (contact: Omit<Contact, '_id' | 'create_date'>): Promise<Contact> => {
+  createContact: async (contact: ContactOmitted): Promise<Contact> => {
     const response = await fetch(`${API_BASE_URL}/contacts`, {
       method: 'POST',
       headers: {

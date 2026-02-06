@@ -31,8 +31,8 @@ export const RadioGroup : FC<RadioGroupProps> = ({ value, name, label, items, er
         value={value}
         name={name} onChange={e => onChange?.(e)}
       >
-        {items.map(i => (
-          <FormControlLabel key={i.value} value={i.value} control={<Radio />} label={i.label} />
+        {items.map(({ value, label }) => (
+          <FormControlLabel key={value} value={value} control={<Radio />} label={label} />
         ))}
       </Group>
     </FormControl>
