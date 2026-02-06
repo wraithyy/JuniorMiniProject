@@ -1,5 +1,3 @@
-import * as z from 'zod';
-
 export function formatDate(date?: string | Date): string {
   if (!date) return '';
   
@@ -13,21 +11,6 @@ export function formatDate(date?: string | Date): string {
 
   return `${year}-${month}-${day}`;
 };
-
-export function mapZodErrors<T>(error: z.ZodError<T>): Partial<Record<keyof T, string>> {
-  const fieldErrors: Partial<Record<keyof T, string>> = {};
-
-  for (const issue of error.issues) {
-    const fieldName = issue.path[0] as keyof T;
-
-    // keep first error per field
-    if (!fieldErrors[fieldName]) {
-      fieldErrors[fieldName] = issue.message;
-    }
-  }
-
-  return fieldErrors;
-}
 
 export function toDate(value: string | Date | undefined): Date | null {
   if (!value) return null;

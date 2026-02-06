@@ -1,25 +1,28 @@
-import { useEffect, useState, type FC } from 'react';
+import { useState, type FC } from 'react';
 import type { Contact } from '../types/contact';
 import "./ContactForm.scss";
 import { contactsApi } from '../api/contactsApi';
-import { mapZodErrors } from '../helpers';
-import ContactSchema from '../validation/contact';
-import { FieldGroup } from './form/FieldGroup';
-import { RadioGroup } from './form/RadioGroup';
-import { DateGroup } from './form/DateGroup';
+import { contactSchema, zodBlurValidator } from '../validation/contact';
 import { SnackbarData } from '../types/snackbar';
-import { Alert, CircularProgress, Typography, Button, Snackbar } from '@mui/material';
+import { Alert, CircularProgress, Typography, Button, Snackbar, TextField } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '../queryClient';
+import { useForm } from '@tanstack/react-form';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { cs } from 'date-fns/locale';
+import { toDate } from "../helpers";
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 
 interface ContactFormProps {
   onSubmit: (contact: Omit<Contact, '_id' | 'create_date'>) => void;
   initialData: Contact;
 }
-
-type ContactFormErrors = Partial<
-  Record<keyof Omit<Contact, '_id' | 'create_date'>, string>
->;
 
 const GENDER_ITEMS = [
   { label: "Muž", value: "on" },
@@ -29,27 +32,23 @@ const GENDER_ITEMS = [
 
 export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => {
   const [snackbar, setSnackbar] = useState<SnackbarData | null>();
-  const [data, setData] = useState<Contact>({ ...initialData });
-  const [errors, setErrors] = useState<ContactFormErrors>({});
 
-  function validateField<K extends keyof typeof ContactSchema.shape>( fieldName: K, value: unknown): string | undefined {
-    const fieldSchema = ContactSchema.shape[fieldName];
-    const result = fieldSchema.safeParse(value);
-
-    if (result.success) return undefined;
-
-    return result.error.issues[0].message;
-  }
-
-  function validateForm(): boolean {
-    const result = ContactSchema.safeParse(data);
-    if (result.success) return true;
-   
-    const mappedErrors = mapZodErrors(result.error);
-    setErrors(mappedErrors);
-
-    return false;
-  };
+  const form = useForm({
+    defaultValues: { ...initialData },
+    onSubmit: ({ value }) => {
+      if (value._id) {
+        updateContactMutation.mutate(value);
+      } else {
+        createContactMutation.mutate(value);
+      }
+    },
+    validators: {
+      onSubmit: ({ value }) => {
+        const result = contactSchema.safeParse(value);
+        return result.success ? undefined : 'Form is invalid';
+      }
+    },
+  });
 
   const createContactMutation = useMutation({
     mutationFn: (contact: Omit<Contact, '_id' | 'create_date'>) => contactsApi.createContact(contact),
@@ -76,122 +75,217 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
     },
   });
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-
-    if (!validateForm()) return;
-
-    if (data._id) {
-      updateContactMutation.mutate(data);
-    } else {
-      createContactMutation.mutate(data);
-    }
-  }
-
-  function handleBlur(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    const { name } = e.target;
-
-    const fieldName = name as keyof ContactFormErrors;
-    const error = validateField(fieldName, data[fieldName]);
-
-    setErrors(prev => ({
-      ...prev,
-      [fieldName]: error,
-    }));
-  };
-
-  function handleChange (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    const { name, value } = e.currentTarget;
-
-    setData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-
-  useEffect(() => {
-    setData({ ...initialData });
-  }, [initialData]);
-
   const isSubmitting = createContactMutation.isPending || updateContactMutation.isPending;
 
-  if (!data)
+  if (!form.state.values)
     return (<CircularProgress />)
 
   return (
     <div>
-      <Typography variant="h2">{data._id ? 'Editovat kontakt' : 'Vytvořit nový kontakt'}</Typography>
+      <Typography variant="h2">{form.state.values._id ? 'Editovat kontakt' : 'Vytvořit nový kontakt'}</Typography>
       <hr />
-      <form className="contact-form" onSubmit={handleSubmit}>
+      <form onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          form.handleSubmit();
+        }}
+        className="contact-form"
+      >
         <Typography variant="h3">Základní údaje</Typography>
 
         <div className="form-row">
-          <FieldGroup name="firstName" label="Jméno" value={data.firstName}
-            error={errors.firstName} onChange={handleChange}
-            onBlur={handleBlur} required={true}
-          />
+          <form.Field 
+            name="firstName"
+            validators={{ onBlur: zodBlurValidator(contactSchema.shape.firstName) }}
+            children={(field) => {
+              const error = field.state.meta.errors?.[0];
 
-          <FieldGroup name="lastName" label="Příjmení" value={data.lastName}
-            error={errors.lastName} onChange={handleChange}
-            onBlur={handleBlur} required={true}
+              return (
+                <TextField label="Jméno" variant="outlined"
+                  required name="firstName" value={field.state.value ?? ''}
+                  onChange={e => field.handleChange(e.target.value)} onBlur={field.handleBlur}
+                  className="text-field" error={!!error} helperText={error ?? ' '}
+                />
+            )}}
+          />
+          
+          <form.Field 
+            name="lastName"
+            validators={{ onBlur: zodBlurValidator(contactSchema.shape.lastName) }}
+            children={(field) => {
+              const error = field.state.meta.errors?.[0];
+
+              return (
+                <TextField label="Příjmení" variant="outlined" 
+                  required name="lastName" value={field.state.value ?? ''}
+                  onChange={e => field.handleChange(e.target.value)} onBlur={field.handleBlur}
+                  className="text-field" error={!!error} helperText={error ?? ' '}
+                />
+            )}}
           />
         </div>
 
         <div className="form-row">
-          <FieldGroup name="email" label="Email" value={data.email}
-            error={errors.email} onChange={handleChange}
-            onBlur={handleBlur} required={true}
+          <form.Field 
+            name="email"
+            validators={{ onBlur: zodBlurValidator(contactSchema.shape.email) }}
+            children={(field) => {
+              const error = field.state.meta.errors?.[0];
+
+              return (
+                <TextField label="Email" variant="outlined" 
+                  required name="email" value={field.state.value ?? ''}
+                  onChange={e => field.handleChange(e.target.value)} onBlur={field.handleBlur}
+                  className="text-field" error={!!error} helperText={error ?? ' '}
+                />
+            )}}
           />
         
-          <FieldGroup name="phone" label="Telefonní číslo" value={data.phone}
-            error={errors.phone} onChange={handleChange}
-            onBlur={handleBlur}
+          <form.Field 
+            name="phone"
+            validators={{ onBlur: zodBlurValidator(contactSchema.shape.phone) }}
+            children={(field) => {
+              const error = field.state.meta.errors?.[0];
+
+              return (
+                <TextField label="Telefonní číslo" variant="outlined" 
+                  name="phone" value={field.state.value ?? ''}
+                  onChange={e => field.handleChange(e.target.value)} onBlur={field.handleBlur}
+                  className="text-field" error={!!error} helperText={error ?? ' '}
+                />
+            )}}
           />
         </div>
         
-        <RadioGroup name="gender" label="Pohlaví" value={data.gender} 
-          onChange={handleChange} error={errors.gender}
-          items={GENDER_ITEMS}
-        />
+        <form.Field 
+          name="gender"
+          validators={{ onBlur: zodBlurValidator(contactSchema.shape.gender) }}
+          children={(field) => {
+            const error = field.state.meta.errors?.[0];
 
-        <FieldGroup name="note" label="Poznámka" value={data.note}
-          error={errors.note} onChange={handleChange}
-          onBlur={handleBlur} textarea={true}
-        />
+            return (
+              <FormControl error={!!error}>
+                <FormLabel id="gender">Pohlaví</FormLabel>
+                  <RadioGroup
+                    aria-labelledby="gender"
+                    value={field.state.value}
+                    name="gender" onChange={(_, value: string) => field.handleChange(value)}
+                  >
+                    {GENDER_ITEMS.map(i => (
+                      <FormControlLabel key={i.value} value={i.value} control={<Radio />} label={i.label} />
+                    ))}
+                  </RadioGroup>
+              </FormControl>
+          )}}
+        />  
+
+        <form.Field 
+          name="note"
+          validators={{ onBlur: zodBlurValidator(contactSchema.shape.note) }}
+          children={(field) => {
+            const error = field.state.meta.errors?.[0];
+
+            return (
+              <TextField label="Poznámka" variant="outlined" 
+                name="note" value={field.state.value ?? ''}
+                onChange={e => field.handleChange(e.target.value)} onBlur={field.handleBlur}
+                className="text-field" error={!!error} helperText={error ?? ' '}
+              />
+          )}}
+        />  
         
         <hr />
         <Typography variant="h3">Adresa</Typography>
 
         <div className="form-row">
-          <FieldGroup name="city" label="Město" value={data.city}
-            error={errors.city} onChange={handleChange}
-            onBlur={handleBlur}
+          <form.Field 
+            name="city"
+            validators={{ onBlur: zodBlurValidator(contactSchema.shape.city) }}
+            children={(field) => {
+              const error = field.state.meta.errors?.[0];
+
+              return (
+                <TextField label="Město" variant="outlined" 
+                  name="city" value={field.state.value ?? ''}
+                  onChange={e => field.handleChange(e.target.value)} onBlur={field.handleBlur}
+                  className="text-field" error={!!error} helperText={error ?? ' '}
+                />
+            )}}
           />
-          <FieldGroup name="street" label="Ulice" value={data.street}
-            error={errors.street} onChange={handleChange}
-            onBlur={handleBlur}
+
+          <form.Field 
+            name="street"
+            validators={{ onBlur: zodBlurValidator(contactSchema.shape.street) }}
+            children={(field) => {
+              const error = field.state.meta.errors?.[0];
+
+              return (
+                <TextField label="Ulice" variant="outlined" 
+                  name="street" value={field.state.value ?? ''}
+                  onChange={e => field.handleChange(e.target.value)} onBlur={field.handleBlur}
+                  className="text-field" error={!!error} helperText={error ?? ' '}
+                />
+            )}}
           />
         </div>
         
         <div className="form-row">
-          <FieldGroup name="houseNumber" label="Číslo a popisné" value={data.houseNumber}
-            error={errors.houseNumber} onChange={handleChange}
-            onBlur={handleBlur}
+          <form.Field 
+            name="houseNumber"
+            validators={{ onBlur: zodBlurValidator(contactSchema.shape.houseNumber) }}
+            children={(field) => {
+              const error = field.state.meta.errors?.[0];
+
+              return (
+                <TextField label="Číslo a popisné" variant="outlined" 
+                  name="houseNumber" value={field.state.value ?? ''}
+                  onChange={e => field.handleChange(e.target.value)} onBlur={field.handleBlur}
+                  className="text-field" error={!!error} helperText={error ?? ' '}
+                />
+            )}}
           />
-          <FieldGroup name="zipCode" label="ZIP" value={data.zipCode ?? 0}
-            error={errors.zipCode} onChange={handleChange}
-            onBlur={handleBlur}
+
+          <form.Field 
+            name="zipCode"
+            validators={{ onBlur: zodBlurValidator(contactSchema.shape.zipCode) }}
+            children={(field) => {
+              const error = field.state.meta.errors?.[0];
+
+              return (
+                <TextField label="ZIP" variant="outlined" type="number"
+                  name="zipCode" value={field.state.value ?? 0}
+                  onChange={e => field.handleChange(Number.parseInt(e.target.value))} onBlur={field.handleBlur}
+                  className="text-field" error={!!error} helperText={error ?? ' '}
+                />
+            )}}
           />
         </div>
         
         <hr />
 
-        <DateGroup name="birthDate" label="Datum narození" value={data.birthDate}
-          error={errors.birthDate}
-          onChange={value =>
-            setData(prev => ({ ...prev, birthDate: value }))
-          }
+        <form.Field 
+          name="birthDate"
+          validators={{ onBlur: zodBlurValidator(contactSchema.shape.birthDate) }}
+          children={(field) => {
+            const error = field.state.meta.errors?.[0];
+
+            return (
+              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={cs}>
+                <DatePicker
+                  label="Datum narození"
+                  value={toDate(field.state.value)}
+                  onChange={date => { field.handleChange(date ? date.toISOString().slice(0, 10) : undefined)} }
+                  slotProps={{
+                    textField: {
+                      name: "birthDate",
+                      error: !!error,
+                      helperText: error,
+                      className: 'text-field',
+                    },
+                  }}
+                />
+              </LocalizationProvider>
+          )}}
         />
 
         <Snackbar
@@ -204,8 +298,12 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
           </Alert>
         </Snackbar>
 
+        {form.getAllErrors().form.errors?.map(error => (
+          <p className="error">{error}</p>
+        ))}
+
         <Button type="submit" loading={isSubmitting} variant="contained">
-            {data._id ? 'Upravit kontakt' : 'Vytořit kontakt'}
+            {form.state.values._id ? 'Upravit kontakt' : 'Vytořit kontakt'}
         </Button>
       </form>
     </div>
