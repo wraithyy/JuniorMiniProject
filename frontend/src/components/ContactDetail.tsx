@@ -1,42 +1,40 @@
-import type { FC } from 'react';
+import { useMemo, type FC } from 'react';
 import type { Contact } from '../types/contact';
 
 interface ContactDetailProps {
   contact: Contact | null;
+  onEdit?: () => void,
 }
 
-export const ContactDetail: FC<ContactDetailProps> = ({ contact }) => {
-  // TODO: Implementovat detail kontaktu:
-  //
-  // 1. Zobrazit všechny informace o kontaktu
-  //    - Jméno a příjmení
-  //    - Email
-  //    - Pohlaví
-  //    - Telefon
-  //    - Poznámka
-  //    - Adresa (město, ulice, číslo popisné, PSČ)
-  //    - Datum narození
-  //
-  // 2. Styling pomocí CSS/SCSS
-  //
-  // 3. Pokud contact je null, zobrazit výzvu k výběru kontaktu
-  //
-  // Bonusový úkol:
-  // - Tlačítko "Editovat" které otevře formulář s předvyplněnými daty
+export const ContactDetail: FC<ContactDetailProps> = ({ contact, onEdit }) => {
+  const dateOfBirth = useMemo(() => {
+    if (!contact?.birthDate) return null;
+    if (typeof contact?.birthDate === "string")
+      return contact.birthDate;
 
-  if (!contact) {
+    return contact?.birthDate?.toLocaleDateString();
+  }, [contact?.birthDate]);
+
+  if (!contact)
     return (
       <div>
         <p>Vyberte kontakt ze seznamu pro zobrazení detailu</p>
       </div>
     );
-  }
 
   return (
     <div>
       <h2>Detail kontaktu</h2>
-      <p>TODO: Implementovat zobrazení detailu</p>
-      <p>Vybraný kontakt: {contact.firstName} {contact.lastName}</p>
+      <p>Vybraný kontakt: <b>{contact.firstName} {contact.lastName}</b></p>
+      <p>Email: <b>{contact.email ?? '-'}</b></p>
+      <p>Telefon: <b>{contact.phone ?? '-'}</b></p>
+      <p>Pohlaví: <b>{contact.gender ?? '-'}</b></p>
+      <p>Poznámka: <b>{contact.note ?? '-'}</b></p>
+      <p>Adresa: <b>{contact.city} {contact.street} {contact.houseNumber} {contact.zipCode}</b></p>
+      <p>Datum narození: <b>{dateOfBirth ?? '-'}</b></p>
+      <br />
+
+      <button onClick={() => onEdit?.()}>Upravit</button>
     </div>
   );
 };

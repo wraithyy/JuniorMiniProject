@@ -1,0 +1,34 @@
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .form-row {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+
+    h3 {
+        flex-basis: 100%;
+        margin-bottom: 16px;
+    }
+
+    hr {
+        flex-basis: 100%;
+        margin: 16px 0;
+    }
+}
+
+.submit {
+    margin: 16px auto;
+}
+
+.error-message {
+    font-size: 14px;
+    color: rgb(169, 19, 19);
+}
+
+.success {
+    color: rgb(28, 155, 28);
+}
