@@ -15,42 +15,11 @@ import RadioGroup from "./RadioGroup.tsx";
 type ContactFormProps = {
     onSubmit: (contact: Omit<Contact, 'create_date'>) => void;
     initialData?: Contact | null,
+    saving: boolean,
+    errorMessage: string,
 }
 
-export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
-  // TODO: Implementovat formulář s těmito prvky:
-  //
-  // Povinná pole:
-  // - firstName (text input)
-  // - lastName (text input)
-  // - email (email input)
-  //
-  // Radio buttons pro pohlaví:
-  // - gender (mužské/ženské/jiné)
-  //
-  // Volitelná pole:
-  // - phone (tel input)
-  // - note (textarea)
-  // - city (text input)
-  // - street (text input)
-  // - houseNumber (text input)
-  // - zipCode (number input)
-  // - birthDate (date input) - hezky naformátované
-  //
-  // Funkcionality:
-  // - Validace (povinná pole, validní email)
-  // - Zobrazení chybových hlášek
-  // - Styling pomocí CSS/SCSS
-  //
-  // Bonusové úkoly:
-  // - Loading indikátor při odesílání
-  // - Zobrazení úspěšné/chybové hlášky po odeslání
-  //
-  // Použití:
-  // - Použít připravený contactsApi.createContact() nebo contactsApi.updateContact()
-  // - Pro přístup k API klientu: import { contactsApi } from '../api/contactsApi'
-
-
+export const ContactForm = ({ onSubmit, initialData, saving, errorMessage  } : ContactFormProps) => {
 
     const emptyValues = {
         _id: "",
@@ -146,13 +115,11 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
 
 
         } else {
-            onSubmit(value)
-            console.log("submitted")
+            console.log("submitting")
 
-            setValue(emptyValues)
+            onSubmit(value);
+
         }
-
-
     }
 
 
@@ -260,8 +227,9 @@ export const ContactForm = ({ onSubmit, initialData } : ContactFormProps) => {
                   <button type="button" onClick={() => console.log(errors)}> Console.log(errors) </button>
 
 
-                  <button type="submit" className="submit">Submit</button>
-                  <small id="message"></small>
+                  <button type="submit" className="submit" disabled={saving}>{ saving ? "Saving..." : "Submit"}</button>
+                  <br/>
+                  <small style={{color: "red"}}>{errorMessage}</small>
 
               </form>
 
