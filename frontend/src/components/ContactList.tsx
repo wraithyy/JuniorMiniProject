@@ -9,17 +9,14 @@ type ContactListProps = {
 
 export const ContactList = ({ onContactSelect }: ContactListProps) => {
     const [contacts, setContacts] = useState<Contact[]>([])
-    const [message, setMessage] = useState("Loading...")
+    const [isLoading, setIsLoading] = useState(true)
 
 
     useEffect(() => {
         async function load() {
             const result = await contactsApi.getAllContacts();
             setContacts(result);
-
-            if (result.length === 0) {
-                setMessage("There are no contacts here")
-            } else {setMessage("")}
+            setIsLoading(false)
 
         }
         load();
@@ -30,17 +27,18 @@ export const ContactList = ({ onContactSelect }: ContactListProps) => {
     return (
     <div>
       <h2>List of Contacts</h2>
-
-        { contacts.length === 0 ? (
-            message
-        ) : (
-            contacts.map(contact => (
-                <div key={contact._id}>
-                    <div className={"contact-name"} onClick={() => onContactSelect(contact)} >
-                        {contact.firstName} {contact.lastName}
+        {
+        isLoading ? "Loading..." :
+        contacts.length === 0 ? "There are no contacts here." :
+            (
+                contacts.map(contact => (
+                    <div key={contact._id}>
+                        <div className={"contact-name"} onClick={() => onContactSelect(contact)} >
+                            {contact.firstName} {contact.lastName}
+                        </div>
                     </div>
-                </div>
-            )))}
+            )))
+        }
     </div>
   );
 };
