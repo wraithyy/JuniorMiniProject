@@ -14,7 +14,7 @@ export interface Contact {
   create_date?: Date | string;
 }
 
-export type ContactOmitted = Omit<Contact, '_id' | 'create_date'>
+export type ContactOmitted = Omit<Contact, '_id' | 'create_date'>;
 
 export interface ContactsResponse {
   status: string;

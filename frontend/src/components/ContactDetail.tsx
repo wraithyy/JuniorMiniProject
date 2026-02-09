@@ -4,14 +4,13 @@ import { Typography, Button } from '@mui/material';
 
 interface ContactDetailProps {
   contact: Contact | null;
-  onEdit?: () => void,
+  onEdit?: () => void;
 }
 
 export const ContactDetail: FC<ContactDetailProps> = ({ contact, onEdit }) => {
   const dateOfBirth = useMemo(() => {
     if (!contact?.birthDate) return null;
-    if (typeof contact?.birthDate === "string")
-      return contact.birthDate;
+    if (typeof contact?.birthDate === 'string') return contact.birthDate;
 
     return contact?.birthDate?.toLocaleDateString();
   }, [contact?.birthDate]);
@@ -26,16 +25,38 @@ export const ContactDetail: FC<ContactDetailProps> = ({ contact, onEdit }) => {
   return (
     <div>
       <Typography variant="h2">Detail kontaktu</Typography>
-      <Typography variant="subtitle1">Vybraný kontakt: <b>{contact.firstName} {contact.lastName}</b></Typography>
-      <Typography variant="subtitle1">Email: <b>{contact.email ?? '-'}</b></Typography>
-      <Typography variant="subtitle1">Telefon: <b>{contact.phone ?? '-'}</b></Typography>
-      <Typography variant="subtitle1">Pohlaví: <b>{contact.gender ?? '-'}</b></Typography>
-      <Typography variant="subtitle1">Poznámka: <b>{contact.note ?? '-'}</b></Typography>
-      <Typography variant="subtitle1">Adresa: <b>{contact.city} {contact.street} {contact.houseNumber} {contact.zipCode}</b></Typography>
-      <Typography variant="subtitle1">Datum narození: <b>{dateOfBirth ?? '-'}</b></Typography>
+      <Typography variant="subtitle1">
+        Vybraný kontakt:{' '}
+        <b>
+          {contact.firstName} {contact.lastName}
+        </b>
+      </Typography>
+      <Typography variant="subtitle1">
+        Email: <b>{contact.email ?? '-'}</b>
+      </Typography>
+      <Typography variant="subtitle1">
+        Telefon: <b>{contact.phone ?? '-'}</b>
+      </Typography>
+      <Typography variant="subtitle1">
+        Pohlaví: <b>{contact.gender ?? '-'}</b>
+      </Typography>
+      <Typography variant="subtitle1">
+        Poznámka: <b>{contact.note ?? '-'}</b>
+      </Typography>
+      <Typography variant="subtitle1">
+        Adresa:{' '}
+        <b>
+          {contact.city} {contact.street} {contact.houseNumber} {contact.zipCode}
+        </b>
+      </Typography>
+      <Typography variant="subtitle1">
+        Datum narození: <b>{dateOfBirth ?? '-'}</b>
+      </Typography>
       <br />
 
-      <Button variant="contained" onClick={() => onEdit?.()}>Upravit</Button>
+      <Button variant="contained" onClick={() => onEdit?.()}>
+        Upravit
+      </Button>
     </div>
   );
 };

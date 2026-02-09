@@ -1,19 +1,31 @@
-import { type FC } from 'react';
+import type { FC } from 'react';
 import type { Contact } from '../types/contact';
 import { contactsApi } from '../api/contactsApi';
 import './ContactList.scss';
 import CloseIcon from '@mui/icons-material/Close';
-import { IconButton, CircularProgress, Typography, List, ListItemButton, ListItemText, ListItemIcon } from '@mui/material';
-import { useQuery, useMutation} from '@tanstack/react-query';
+import {
+  IconButton,
+  CircularProgress,
+  Typography,
+  List,
+  ListItemButton,
+  ListItemText,
+  ListItemIcon,
+} from '@mui/material';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { queryClient } from '../queryClient';
 
 interface ContactListProps {
-  selectedContact: Contact | null,
+  selectedContact: Contact | null;
   onContactSelect?: (contact: Contact | null) => void;
 }
 
 export const ContactList: FC<ContactListProps> = ({ onContactSelect, selectedContact }) => {
-  const { data: contacts, isLoading, error } = useQuery({ queryKey: ['contacts'], queryFn: contactsApi.getAllContacts })
+  const {
+    data: contacts,
+    isLoading,
+    error,
+  } = useQuery({ queryKey: ['contacts'], queryFn: contactsApi.getAllContacts });
 
   function handleClick(contact: Contact) {
     if (!onContactSelect) return;
@@ -37,17 +49,20 @@ export const ContactList: FC<ContactListProps> = ({ onContactSelect, selectedCon
     deleteContactMutation.mutate(contact._id);
   }
 
-  if (isLoading || !contacts)
-    return (<CircularProgress />)
-  
+  if (isLoading || !contacts) return <CircularProgress />;
+
   if (error)
-    return (<Typography variant="subtitle1" color="error">Nepodařilo se načíst list</Typography>)
+    return (
+      <Typography variant="subtitle1" color="error">
+        Nepodařilo se načíst list
+      </Typography>
+    );
 
   return (
     <div>
       <Typography variant="h2">Seznam kontaktů</Typography>
       <List>
-        {contacts.map(contact => (
+        {contacts.map((contact) => (
           <ListItemButton selected={selectedContact === contact} key={contact._id} onClick={() => handleClick(contact)}>
             <ListItemText>
               {contact.firstName} {contact.lastName}

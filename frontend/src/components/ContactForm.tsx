@@ -1,13 +1,13 @@
 import { useEffect, useState, type FC } from 'react';
 import type { Contact, ContactOmitted } from '../types/contact';
-import "./ContactForm.scss";
+import './ContactForm.scss';
 import { contactsApi } from '../api/contactsApi';
 import { mapZodErrors, shallowEqual } from '../helpers';
 import ContactSchema from '../validation/contact';
 import { FieldGroup } from './form/FieldGroup';
 import { RadioGroup } from './form/RadioGroup';
 import { DateGroup } from './form/DateGroup';
-import { SnackbarData } from '../types/snackbar';
+import type { SnackbarData } from '../types/snackbar';
 import { Alert, CircularProgress, Typography, Button, Snackbar } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '../queryClient';
@@ -17,14 +17,12 @@ interface ContactFormProps {
   initialData: Contact;
 }
 
-type ContactFormErrors = Partial<
-  Record<keyof Omit<Contact, '_id' | 'create_date'>, string>
->;
+type ContactFormErrors = Partial<Record<keyof Omit<Contact, '_id' | 'create_date'>, string>>;
 
 const GENDER_ITEMS = [
-  { label: "Muž", value: "on" },
-  { label: "Žena", value: "ona" },
-  { label: "Ostatní", value: "ono" },
+  { label: 'Muž', value: 'on' },
+  { label: 'Žena', value: 'ona' },
+  { label: 'Ostatní', value: 'ono' },
 ];
 
 export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => {
@@ -38,7 +36,7 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
     sePrevInitialData({ ...initialData });
   }
 
-  function validateField<K extends keyof typeof ContactSchema.shape>( fieldName: K, value: unknown): string | undefined {
+  function validateField<K extends keyof typeof ContactSchema.shape>(fieldName: K, value: unknown): string | undefined {
     const fieldSchema = ContactSchema.shape[fieldName];
     const result = fieldSchema.safeParse(value);
 
@@ -50,18 +48,18 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
   function validateForm(): boolean {
     const result = ContactSchema.safeParse(data);
     if (result.success) return true;
-   
+
     const mappedErrors = mapZodErrors(result.error);
     setErrors(mappedErrors);
 
     return false;
-  };
+  }
 
   const createContactMutation = useMutation({
     mutationFn: (contact: Omit<Contact, '_id' | 'create_date'>) => contactsApi.createContact(contact),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['contacts'] });
-      setSnackbar({ text: 'Kontakt byl vytvořen', type: 'success'});
+      setSnackbar({ text: 'Kontakt byl vytvořen', type: 'success' });
       onSubmit(data);
     },
     onError: () => {
@@ -70,8 +68,10 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
   });
 
   const updateContactMutation = useMutation({
-    mutationFn: (contact: Contact) =>
-      contactsApi.updateContact(contact._id!, contact),
+    mutationFn: (contact: Contact) => {
+      if (!contact._id) throw new Error('Contact is missing ID');
+      return contactsApi.updateContact(contact._id, contact);
+    },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['contacts'] });
       setSnackbar({ text: 'Kontakt byl upraven', type: 'success' });
@@ -100,21 +100,20 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
     const fieldName = name as keyof ContactFormErrors;
     const error = validateField(fieldName, data[fieldName]);
 
-    setErrors(prev => ({
+    setErrors((prev) => ({
       ...prev,
       [fieldName]: error,
     }));
-  };
+  }
 
-  function handleChange (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = e.currentTarget;
 
-    setData(prev => ({
+    setData((prev) => ({
       ...prev,
       [name]: value,
     }));
-  };
-
+  }
 
   useEffect(() => {
     setData({ ...initialData });
@@ -122,8 +121,7 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
 
   const isSubmitting = createContactMutation.isPending || updateContactMutation.isPending;
 
-  if (!data)
-    return (<CircularProgress />)
+  if (!data) return <CircularProgress />;
 
   return (
     <div>
@@ -133,85 +131,124 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
         <Typography variant="h3">Základní údaje</Typography>
 
         <div className="form-row">
-          <FieldGroup name="firstName" label="Jméno" value={data.firstName}
-            error={errors.firstName} onChange={handleChange}
-            onBlur={handleBlur} required={true}
+          <FieldGroup
+            name="firstName"
+            label="Jméno"
+            value={data.firstName}
+            error={errors.firstName}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            required={true}
           />
 
-          <FieldGroup name="lastName" label="Příjmení" value={data.lastName}
-            error={errors.lastName} onChange={handleChange}
-            onBlur={handleBlur} required={true}
+          <FieldGroup
+            name="lastName"
+            label="Příjmení"
+            value={data.lastName}
+            error={errors.lastName}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            required={true}
           />
         </div>
 
         <div className="form-row">
-          <FieldGroup name="email" label="Email" value={data.email}
-            error={errors.email} onChange={handleChange}
-            onBlur={handleBlur} required={true}
+          <FieldGroup
+            name="email"
+            label="Email"
+            value={data.email}
+            error={errors.email}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            required={true}
           />
-        
-          <FieldGroup name="phone" label="Telefonní číslo" value={data.phone}
-            error={errors.phone} onChange={handleChange}
+
+          <FieldGroup
+            name="phone"
+            label="Telefonní číslo"
+            value={data.phone}
+            error={errors.phone}
+            onChange={handleChange}
             onBlur={handleBlur}
           />
         </div>
-        
-        <RadioGroup name="gender" label="Pohlaví" value={data.gender} 
-          onChange={handleChange} error={errors.gender}
+
+        <RadioGroup
+          name="gender"
+          label="Pohlaví"
+          value={data.gender}
+          onChange={handleChange}
+          error={errors.gender}
           items={GENDER_ITEMS}
         />
 
-        <FieldGroup name="note" label="Poznámka" value={data.note}
-          error={errors.note} onChange={handleChange}
-          onBlur={handleBlur} textarea={true}
+        <FieldGroup
+          name="note"
+          label="Poznámka"
+          value={data.note}
+          error={errors.note}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          textarea={true}
         />
-        
+
         <hr />
         <Typography variant="h3">Adresa</Typography>
 
         <div className="form-row">
-          <FieldGroup name="city" label="Město" value={data.city}
-            error={errors.city} onChange={handleChange}
+          <FieldGroup
+            name="city"
+            label="Město"
+            value={data.city}
+            error={errors.city}
+            onChange={handleChange}
             onBlur={handleBlur}
           />
-          <FieldGroup name="street" label="Ulice" value={data.street}
-            error={errors.street} onChange={handleChange}
+          <FieldGroup
+            name="street"
+            label="Ulice"
+            value={data.street}
+            error={errors.street}
+            onChange={handleChange}
             onBlur={handleBlur}
           />
         </div>
-        
+
         <div className="form-row">
-          <FieldGroup name="houseNumber" label="Číslo a popisné" value={data.houseNumber}
-            error={errors.houseNumber} onChange={handleChange}
+          <FieldGroup
+            name="houseNumber"
+            label="Číslo a popisné"
+            value={data.houseNumber}
+            error={errors.houseNumber}
+            onChange={handleChange}
             onBlur={handleBlur}
           />
-          <FieldGroup name="zipCode" label="ZIP" value={data.zipCode ?? 0}
-            error={errors.zipCode} onChange={handleChange}
+          <FieldGroup
+            name="zipCode"
+            label="ZIP"
+            value={data.zipCode ?? 0}
+            error={errors.zipCode}
+            onChange={handleChange}
             onBlur={handleBlur}
           />
         </div>
-        
+
         <hr />
 
-        <DateGroup name="birthDate" label="Datum narození" value={data.birthDate}
+        <DateGroup
+          name="birthDate"
+          label="Datum narození"
+          value={data.birthDate}
           error={errors.birthDate}
-          onChange={value =>
-            setData(prev => ({ ...prev, birthDate: value }))
-          }
+          onChange={(value) => setData((prev) => ({ ...prev, birthDate: value }))}
         />
 
-        <Snackbar
-          open={!!snackbar}
-          autoHideDuration={6000}
-          onClose={() => setSnackbar(null)}
-        >
-          <Alert severity={snackbar?.type ?? 'success'}>
-            {snackbar?.text}
-          </Alert>
+        <Snackbar open={!!snackbar} autoHideDuration={6000} onClose={() => setSnackbar(null)}>
+          <Alert severity={snackbar?.type ?? 'success'}>{snackbar?.text}</Alert>
         </Snackbar>
 
         <Button type="submit" loading={isSubmitting} variant="contained">
-            {data._id ? 'Upravit kontakt' : 'Vytořit kontakt'}
+          {data._id ? 'Upravit kontakt' : 'Vytořit kontakt'}
         </Button>
       </form>
     </div>
