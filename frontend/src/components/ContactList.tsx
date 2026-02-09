@@ -8,54 +8,39 @@ type ContactListProps = {
 }
 
 export const ContactList = ({ onContactSelect }: ContactListProps) => {
-  // TODO: Implementovat seznam kontaktů:
-  //
-  // 1. Načíst všechny kontakty pomocí contactsApi.getAllContacts()
-  //    - použít useEffect pro načtení při mount komponenty
-  //    - použít useState pro uložení kontaktů
-  //
-  // 2. Zobrazit seznam jmen kontaktů
-  //    - Zobrazit firstName a lastName
-  //    - Při kliknutí na jméno zavolat onContactSelect
-  //
-  // 3. Tlačítko "Smazat" u každého kontaktu
-  //    - Při kliknutí zavolat contactsApi.deleteContact(id)
-  //    - Po smazání znovu načíst seznam
-  //
-  // 4. Styling pomocí CSS/SCSS
-  //
-  // 5. Error handling:
-  //    - Loading stav během načítání
-  //    - Zobrazení chybové hlášky při selhání
-  //
-  // Použití API klientu:
-  // import { contactsApi } from '../api/contactsApi'
-
     const [contacts, setContacts] = useState<Contact[]>([])
+    const [message, setMessage] = useState("Loading...")
 
 
     useEffect(() => {
         async function load() {
             const result = await contactsApi.getAllContacts();
             setContacts(result);
+
+            if (result.length === 0) {
+                setMessage("There are no contacts here")
+            } else {setMessage("")}
+
         }
         load();
-    }, []);
 
-    console.log(contacts? contacts : "nope")
+    }, []);
 
 
     return (
     <div>
       <h2>List of Contacts</h2>
 
-        {contacts.map(contact => (
+        { contacts.length === 0 ? (
+            message
+        ) : (
+            contacts.map(contact => (
                 <div key={contact._id}>
                     <div className={"contact-name"} onClick={() => onContactSelect(contact)} >
                         {contact.firstName} {contact.lastName}
                     </div>
                 </div>
-            ))}
+            )))}
     </div>
   );
 };
