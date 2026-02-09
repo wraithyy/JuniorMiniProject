@@ -12,17 +12,10 @@ function App() {
   const [currentPage, setCurrentPage] = useState<Page>('form');
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [reload, setReload] = useState(0);
-  const [initialData, setInitialData] = useState<Contact | null>(null)
+  const [initialData, setInitialData] = useState<Contact | null>(null);
+  const [errorMessage, setErrorMessage] = useState("")
+  const [saving, setSaving] = useState(false);
 
-  // TODO: Implementovat navigaci mezi stránkami
-  // TODO: Implementovat handlery pro vytvoření/editaci kontaktu
-  // TODO: Implementovat výběr kontaktu ze seznamu
-  //
-  // Tato kostra ukazuje základní strukturu aplikace.
-  // Junioři mohou implementovat detaily podle zadání.
-
-
-    //TODO sem jednou hodit useeffect pro načtení dat
 
 
     function handleDelete(contact: Contact){
@@ -44,6 +37,49 @@ function App() {
       setSelectedContact(null);
     }
 
+
+    function onSubmit (contact: Contact) {
+        if(contact._id){
+
+            setSaving(() => true)
+             contactsApi.updateContact(contact._id, contact).then(r => {
+                console.log(r);
+                 setCurrentPage("list");
+                 setSelectedContact(r)
+                 setErrorMessage("")
+
+            }).catch(error => {
+                console.log(error)
+                console.log("upsík error");
+                setErrorMessage("There was a problem saving the contact.")
+
+            }).finally(() => {
+                console.log("je možné znova upravovat");
+                setSaving(false)
+            })
+
+        } else {
+
+            setSaving(() => true)
+             contactsApi.createContact(contact).then(r => {
+                console.log(r);
+                setCurrentPage("list");
+                setSelectedContact(r)
+                 setErrorMessage("")
+
+
+             }).catch(error => {
+                console.log(error)
+                console.log("upsík error")
+                 setErrorMessage("There was a problem saving the contact.")
+
+            }).finally(() => {
+                console.log("je možné znova upravovat");
+                setSaving(false)
+            })
+        }
+    }
+
   return (
     <div className="app">
       <header>
@@ -60,16 +96,8 @@ function App() {
       <main>
         {currentPage === 'form' ? (
           <ContactForm
-            onSubmit={(contact) => {
-
-                if(contact._id){
-                    contactsApi.updateContact(contact._id, contact).then(r => console.log(r))
-                } else {
-                    contactsApi.createContact(contact).then(r => console.log(r));
-                }
-
-            }}
-            initialData={initialData}
+            onSubmit={(contact) => {onSubmit(contact)}}
+            initialData={initialData} saving={saving} errorMessage={errorMessage}
           />
         ) : (
           <div className="list-view">
