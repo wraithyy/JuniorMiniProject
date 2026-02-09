@@ -1,63 +1,81 @@
 import { useState } from 'react';
+import { ContactDetail } from './components/ContactDetail';
 import { ContactForm } from './components/ContactForm';
 import { ContactList } from './components/ContactList';
-import { ContactDetail } from './components/ContactDetail';
 import type { Contact } from './types/contact';
 import './App.scss';
+import { createTheme, Tab, Tabs, THEME_ID, ThemeProvider, Typography } from '@mui/material';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './queryClient';
 
 type Page = 'form' | 'list';
+
 const EMPTY_CONTACT: Contact = {
   firstName: '',
   lastName: '',
   email: '',
-  gender: undefined,
+  gender: '',
   phone: '',
   note: '',
   city: '',
   street: '',
   houseNumber: '',
-  zipCode: 0,
+  zipCode: undefined,
   birthDate: '',
 };
+
+const materialTheme = createTheme({
+  typography: {
+    h1: { fontSize: 32 },
+    h2: { fontSize: 28, marginBottom: 12 },
+    h3: { fontSize: 24 },
+  },
+});
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('form');
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
 
-  return (
-    <div className="app">
-      <header>
-        <h1>Správa kontaktů</h1>
-        <nav>
-          <button onClick={() => { setSelectedContact(null); setCurrentPage('form')} }>Vytvořit kontakt</button>
-          <button onClick={() => setCurrentPage('list')}>Seznam kontaktů</button>
-        </nav>
-      </header>
+  function handlePageChange(_e: React.SyntheticEvent, newVal: Page) {
+    if (newVal === 'form') setSelectedContact(null);
 
-      <main>
-        {currentPage === 'form' ? (
-          <ContactForm
-            onSubmit={(contact) => {
-              console.log('TODO: Implementovat vytvoření kontaktu', contact);
-            }}
-            initialData={selectedContact ?? EMPTY_CONTACT}
-          />
-        ) : (
-          <div className="list-view">
-            <div className="list-panel">
-              <ContactList
-                onContactSelect={(contact) => {
-                  setSelectedContact(contact);
-                }}
-              />
-            </div>
-            <div className="detail-panel">
-              <ContactDetail contact={selectedContact} onEdit={() => setCurrentPage('form')} />
-            </div>
-          </div>
-        )}
-      </main>
-    </div>
+    setCurrentPage(newVal);
+  }
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={{ [THEME_ID]: materialTheme }}>
+        <div className="app">
+          <header>
+            <Typography variant="h1">Správa kontaktů</Typography>
+            <Tabs value={currentPage} onChange={handlePageChange}>
+              <Tab label="Vytvořit kontakt" value="form" onClick={() => setSelectedContact(null)} />
+              <Tab label="Seznam kontaktů" value="list" />
+            </Tabs>
+          </header>
+
+          <main>
+            {currentPage === 'form' ? (
+              <ContactForm onSubmit={() => {}} initialData={selectedContact ?? EMPTY_CONTACT} />
+            ) : (
+              <div className="list-view">
+                <div className="list-panel">
+                  <ContactList
+                    selectedContact={selectedContact}
+                    onContactSelect={(contact) => {
+                      setSelectedContact(contact);
+                    }}
+                  />
+                </div>
+                <div className="detail-panel">
+                  <ContactDetail contact={selectedContact} onEdit={() => setCurrentPage('form')} />
+                </div>
+              </div>
+            )}
+          </main>
+        </div>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 
