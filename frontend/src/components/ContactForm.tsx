@@ -33,10 +33,6 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
   const [prevInitialData, sePrevInitialData] = useState<Contact>({ ...initialData });
   const [errors, setErrors] = useState<ContactFormErrors>({});
 
-  useEffect(() => {
-    setData({ ...initialData });
-  }, [initialData]);
-
   if (!shallowEqual(initialData, prevInitialData)) {
     setData({ ...initialData });
     sePrevInitialData({ ...initialData });
