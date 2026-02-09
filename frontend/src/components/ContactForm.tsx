@@ -18,7 +18,7 @@ interface ContactFormProps {
 }
 
 type ContactFormErrors = Partial<
-  Record<keyof Omit<Contact, '_id' | 'create_date'>, string>
+  Record<keyof ContactOmitted, string>
 >;
 
 const GENDER_ITEMS = [
@@ -32,6 +32,10 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
   const [data, setData] = useState<Contact>({ ...initialData });
   const [prevInitialData, sePrevInitialData] = useState<Contact>({ ...initialData });
   const [errors, setErrors] = useState<ContactFormErrors>({});
+
+  useEffect(() => {
+    setData({ ...initialData });
+  }, [initialData]);
 
   if (!shallowEqual(initialData, prevInitialData)) {
     setData({ ...initialData });
@@ -58,7 +62,7 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
   };
 
   const createContactMutation = useMutation({
-    mutationFn: (contact: Omit<Contact, '_id' | 'create_date'>) => contactsApi.createContact(contact),
+    mutationFn: (contact: ContactOmitted) => contactsApi.createContact(contact),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['contacts'] });
       setSnackbar({ text: 'Kontakt byl vytvořen', type: 'success'});
@@ -114,11 +118,6 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
       [name]: value,
     }));
   };
-
-
-  useEffect(() => {
-    setData({ ...initialData });
-  }, [initialData]);
 
   const isSubmitting = createContactMutation.isPending || updateContactMutation.isPending;
 
