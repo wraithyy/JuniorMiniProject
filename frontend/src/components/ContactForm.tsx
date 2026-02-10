@@ -18,13 +18,12 @@ type FormData = z.infer<typeof ContactSchema>
 
 
 type ContactFormProps = {
-    onSubmitForm: (contact: Omit<Contact, 'create_date'>) => void;
+    onSubmitForm: (contact: FormData) => Promise<boolean>;
     initialData?: Contact | null,
-    saving: boolean,
     errorMessage: string,
 }
 
-export const ContactForm = ({ onSubmitForm, initialData, saving, errorMessage  } : ContactFormProps) => {
+export const ContactForm = ({ onSubmitForm, initialData,  errorMessage  } : ContactFormProps) => {
 
     const emptyValues = {
         _id: "",
@@ -45,7 +44,7 @@ export const ContactForm = ({ onSubmitForm, initialData, saving, errorMessage  }
     const {
         register,
         handleSubmit,
-        formState: { errors},
+        formState: { errors, isSubmitting},
         reset,
         control,
     } = useForm<FormData>({
@@ -55,9 +54,9 @@ export const ContactForm = ({ onSubmitForm, initialData, saving, errorMessage  }
     });
 
 
-    const onSubmit = (values: FormData) => {
+    const onSubmit = async (values: FormData) => {
         console.log(values)
-        onSubmitForm(values)
+        await onSubmitForm(values)
         reset()
     }
 
@@ -114,6 +113,8 @@ export const ContactForm = ({ onSubmitForm, initialData, saving, errorMessage  }
 
                       <label htmlFor={"other"}>Other</label>
                       <input type="radio" id={"other"} value={"other"} {...register("gender")}/>
+
+                      { errors.gender && <p style={{color: "red"}}>{errors.gender.message}</p>}
                   </fieldset>
 
 
@@ -148,7 +149,7 @@ export const ContactForm = ({ onSubmitForm, initialData, saving, errorMessage  }
                   <button type="button" onClick={() => console.log(errors)}> Console.log(errors) </button>
 
 
-                  <button type="submit" className="submit" disabled={saving}>{ saving ? "Saving..." : "Submit"}</button>
+                  <button type="submit" className="submit" disabled={isSubmitting} onClick={() => console.log("click")}>{ isSubmitting ? "Saving..." : "Submit"}</button>
                   <br/>
                   <small style={{color: "red"}}>{errorMessage}</small>
 
