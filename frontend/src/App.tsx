@@ -5,6 +5,7 @@ import { ContactDetail } from './components/ContactDetail';
 import type { Contact } from './types/contact';
 import './App.css';
 import { contactsApi } from './api/contactsApi'
+import {ContactSchema} from "./components/ContactSchema.tsx";
 
 type Page = 'form' | 'list';
 
@@ -96,7 +97,7 @@ function App() {
       <main>
         {currentPage === 'form' ? (
           <ContactForm
-            onSubmit={(contact) => {onSubmit(contact)}}
+            onSubmitForm={(contact) => {onSubmit(contact)}}
             initialData={initialData} saving={saving} errorMessage={errorMessage}
           />
         ) : (

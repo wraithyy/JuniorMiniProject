@@ -10,16 +10,21 @@ import type z from "zod"
 import {ContactSchema} from "./ContactSchema.tsx";
 import RadioGroup from "./RadioGroup.tsx";
 
+import {useForm, useWatch} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+
+type FormData = z.infer<typeof ContactSchema>
+
 
 
 type ContactFormProps = {
-    onSubmit: (contact: Omit<Contact, 'create_date'>) => void;
+    onSubmitForm: (contact: Omit<Contact, 'create_date'>) => void;
     initialData?: Contact | null,
     saving: boolean,
     errorMessage: string,
 }
 
-export const ContactForm = ({ onSubmit, initialData, saving, errorMessage  } : ContactFormProps) => {
+export const ContactForm = ({ onSubmitForm, initialData, saving, errorMessage  } : ContactFormProps) => {
 
     const emptyValues = {
         _id: "",
@@ -36,91 +41,28 @@ export const ContactForm = ({ onSubmit, initialData, saving, errorMessage  } : C
         birthDate: "",
     }
 
-    const [value, setValue] = useState<Contact>(
-        initialData ? initialData : emptyValues
-    );
 
-
-    const [errors, setErrors] = useState({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        note: "",
-        gender: "",
-        city: "",
-        street: "",
-        houseNumber: "",
-        zipCode: "",
-        birthDate: "",
-
+    const {
+        register,
+        handleSubmit,
+        formState: { errors},
+        reset,
+        control,
+    } = useForm<FormData>({
+        resolver: zodResolver(ContactSchema),
+        mode: "onTouched",
+        defaultValues: initialData ? initialData : emptyValues
     });
 
-    //tohle funguje, ale nechápu jak
-    const fieldSchema = <K extends keyof z.infer<typeof ContactSchema>>(key: K) =>
-        ContactSchema.shape[key];
 
-
-    function validate(name: keyof Omit<Contact, "_id" | "create_date">, data: string | number){
-
-        const result = fieldSchema(name).safeParse(data);
-
-        if (!result.success) {
-            setErrors({
-                ...errors,
-                [name] : result.error.issues[0].message,
-            });
-        } else {
-            setErrors({
-                ...errors,
-                [name] : "",
-            })
-        }
-
-
+    const onSubmit = (values: FormData) => {
+        console.log(values)
+        onSubmitForm(values)
+        reset()
     }
 
+    const neco = useWatch({control})
 
-    function handleOnBlur(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>){
-        e.preventDefault();
-        validate(e.target.name, e.target.value)
-
-    }
-
-    function handleInputChange(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
-        const data = e.target.name === "zipCode" ? parseInt(e.target.value) : e.target.value;
-
-        setValue({
-            ...value,
-            [e.target.name]: data,
-        })
-
-    }
-
-    //submit working like this nice
-    function handleSubmit() {
-
-        const result = ContactSchema.safeParse(value)
-
-        if (!result.success) {
-            console.log("not okay")
-
-            result.error.issues.forEach((element) => {
-                setErrors(errors => ({
-                    ...errors,
-                    [element.path[0]] : element.message,
-                }));
-            })
-
-
-
-        } else {
-            console.log("submitting")
-
-            onSubmit(value);
-
-        }
-    }
 
 
     const options = [
@@ -131,99 +73,78 @@ export const ContactForm = ({ onSubmit, initialData, saving, errorMessage  } : C
 
     ]
 
+    //odstraněny všechny errory
   return (
       <div>
           <h2>{initialData ? 'Editovat kontakt' : 'Vytvořit nový kontakt'}</h2>
 
           <div className="form-group">
-              <form className="form-horizontal" id="contactForm" action={handleSubmit}>
+              <form className="form-horizontal" id="contactForm" onSubmit={handleSubmit(onSubmit)} noValidate>
 
-                  { value._id ? (<InputComponent id={"_id"} type={"hidden"} name={"_id"} label={"ID:"} />) : null }
-
-                  <InputComponent
-                      id={"firstName"} label={"First Name"} type={"text"} name={"firstName"} placeholder={"John"} error={errors?.firstName}
-                      value={value?.firstName} onChange={(e) => handleInputChange(e)}
-                      onBlur={(e) => handleOnBlur(e)}
-                       />
-
-                  <InputComponent
-                      id={"lastName"} label={"Last Name"} type={"text"} name={"lastName"} placeholder={"Smith"} error={errors?.lastName}
-                      value={value?.lastName} onChange={(e) => handleInputChange(e)}
-                      onBlur={(e) => handleOnBlur(e)}
-                      />
-
-                  <InputComponent
-                      id={"email"} label={"Email"} type={"email"} name={"email"} placeholder={"john.smith@tardis.uk"} error={errors?.email}
-                      value={value?.email} onChange={(e) => handleInputChange(e)}
-                      onBlur={(e) => handleOnBlur(e)}
-                      />
+                  <label htmlFor={"firstName"}>First Name</label>
+                  <input type="text" id={"firstName"} placeholder={"John"} {...register("firstName")}/>
+                  { errors.firstName && <p style={{color: "red"}}>{errors.firstName.message}</p>}
 
 
-                  <InputComponent
-                      id={"phone"} label={"Phone"} type={"tel"} name={"phone"} placeholder={"+420 123 456 789"} error={errors?.phone}
-                      value={value?.phone} onChange={(e) => handleInputChange(e)}
-                      onBlur={(e) => handleOnBlur(e)}
-                  />
+                  <label htmlFor={"lastName"}>Last Name</label>
+                  <input type="text" id={"lastName"} placeholder={"Smith"} {...register("lastName")}/>
+                  { errors.lastName && <p style={{color: "red"}}>{errors.lastName.message}</p>}
+
+                  <label htmlFor={"email"}>Email</label>
+                  <input type="text" id={"email"} placeholder={"mail@mail.mail"} {...register("email")}/>
+                  { errors.email && <p style={{color: "red"}}>{errors.email.message}</p>}
 
 
-                  <TextArea
-                      idName={"note"} name={"Note"} placeholder={"Enter some notes about your new contact..."} error={errors?.note}
-                      value={value?.note} onChange={(e) => handleInputChange(e)}
-                      onBlur={(e) => handleOnBlur(e)}
-                  />
+                  <label htmlFor={"phone"}>Phone</label>
+                  <input type="text" id={"phone"} placeholder={"123456789"} {...register("phone")}/>
+                  { errors.phone && <p style={{color: "red"}}>{errors.phone.message}</p>}
 
 
+                  <label htmlFor={"note"}>Note</label>
+                  <textarea id={"note"} rows={5} {...register("note")}/>
+                  { errors.note && <p style={{color: "red"}}>{errors.note.message}</p>}
+
+                  <fieldset className={"gender"}>
+                      <legend>Gender</legend>
+                      <label htmlFor={"female"}>Female</label>
+                      <input type="radio" id={"female"} value={"female"} {...register("gender")}/>
+
+                      <label htmlFor={"male"}>Male</label>
+                      <input type="radio" id={"male"} value={"male"} {...register("gender")}/>
+
+                      <label htmlFor={"other"}>Other</label>
+                      <input type="radio" id={"other"} value={"other"} {...register("gender")}/>
+                  </fieldset>
 
 
-                  <FieldSet id={"gender"} legend={"Gender"} className={"gender"} >
+                  <fieldset>
+                      <legend>Address</legend>
 
-                      <RadioGroup options={options}
-                                  value={value?.gender}
-                                  onChange={(e) => handleInputChange(e)}
-                                  onBlur={(e) => handleOnBlur(e)}
-                      />
+                      <label htmlFor={"city"}>City</label>
+                      <input type="text" id={"city"} placeholder={"Gotham"} {...register("city")}/>
+                      { errors.city && <p style={{color: "red"}}>{errors.city.message}</p>}
 
+                      <label htmlFor={"street"}>Street</label>
+                      <input type="text" id={"street"} placeholder={"Batstreet"} {...register("street")}/>
+                      { errors.street && <p style={{color: "red"}}>{errors.street.message}</p>}
 
-                  </FieldSet>
+                      <label htmlFor={"houseNumber"}>House Number</label>
+                      <input type="text" id={"houseNumber"} placeholder={"47"}  {...register("houseNumber")}/>
+                      { errors.houseNumber && <p style={{color: "red"}}>{errors.houseNumber.message}</p>}
 
-                  <FieldSet id={"address"} legend={"Address"} >
-
-                      <InputComponent
-                          id={"city"} label={"City"} type={"text"} name={"city"} placeholder={"Gotham"} error={errors?.city}
-                          value={value?.city} onChange={(e) => handleInputChange(e)}
-                          onBlur={(e) => handleOnBlur(e)}
-                      />
-
-                      <InputComponent
-                          id={"street"} label={"Street"} type={"text"} name={"street"} placeholder={"Batstreet"} error={errors?.street}
-                          value={value?.street} onChange={(e) => handleInputChange(e)}
-                          onBlur={(e) => handleOnBlur(e)}
-                      />
-
-                      <InputComponent
-                          id={"houseNumber"} label={"House Number"} type={"text"} name={"houseNumber"} placeholder={"47"} error={errors?.houseNumber}
-                          value={value?.houseNumber} onChange={(e) => handleInputChange(e)}
-                          onBlur={(e) => handleOnBlur(e)}
-                      />
-
-                      <InputComponent
-                          id={"zipCode"} label={"Zip Code"} type={"number"} name={"zipCode"} error={errors?.zipCode}
-                          value={value?.zipCode} onChange={(e) => handleInputChange(e)}
-                          onBlur={(e) => handleOnBlur(e)}
-                      />
-
-                  </FieldSet>
+                      <label htmlFor={"zipCode"}>Zip COde</label>
+                      <input type="text" id={"zipCode"} placeholder={"47"}  {...register("zipCode")}/>
+                      { errors.zipCode && <p style={{color: "red"}}>{errors.zipCode.message}</p>}
+                  </fieldset>
 
 
+                  <label htmlFor={"birthDate"}>Birth Date</label>
+                  <input type="date" id={"birthDate"} placeholder={"birthDate"}  {...register("birthDate")}/>
+                  { errors.birthDate && <p style={{color: "red"}}>{errors.birthDate.message}</p>}
 
-                  <InputComponent
-                      id={"birthDate"} label={"Birthday"} type={"date"} name={"birthDate"} error={errors?.birthDate}
-                      value={value?.birthDate} onChange={(e) => handleInputChange(e)}
-                      onBlur={(e) => handleOnBlur(e)}
-                  />
 
                   {/*TODO eventuelně odstranit*/}
-                  <button type="button" onClick={() => console.log(value)} >Console.Log(value)</button>
+                  <button type="button" onClick={() => console.log(neco)} >Console.Log(value)</button>
                   <button type="button" onClick={() => console.log(errors)}> Console.log(errors) </button>
 
 

@@ -12,10 +12,10 @@ export const ContactSchema = z.object(
         city: z.string().optional(),
         street: z.string().optional(),
         houseNumber: z.string().optional(),
-        zipCode: z.number().optional(),
+        zipCode: z.coerce.number<number>(),
         birthDate: z.string().optional(),
 
 
     }
 )
-//TODO dodělat gender a birthDate
+//TODO dodělat gender a birthDate,
