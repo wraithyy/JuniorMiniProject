@@ -1,10 +1,14 @@
 import type { FC } from 'react';
 import type { Contact } from '../types/contact';
+import FormInput from './FormInput';
+import { formSchema } from '../utils/validators';
+import { useInput } from '../hooks/useInput';
 
 interface ContactFormProps {
   onSubmit: (contact: Omit<Contact, '_id' | 'create_date'>) => void;
   initialData?: Contact;
 }
+
 
 export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => {
   // TODO: Implementovat formulář s těmito prvky:
@@ -39,10 +43,49 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
   // - Použít připravený contactsApi.createContact() nebo contactsApi.updateContact()
   // - Pro přístup k API klientu: import { contactsApi } from '../api/contactsApi'
 
+  const emailHook = useInput('', formSchema.shape.email);
+  const firstNameHook = useInput('', formSchema.shape.nonEmpty);
+  const secondNameHook = useInput('', formSchema.shape.nonEmpty);
+  
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
+    event.preventDefault();
+  }
+
   return (
-    <div>
-      <h2>{initialData ? 'Editovat kontakt' : 'Vytvořit nový kontakt'}</h2>
-      <p>TODO: Implementovat formulář</p>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <h2>{initialData ? 'Editace kontaktu' : 'Nový kontakt'}</h2>
+
+      <FormInput
+        label='Jméno'
+        id='firstName'
+        name='firstName'
+        type='text'
+        required
+        hook={firstNameHook}
+      />
+
+      <FormInput
+        label='Příjmení'
+        id='lastName'
+        name='lastName'
+        type='text'
+        required
+        hook={secondNameHook}
+      />
+
+      <FormInput
+        label='E-mail'
+        id='email'
+        name='email'
+        type='email'
+        required
+        hook={emailHook}
+      />
+
+      <button className='submit-btn'>
+        {initialData ? 'Potvrdit změny' : 'Přidat kontakt'}
+      </button>
+    </form>
   );
 };
