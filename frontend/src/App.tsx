@@ -15,7 +15,6 @@ function App() {
   const [reload, setReload] = useState(0);
   const [initialData, setInitialData] = useState<Contact | null>(null);
   const [errorMessage, setErrorMessage] = useState("")
-  const [saving, setSaving] = useState(false);
 
 
 
@@ -39,11 +38,12 @@ function App() {
     }
 
 
-    function onSubmit (contact: Contact) {
-        if(contact._id){
+    async function onSubmit (contact: Contact) {
 
-            setSaving(() => true)
-             contactsApi.updateContact(contact._id, contact).then(r => {
+        if(contact._id){
+            console.log(contact._id)
+
+            await contactsApi.updateContact(contact._id, contact).then(r => {
                 console.log(r);
                  setCurrentPage("list");
                  setSelectedContact(r)
@@ -56,17 +56,16 @@ function App() {
 
             }).finally(() => {
                 console.log("je možné znova upravovat");
-                setSaving(false)
+
             })
 
         } else {
 
-            setSaving(() => true)
-             contactsApi.createContact(contact).then(r => {
+            await contactsApi.createContact(contact).then(r => {
                 console.log(r);
                 setCurrentPage("list");
                 setSelectedContact(r)
-                 setErrorMessage("")
+                setErrorMessage("")
 
 
              }).catch(error => {
@@ -76,9 +75,10 @@ function App() {
 
             }).finally(() => {
                 console.log("je možné znova upravovat");
-                setSaving(false)
+
             })
         }
+        return true
     }
 
   return (
@@ -97,8 +97,8 @@ function App() {
       <main>
         {currentPage === 'form' ? (
           <ContactForm
-            onSubmitForm={(contact) => {onSubmit(contact)}}
-            initialData={initialData} saving={saving} errorMessage={errorMessage}
+            onSubmitForm={onSubmit}
+            initialData={initialData} errorMessage={errorMessage}
           />
         ) : (
           <div className="list-view">

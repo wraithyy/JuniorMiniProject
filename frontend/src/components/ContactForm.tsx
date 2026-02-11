@@ -10,7 +10,7 @@ import type z from "zod"
 import {ContactSchema} from "./ContactSchema.tsx";
 import RadioGroup from "./RadioGroup.tsx";
 
-import {useForm, useWatch} from "react-hook-form";
+import {Controller, useForm, useWatch} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 
 type FormData = z.infer<typeof ContactSchema>
@@ -80,68 +80,167 @@ export const ContactForm = ({ onSubmitForm, initialData,  errorMessage  } : Cont
           <div className="form-group">
               <form className="form-horizontal" id="contactForm" onSubmit={handleSubmit(onSubmit)} noValidate>
 
-                  <label htmlFor={"firstName"}>First Name</label>
-                  <input type="text" id={"firstName"} placeholder={"John"} {...register("firstName")}/>
-                  { errors.firstName && <p style={{color: "red"}}>{errors.firstName.message}</p>}
+                  {/* TODO Při úpravě se nemaže, ale změna funguje */}
 
 
-                  <label htmlFor={"lastName"}>Last Name</label>
-                  <input type="text" id={"lastName"} placeholder={"Smith"} {...register("lastName")}/>
-                  { errors.lastName && <p style={{color: "red"}}>{errors.lastName.message}</p>}
+                  <Controller control={control} name={"firstName"}
+                              render={({ field }) => (
+                                  <InputComponent
+                                      label="First Name"
+                                      value={field.value}
+                                      onChange={field.onChange}
+                                      onBlur={field.onBlur}
+                                      id={"firstName"} type={"text"} name={"firstName"} placeholder={"John"}
+                                      error={errors.firstName?.message}
 
-                  <label htmlFor={"email"}>Email</label>
-                  <input type="text" id={"email"} placeholder={"mail@mail.mail"} {...register("email")}/>
-                  { errors.email && <p style={{color: "red"}}>{errors.email.message}</p>}
+                                  />
+                              )}
+                  />
+
+                  <Controller control={control} name={"lastName"}
+                              render={({ field }) => (
+                                  <InputComponent
+                                      label="Last Name"
+                                      value={field.value}
+                                      onChange={field.onChange}
+                                      onBlur={field.onBlur}
+                                      id={"lastName"} type={"text"} name={"lastName"} placeholder={"Smith"}
+                                      error={errors.lastName?.message}
+
+                                  />
+                              )}
+                  />
+
+                  <Controller control={control} name={"email"}
+                              render={({ field }) => (
+                                  <InputComponent
+                                      label="Email"
+                                      value={field.value}
+                                      onChange={field.onChange}
+                                      onBlur={field.onBlur}
+                                      id={"email"} type={"text"} name={"email"} placeholder={"example@example.com"}
+                                      error={errors.email?.message}
+
+                                  />
+                              )}
+                  />
+
+                  <Controller control={control} name={"phone"}
+                              render={({ field }) => (
+                                  <InputComponent
+                                      label="Phone"
+                                      value={field.value}
+                                      onChange={field.onChange}
+                                      onBlur={field.onBlur}
+                                      id={"phone"} type={"text"} name={"phone"} placeholder={"123 456 789"}
+                                      error={errors.phone?.message}
+
+                                  />
+                              )}
+                  />
 
 
-                  <label htmlFor={"phone"}>Phone</label>
-                  <input type="text" id={"phone"} placeholder={"123456789"} {...register("phone")}/>
-                  { errors.phone && <p style={{color: "red"}}>{errors.phone.message}</p>}
+                  <Controller control={control} name={"note"}
+                              render={({ field }) => (
+                                  <TextArea id={"note"} name={"note"} label={"Note"} placeholder={"Write something..."} rows={5}
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                            onBlur={field.onBlur}
+                                            error={errors.note?.message}
+                                  />
+                              )}
+                  />
 
 
-                  <label htmlFor={"note"}>Note</label>
-                  <textarea id={"note"} rows={5} {...register("note")}/>
-                  { errors.note && <p style={{color: "red"}}>{errors.note.message}</p>}
+                  <FieldSet id={"gender"} legend={"Gender"} >
 
-                  <fieldset className={"gender"}>
-                      <legend>Gender</legend>
-                      <label htmlFor={"female"}>Female</label>
-                      <input type="radio" id={"female"} value={"female"} {...register("gender")}/>
+                      <Controller control={control}  name={"gender"} render={({field}) => (
+                          <RadioGroup options={options}
+                                      value={field?.value}
+                                      onChange={field.onChange} onBlur={field.onBlur}
+                          />
+                      )}
+                      />
 
-                      <label htmlFor={"male"}>Male</label>
-                      <input type="radio" id={"male"} value={"male"} {...register("gender")}/>
-
-                      <label htmlFor={"other"}>Other</label>
-                      <input type="radio" id={"other"} value={"other"} {...register("gender")}/>
-
-                      { errors.gender && <p style={{color: "red"}}>{errors.gender.message}</p>}
-                  </fieldset>
+                  </FieldSet>
 
 
-                  <fieldset>
-                      <legend>Address</legend>
+                  <FieldSet id={"address"} legend={"Address"} >
 
-                      <label htmlFor={"city"}>City</label>
-                      <input type="text" id={"city"} placeholder={"Gotham"} {...register("city")}/>
-                      { errors.city && <p style={{color: "red"}}>{errors.city.message}</p>}
+                      <Controller control={control} name={"city"}
+                                  render={({ field }) => (
+                                      <InputComponent
+                                          label="City"
+                                          value={field.value}
+                                          onChange={field.onChange}
+                                          onBlur={field.onBlur}
+                                          id={"city"} type={"text"} name={"city"} placeholder={"Gotham"}
+                                          error={errors.city?.message}
 
-                      <label htmlFor={"street"}>Street</label>
-                      <input type="text" id={"street"} placeholder={"Batstreet"} {...register("street")}/>
-                      { errors.street && <p style={{color: "red"}}>{errors.street.message}</p>}
+                                      />
+                                  )}
+                      />
 
-                      <label htmlFor={"houseNumber"}>House Number</label>
-                      <input type="text" id={"houseNumber"} placeholder={"47"}  {...register("houseNumber")}/>
-                      { errors.houseNumber && <p style={{color: "red"}}>{errors.houseNumber.message}</p>}
+                      <Controller control={control} name={"street"}
+                                  render={({ field }) => (
+                                      <InputComponent
+                                          label="Street"
+                                          value={field.value}
+                                          onChange={field.onChange}
+                                          onBlur={field.onBlur}
+                                          id={"street"} type={"text"} name={"street"} placeholder={"Batstreet"}
+                                          error={errors.street?.message}
 
-                      <label htmlFor={"zipCode"}>Zip COde</label>
-                      <input type="text" id={"zipCode"} placeholder={"47"}  {...register("zipCode")}/>
-                      { errors.zipCode && <p style={{color: "red"}}>{errors.zipCode.message}</p>}
-                  </fieldset>
+                                      />
+                                  )}
+                      />
+
+                      <Controller control={control} name={"houseNumber"}
+                                  render={({ field }) => (
+                                      <InputComponent
+                                          label="House Number"
+                                          value={field.value}
+                                          onChange={field.onChange}
+                                          onBlur={field.onBlur}
+                                          id={"houseNumber"} type={"text"} name={"houseNumber"} placeholder={"42"}
+                                          error={errors.houseNumber?.message}
+
+                                      />
+                                  )}
+                      />
 
 
-                  <label htmlFor={"birthDate"}>Birth Date</label>
-                  <input type="date" id={"birthDate"} placeholder={"birthDate"}  {...register("birthDate")}/>
-                  { errors.birthDate && <p style={{color: "red"}}>{errors.birthDate.message}</p>}
+                      <Controller control={control} name={"zipCode"}
+                                  render={({ field }) => (
+                                      <InputComponent
+                                          label="Zip Code"
+                                          value={field.value}
+                                          onChange={field.onChange}
+                                          onBlur={field.onBlur}
+                                          id={"zipCode"} type={"number"} name={"zipCode"} placeholder={"47"}
+                                          error={errors.zipCode?.message}
+
+                                      />
+                                  )}
+                      />
+
+
+                  </FieldSet>
+
+
+                  <Controller control={control} name={"birthDate"}
+                              render={({ field }) => (
+                                  <InputComponent
+                                      label="Birth Date"
+                                      value={field.value}
+                                      onChange={field.onChange}
+                                      onBlur={field.onBlur}
+                                      id={"birthDate"} type={"date"} name={"birthDate"}
+                                      error={errors.birthDate?.message}
+
+                                  />
+                              )}
+                  />
 
 
                   {/*TODO eventuelně odstranit*/}
@@ -149,7 +248,7 @@ export const ContactForm = ({ onSubmitForm, initialData,  errorMessage  } : Cont
                   <button type="button" onClick={() => console.log(errors)}> Console.log(errors) </button>
 
 
-                  <button type="submit" className="submit" disabled={isSubmitting} onClick={() => console.log("click")}>{ isSubmitting ? "Saving..." : "Submit"}</button>
+                  <button type="submit" className="submit" disabled={isSubmitting}>{ isSubmitting ? "Saving..." : "Submit"}</button>
                   <br/>
                   <small style={{color: "red"}}>{errorMessage}</small>
 
