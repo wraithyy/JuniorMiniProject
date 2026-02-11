@@ -29,7 +29,7 @@ const materialTheme = createTheme({
     h1: { fontSize: 32 },
     h2: { fontSize: 28, marginBottom: 12 },
     h3: { fontSize: 24 },
-  }
+  },
 });
 
 function App() {
@@ -37,8 +37,7 @@ function App() {
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
 
   function handlePageChange(_e: React.SyntheticEvent, newVal: Page) {
-    if (newVal === 'form')
-      setSelectedContact(null);
+    if (newVal === 'form') setSelectedContact(null);
 
     setCurrentPage(newVal);
   }
@@ -57,10 +56,7 @@ function App() {
 
           <main>
             {currentPage === 'form' ? (
-              <ContactForm
-                onSubmit={() => {}}
-                initialData={selectedContact ?? EMPTY_CONTACT}
-              />
+              <ContactForm onSubmit={() => {}} initialData={selectedContact ?? EMPTY_CONTACT} />
             ) : (
               <div className="list-view">
                 <div className="list-panel">
