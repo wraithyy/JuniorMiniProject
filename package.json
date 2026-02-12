@@ -13,7 +13,9 @@
   ],
   "scripts": {
     "start": "yarn concurrently \"yarn workspace frontend dev\" \"yarn workspace backend start\"",
-    "start:vanilla": "yarn concurrently \"yarn workspace frontend-vanilla dev\" \"yarn workspace backend start\""
+    "start:vanilla": "yarn concurrently \"yarn workspace frontend-vanilla dev\" \"yarn workspace backend start\"",
+    "check": "ultracite check",
+    "fix": "ultracite fix"
   },
   "devDependencies": {
     "concurrently": "^9.1.0"

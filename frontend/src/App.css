@@ -59,7 +59,6 @@ label {
   display: block;
 }
 
-
 .form-control {
   width: 50%;
   padding: 12px;
@@ -71,7 +70,7 @@ label {
 
 .submit-btn {
   width: 30%;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   padding: 14px;
   margin: 8px 0;
@@ -83,4 +82,3 @@ label {
 .submit-btn:hover {
   background-color: #45a049;
 }
-

@@ -1,10 +1,8 @@
-import { hideContactList } from './contactPage'
-import { Contact } from './types'
-import { cutDateToYYYYMMDD } from './helpers'
-import { form, formContainer } from './helpers';
+import { hideContactList } from "./contactPage";
+import { cutDateToYYYYMMDD, form, formContainer } from "./helpers";
+import type { Contact } from "./types";
 
 const SUBMIT_BTN = document.getElementById("submit-btn");
-
 
 export function hideForm() {
   if (formContainer) {
@@ -28,12 +26,12 @@ export function displayFormPage() {
 }
 
 function setInputValue(inputId: string, value: string) {
-  if (value) {
-    if (formContainer) {
-      const inputElement = formContainer.querySelector(`#${inputId}`) as HTMLInputElement;
-      if (inputElement) {
-        inputElement.value = value;
-      }
+  if (value && formContainer) {
+    const inputElement = formContainer.querySelector(
+      `#${inputId}`
+    ) as HTMLInputElement;
+    if (inputElement) {
+      inputElement.value = value;
     }
   }
 }

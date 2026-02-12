@@ -1,34 +1,45 @@
 import { useState } from "react";
-import { ZodType } from "zod";
-import { UseInputReturn } from "../types/input";
+import type { ZodType } from "zod";
+import type { Contact } from "../types/contact";
+import type { UseInputReturn } from "../types/input";
+
+function findDefaultValue(
+  prefilledInputs: Contact | undefined,
+  inputType: keyof Contact
+) {
+  return prefilledInputs?.[inputType]?.toString() ?? "";
+}
 
 export function useInput(
-    defaultValue: string,
-    schema: ZodType
+  prefilledInputs: Contact | undefined,
+  inputType: keyof Contact,
+  schema: ZodType
 ): UseInputReturn {
-    const [enteredValue, setEnteredValue] = useState(defaultValue);
-    const [didEdit, setDidEdit] = useState(false);
+  const defaultValue = findDefaultValue(prefilledInputs, inputType);
+  const [enteredValue, setEnteredValue] = useState(defaultValue);
+  const [didEdit, setDidEdit] = useState(false);
 
-    const parsed = schema.safeParse(enteredValue);
-    const valueIsValid = parsed.success;
-    const latentErrorMsg = valueIsValid
-        ? ''
-        : parsed.error.issues[0]?.message ?? 'Špatný vstup';
-    const displayedErrorMessage = (didEdit && !valueIsValid) ? latentErrorMsg : '';
+  const parsed = schema.safeParse(enteredValue);
+  const valueIsValid = parsed.success;
+  const errorMsg = valueIsValid
+    ? ""
+    : (parsed.error.issues[0]?.message ?? "Špatný vstup");
+  const displayedErrorMessage = didEdit && !valueIsValid ? errorMsg : "";
 
-    function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-        setEnteredValue(event.target.value);
-        setDidEdit(false);
-    }
+  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setEnteredValue(event.target.value);
+    setDidEdit(false);
+  }
 
-    function handleInputBlur() {
-        setDidEdit(true);
-    }
+  function setAsTouched() {
+    setDidEdit(true);
+  }
 
-    return {
-        value: enteredValue,
-        handleInputChange,
-        handleInputBlur,
-        errorMsg: displayedErrorMessage
-    };
+  return {
+    value: enteredValue,
+    handleInputChange,
+    setAsTouched,
+    errorMsg: displayedErrorMessage,
+    isValid: valueIsValid,
+  };
 }

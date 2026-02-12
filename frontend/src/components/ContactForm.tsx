@@ -1,16 +1,18 @@
-import type { FC } from 'react';
-import type { Contact } from '../types/contact';
-import FormInput from './FormInput';
-import { formSchema } from '../utils/validators';
-import { useInput } from '../hooks/useInput';
+import type { FC } from "react";
+import { useContactFormInputs } from "../hooks/useContactFormInputs";
+import type { Contact } from "../types/contact";
+import type { UseInputReturn } from "../types/input";
+import FormInput from "./FormInput";
 
 interface ContactFormProps {
-  onSubmit: (contact: Omit<Contact, '_id' | 'create_date'>) => void;
+  onSubmit: (contact: Omit<Contact, "_id" | "create_date">) => void;
   initialData?: Contact;
 }
 
-
-export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => {
+export const ContactForm: FC<ContactFormProps> = ({
+  onSubmit,
+  initialData,
+}) => {
   // TODO: Implementovat formulář s těmito prvky:
   //
   // Povinná pole:
@@ -42,49 +44,69 @@ export const ContactForm: FC<ContactFormProps> = ({ onSubmit, initialData }) => 
   // Použití:
   // - Použít připravený contactsApi.createContact() nebo contactsApi.updateContact()
   // - Pro přístup k API klientu: import { contactsApi } from '../api/contactsApi'
+  const contactInputProps = useContactFormInputs(initialData);
+  const { firstNameProps, lastNameProps, emailProps } = contactInputProps;
 
-  const emailHook = useInput('', formSchema.shape.email);
-  const firstNameHook = useInput('', formSchema.shape.nonEmpty);
-  const secondNameHook = useInput('', formSchema.shape.nonEmpty);
-  
+  function allInputsValid(inputProps: Record<string, UseInputReturn>): boolean {
+    return Object.values(inputProps).every(({ isValid }) => isValid);
+  }
+
+  function triggerErrors(
+    inputProps: Record<string, UseInputReturn>
+  ): void {
+    for (const inputProp of Object.values(inputProps)) {
+      inputProp.setAsTouched();
+    }
+  }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault();
+
+    if (allInputsValid(contactInputProps)) {
+      const formContact: Contact = {
+        firstName: firstNameProps.value,
+        lastName: lastNameProps.value,
+        email: emailProps.value,
+      };
+      onSubmit(formContact);
+    } else {
+      triggerErrors(contactInputProps);
+    }
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>{initialData ? 'Editace kontaktu' : 'Nový kontakt'}</h2>
+      <h2>{initialData ? "Editace kontaktu" : "Nový kontakt"}</h2>
 
       <FormInput
-        label='Jméno'
-        id='firstName'
-        name='firstName'
-        type='text'
+        formprops={firstNameProps}
+        id="firstName"
+        label="Jméno"
+        name="firstName"
         required
-        hook={firstNameHook}
+        type="text"
       />
 
       <FormInput
-        label='Příjmení'
-        id='lastName'
-        name='lastName'
-        type='text'
+        formprops={lastNameProps}
+        id="lastName"
+        label="Příjmení"
+        name="lastName"
         required
-        hook={secondNameHook}
+        type="text"
       />
 
       <FormInput
-        label='E-mail'
-        id='email'
-        name='email'
-        type='email'
+        formprops={emailProps}
+        id="email"
+        label="E-mail"
+        name="email"
         required
-        hook={emailHook}
+        type="email"
       />
 
-      <button className='submit-btn'>
-        {initialData ? 'Potvrdit změny' : 'Přidat kontakt'}
+      <button className="submit-btn" type="submit">
+        {initialData ? "Potvrdit změny" : "Přidat kontakt"}
       </button>
     </form>
   );

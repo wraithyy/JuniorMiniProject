@@ -20,8 +20,11 @@ mongoose.connect("mongodb://localhost/testApi");
 
 var db = mongoose.connection;
 
-if (!db) console.log("Error connecting db");
-else console.log("Db connected successfully");
+if (db) {
+  console.log("Db connected successfully");
+} else {
+  console.log("Error connecting db");
+}
 
 const indexRouter = require("./routes/index");
 app.use("/api", indexRouter);
@@ -34,7 +37,7 @@ const options = {
   schemes: ["http", "https"],
 };
 
-app.listen(port, function () {
+app.listen(port, () => {
   console.log("Running TestApi on port " + port);
 });
 

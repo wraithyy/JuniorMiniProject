@@ -10,6 +10,6 @@ router.put("/:contact_id", contactController.update);
 router.delete("/:contact_id", contactController.delete);
 
 module.exports = {
-  router: router,
+  router,
   basePath: "/contacts",
 };

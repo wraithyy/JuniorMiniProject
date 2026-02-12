@@ -1,35 +1,33 @@
-import './styles/main.css';
-import handleSubmit from './submit'
-import { displayContatPage } from './contactPage'
-import { displayFormPage } from './formPage'
+import "./styles/main.css";
+import { displayContatPage } from "./contactPage";
+import { displayFormPage } from "./formPage";
+import handleSubmit from "./submit";
 
 async function initHeaderButtons() {
   const newContactBtn = document.getElementById("new-contact-btn");
-  if (!newContactBtn) {
-    console.warn("no newContactBtn")
-  } else {
+  if (newContactBtn) {
     newContactBtn.addEventListener("click", displayFormPage);
+  } else {
+    console.warn("no newContactBtn");
   }
 
   const contactListBtn = document.getElementById("contact-list-btn");
-  if (!contactListBtn) {
-    console.warn("no contactListBtn")
-  } else {
+  if (contactListBtn) {
     contactListBtn.addEventListener("click", displayContatPage);
+  } else {
+    console.warn("no contactListBtn");
   }
 }
 //---------------------------------------------------------------------------------------------
 initHeaderButtons();
-const formHtmlElement = document.querySelector('#contact-form') as HTMLFormElement | null;
-if (!formHtmlElement) {
-  console.warn('Form #contact-form not found.');
-} else {
+const formHtmlElement = document.querySelector(
+  "#contact-form"
+) as HTMLFormElement | null;
+if (formHtmlElement) {
   handleSubmit();
+} else {
+  console.warn("Form #contact-form not found.");
 }
-
-
-
-
 
 // TODO: Implementovat aplikaci pro správu kontaktů
 //
@@ -40,4 +38,3 @@ if (!formHtmlElement) {
 //
 // API endpointy jsou dostupné na: http://localhost:3333/api/contacts
 // Dokumentace API: http://localhost:3333/swagger
-

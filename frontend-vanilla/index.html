@@ -1,169 +1,279 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontakty - Vanilla TypeScript</title>
+    <script type="module" src="/src/main.ts"></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kontakty - Vanilla TypeScript</title>
-  <script type="module" src="/src/main.ts"></script>
-</head>
+  <body>
+    <header>
+      <h1>Contact Manager - Vanilla</h1>
+      <nav id="nav-btns">
+        <button id="new-contact-btn">New Contact</button>
+        <button id="contact-list-btn">Contact List</button>
+      </nav>
+    </header>
 
-<body>
-  <header>
-    <h1>Contact Manager - Vanilla</h1>
-    <nav id="nav-btns">
-      <button id="new-contact-btn">New Contact</button>
-      <button id="contact-list-btn">Contact List</button>
-    </nav>
-  </header>
-
-  <main>
-    <!-- Form container -->
-    <div class="form-container" id="contact-form-container">
-      <form id="contact-form">
-        <!-- Name and Surname -->
-        <div class="form-group">
-          <label for="firstName">First Name<span class="required">*</span></label>
-          <input type="text" id="firstName" name="firstName" placeholder="John" autocomplete="given-name" required
-            aria-describedby="firstName-error" />
-          <p id="firstName-error" class="error" role="alert" aria-live="polite"></p>
-          <label for="lastName">Last Name<span class="required">*</span></label>
-          <input type="text" id="lastName" name="lastName" placeholder="Doe" autocomplete="family-name" required
-            aria-describedby="lastName-error" />
-          <p id="lastName-error" class="error" role="alert" aria-live="polite"></p>
-        </div>
-
-        <!-- Email -->
-        <div class="form-group">
-          <label for="email">Email<span class="required">*</span></label>
-          <input type="email" id="email" name="email" placeholder="john@example.com" autocomplete="email" required
-            aria-describedby="email-error" />
-          <p id="email-error" class="error" role="alert" aria-live="polite"></p>
-        </div>
-
-        <!-- Gender -->
-        <fieldset>
-          <legend>Gender</legend>
-          <div class="radio-group">
-            <label>
-              <input type="radio" name="gender" value="male" />
-              Male
-            </label>
-            <label>
-              <input type="radio" name="gender" value="female" />
-              Female
-            </label>
-            <label>
-              <input type="radio" name="gender" value="other" checked />
-              Other / Undisclosed
-            </label>
-          </div>
-        </fieldset>
-
-        <!-- Birth date -->
-        <div class="form-group">
-          <label for="birthDate">Date of Birth</label>
-          <input type="date" id="birthDate" name="birthDate" autocomplete="bday" min="1900-01-01" />
-        </div>
-
-        <!-- Phone -->
-        <div class="form-group">
-          <label for="phone">Phone</label>
-          <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" aria-describedby="phone-error" />
-          <p id="phone-error" class="error" role="alert" aria-live="polite"></p>
-        </div>
-
-        <!-- Address -->
-        <fieldset>
-          <legend>Address</legend>
+    <main>
+      <!-- Form container -->
+      <div class="form-container" id="contact-form-container">
+        <form id="contact-form">
+          <!-- Name and Surname -->
           <div class="form-group">
-            <label for="city">Place <span class="disclaimer">(City, Village)</span></label>
-            <input type="text" id="city" name="city" autocomplete="address-level2" aria-describedby="city-error" />
-            <p id="city-error" class="error" role="alert" aria-live="polite"></p>
-            <label for="street">Street</label>
-            <input type="text" id="street" name="street" placeholder="leave blank for villages with none"
-              autocomplete="street-address" aria-describedby="street-error" />
-            <p id="street-error" class="error" role="alert" aria-live="polite"></p>
-            <label for="houseNumber">House number</label>
-
-            <input type="text" id="houseNumber" name="houseNumber" inputmode="text" placeholder="12/1"
-              aria-describedby="houseNumber-error" />
-            <p id="houseNumber-error" class="error" role="alert" aria-live="polite"></p>
-            <!-- Czech ZIP format -->
-            <label for="zipCode">ZIP Code</label>
-            <input type="text" id="zipCode" name="zipCode" inputmode="numeric" autocomplete="postal-code"
-              placeholder="123 45" aria-describedby="zipCode-error" />
-            <p id="zipCode-error" class="error" role="alert" aria-live="polite"></p>
+            <label for="firstName">
+              First Name<span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              placeholder="John"
+              autocomplete="given-name"
+              required
+              aria-describedby="firstName-error"
+            >
+            <p
+              id="firstName-error"
+              class="error"
+              role="alert"
+              aria-live="polite"
+            ></p>
+            <label for="lastName">
+              Last Name<span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              placeholder="Doe"
+              autocomplete="family-name"
+              required
+              aria-describedby="lastName-error"
+            >
+            <p
+              id="lastName-error"
+              class="error"
+              role="alert"
+              aria-live="polite"
+            ></p>
           </div>
-        </fieldset>
 
-        <!-- Note -->
-        <div class="form-group">
-          <label for="note">Note</label>
-          <textarea id="note" name="note" placeholder="Any additional detail (optional)" rows="3"></textarea>
-        </div>
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email">Email<span class="required">*</span></label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="john@example.com"
+              autocomplete="email"
+              required
+              aria-describedby="email-error"
+            >
+            <p
+              id="email-error"
+              class="error"
+              role="alert"
+              aria-live="polite"
+            ></p>
+          </div>
 
-        <button id="submit-btn" type="submit" aria-describedby="submit-message">Add Contact</button>
-        <p id="submit-message" aria-live="polite"></p>
-      </form>
-    </div>
+          <!-- Gender -->
+          <fieldset>
+            <legend>Gender</legend>
+            <div class="radio-group">
+              <label>
+                <input type="radio" name="gender" value="male">
+                Male
+              </label>
+              <label>
+                <input type="radio" name="gender" value="female">
+                Female
+              </label>
+              <label>
+                <input type="radio" name="gender" value="other" checked>
+                Other / Undisclosed
+              </label>
+            </div>
+          </fieldset>
 
-    <ul id="contacts-list">
+          <!-- Birth date -->
+          <div class="form-group">
+            <label for="birthDate">Date of Birth</label>
+            <input
+              type="date"
+              id="birthDate"
+              name="birthDate"
+              autocomplete="bday"
+              min="1900-01-01"
+            >
+          </div>
 
-      <template id="contact-item-tpl">
-        <li>
-          <details>
-            <summary></summary>
-            <dl class="contact-details">
-              <div>
-                <dt>E-mail</dt>
-                <dd id="field-email"></dd>
-              </div>
-              <div>
-                <dt>Gender</dt>
-                <dd id="field-gender"></dd>
-              </div>
-              <div>
-                <dt>Date of Birth</dt>
-                <dd id="field-birthDate"></dd>
-              </div>
-              <div>
-                <dt>Phone</dt>
-                <dd id="field-phone"></dd>
-              </div>
-              <div>
-                <dt>City</dt>
-                <dd id="field-city"></dd>
-              </div>
-              <div>
-                <dt>Street</dt>
-                <dd id="field-street"></dd>
-              </div>
-              <div>
-                <dt>House number</dt>
-                <dd id="field-houseNumber"></dd>
-              </div>
-              <div>
-                <dt>ZIP Code</dt>
-                <dd id="field-zipCode"></dd>
-              </div>
-              <div>
-                <dt>Note</dt>
-                <dd id="field-note"></dd>
-              </div>
-              <div class="update-btns">
-                <button class="update-btn">update</button>
-                <button class="delete-btn">delete</button>
-              </div>
-        
-            </dl>
-          </details>
-        </li>
-      </template>
-    </ul>
+          <!-- Phone -->
+          <div class="form-group">
+            <label for="phone">Phone</label>
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              autocomplete="tel"
+              inputmode="tel"
+              aria-describedby="phone-error"
+            >
+            <p
+              id="phone-error"
+              class="error"
+              role="alert"
+              aria-live="polite"
+            ></p>
+          </div>
 
+          <!-- Address -->
+          <fieldset>
+            <legend>Address</legend>
+            <div class="form-group">
+              <label for="city">
+                Place <span class="disclaimer">(City, Village)</span>
+              </label>
+              <input
+                type="text"
+                id="city"
+                name="city"
+                autocomplete="address-level2"
+                aria-describedby="city-error"
+              >
+              <p
+                id="city-error"
+                class="error"
+                role="alert"
+                aria-live="polite"
+              ></p>
+              <label for="street">Street</label>
+              <input
+                type="text"
+                id="street"
+                name="street"
+                placeholder="leave blank for villages with none"
+                autocomplete="street-address"
+                aria-describedby="street-error"
+              >
+              <p
+                id="street-error"
+                class="error"
+                role="alert"
+                aria-live="polite"
+              ></p>
+              <label for="houseNumber">House number</label>
 
-  </main>
-</body>
+              <input
+                type="text"
+                id="houseNumber"
+                name="houseNumber"
+                inputmode="text"
+                placeholder="12/1"
+                aria-describedby="houseNumber-error"
+              >
+              <p
+                id="houseNumber-error"
+                class="error"
+                role="alert"
+                aria-live="polite"
+              ></p>
+              <!-- Czech ZIP format -->
+              <label for="zipCode">ZIP Code</label>
+              <input
+                type="text"
+                id="zipCode"
+                name="zipCode"
+                inputmode="numeric"
+                autocomplete="postal-code"
+                placeholder="123 45"
+                aria-describedby="zipCode-error"
+              >
+              <p
+                id="zipCode-error"
+                class="error"
+                role="alert"
+                aria-live="polite"
+              ></p>
+            </div>
+          </fieldset>
 
+          <!-- Note -->
+          <div class="form-group">
+            <label for="note">Note</label>
+            <textarea
+              id="note"
+              name="note"
+              placeholder="Any additional detail (optional)"
+              rows="3"
+            ></textarea>
+          </div>
+
+          <button
+            id="submit-btn"
+            type="submit"
+            aria-describedby="submit-message"
+          >
+            Add Contact
+          </button>
+          <p id="submit-message" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <ul id="contacts-list">
+        <template id="contact-item-tpl">
+          <li>
+            <details>
+              <summary></summary>
+              <dl class="contact-details">
+                <div>
+                  <dt>E-mail</dt>
+                  <dd id="field-email"></dd>
+                </div>
+                <div>
+                  <dt>Gender</dt>
+                  <dd id="field-gender"></dd>
+                </div>
+                <div>
+                  <dt>Date of Birth</dt>
+                  <dd id="field-birthDate"></dd>
+                </div>
+                <div>
+                  <dt>Phone</dt>
+                  <dd id="field-phone"></dd>
+                </div>
+                <div>
+                  <dt>City</dt>
+                  <dd id="field-city"></dd>
+                </div>
+                <div>
+                  <dt>Street</dt>
+                  <dd id="field-street"></dd>
+                </div>
+                <div>
+                  <dt>House number</dt>
+                  <dd id="field-houseNumber"></dd>
+                </div>
+                <div>
+                  <dt>ZIP Code</dt>
+                  <dd id="field-zipCode"></dd>
+                </div>
+                <div>
+                  <dt>Note</dt>
+                  <dd id="field-note"></dd>
+                </div>
+                <div class="update-btns">
+                  <button class="update-btn">update</button>
+                  <button class="delete-btn">delete</button>
+                </div>
+              </dl>
+            </details>
+          </li>
+        </template>
+      </ul>
+    </main>
+  </body>
 </html>

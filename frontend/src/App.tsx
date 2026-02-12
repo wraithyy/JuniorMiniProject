@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { ContactForm } from './components/ContactForm';
-import { ContactList } from './components/ContactList';
-import { ContactDetail } from './components/ContactDetail';
-import type { Contact } from './types/contact';
-import './App.css';
+import { useState } from "react";
+import { ContactDetail } from "./components/ContactDetail";
+import { ContactForm } from "./components/ContactForm";
+import { ContactList } from "./components/ContactList";
+import type { Contact } from "./types/contact";
+import "./App.css";
 
-type Page = 'form' | 'list';
+type Page = "form" | "list";
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<Page>('form');
+  const [currentPage, setCurrentPage] = useState<Page>("form");
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
 
   // TODO: Implementovat navigaci mezi stránkami
@@ -23,16 +23,20 @@ function App() {
       <header>
         <h1>Správa kontaktů</h1>
         <nav>
-          <button onClick={() => setCurrentPage('form')}>Vytvořit kontakt</button>
-          <button onClick={() => setCurrentPage('list')}>Seznam kontaktů</button>
+          <button onClick={() => setCurrentPage("form")} type="button">
+            Vytvořit kontakt
+          </button>
+          <button onClick={() => setCurrentPage("list")} type="button">
+            Seznam kontaktů
+          </button>
         </nav>
       </header>
 
       <main>
-        {currentPage === 'form' ? (
+        {currentPage === "form" ? (
           <ContactForm
             onSubmit={(contact) => {
-              console.log('TODO: Implementovat vytvoření kontaktu', contact);
+              console.log("TODO: Implementovat vytvoření kontaktu", contact);
             }}
           />
         ) : (

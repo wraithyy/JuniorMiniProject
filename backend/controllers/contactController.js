@@ -1,7 +1,7 @@
 Contact = require("../models/contactModel");
 // Handle index actions
 
-exports.index = async function (req, res) {
+exports.index = async (req, res) => {
   try {
     const contacts = await Contact.find();
     res.json({
@@ -17,7 +17,7 @@ exports.index = async function (req, res) {
   }
 };
 // Handle create contact actions
-exports.new = async function (req, res) {
+exports.new = async (req, res) => {
   try {
     const contact = new Contact();
     contact.firstName = req.body.firstName
@@ -46,10 +46,12 @@ exports.new = async function (req, res) {
   }
 };
 // Handle view contact info
-exports.view = async function (req, res) {
+exports.view = async (req, res) => {
   try {
     const contact = await Contact.findById(req.params.contact_id);
-    if (!contact) return res.status(404).send({ message: "Contact not found" });
+    if (!contact) {
+      return res.status(404).send({ message: "Contact not found" });
+    }
     res.json({
       message: "Contact details loading..",
       data: contact,
@@ -59,10 +61,12 @@ exports.view = async function (req, res) {
   }
 };
 // Handle update contact info
-exports.update = async function (req, res) {
+exports.update = async (req, res) => {
   try {
     const contact = await Contact.findById(req.params.contact_id);
-    if (!contact) return res.status(404).send({ message: "Contact not found" });
+    if (!contact) {
+      return res.status(404).send({ message: "Contact not found" });
+    }
 
     contact.firstName = req.body.firstName
       ? req.body.firstName
@@ -90,7 +94,7 @@ exports.update = async function (req, res) {
   }
 };
 // Handle delete contact
-exports.delete = async function (req, res) {
+exports.delete = async (req, res) => {
   try {
     const result = await Contact.deleteOne({
       _id: req.params.contact_id,

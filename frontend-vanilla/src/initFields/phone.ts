@@ -1,15 +1,14 @@
-import { getErrorElement, debounce } from '../helpers';
-import intlTelInput from 'intl-tel-input';
-import 'intl-tel-input/build/css/intlTelInput.css'; // phone library plugin CSS
+import intlTelInput from "intl-tel-input";
+import { debounce, getErrorElement } from "../helpers";
+import "intl-tel-input/build/css/intlTelInput.css"; // phone library plugin CSS
 
 export default function initPhone(root: ParentNode) {
   // Get the phone input element
-  const input = root.querySelector<HTMLInputElement>('#phone');
+  const input = root.querySelector<HTMLInputElement>("#phone");
 
   if (!input) {
-    console.warn('Phone input (#phone) not found.');
+    console.warn("Phone input (#phone) not found.");
     return () => "";
-    
   }
 
   // Find the error message element for this input
@@ -17,41 +16,36 @@ export default function initPhone(root: ParentNode) {
 
   // Initialize intl-tel-input for phone validation
   const iti = intlTelInput(input, {
-    initialCountry: 'cz',
-    loadUtils: () => import('intl-tel-input/utils'),
+    initialCountry: "cz",
+    loadUtils: () => import("intl-tel-input/utils"),
   });
 
   let errorShown = false; // Track if an error is currently displayed
-  const isEmpty = () => input.value.trim() === ''; 
+  const isEmpty = () => input.value.trim() === "";
   // Update error message based on validity
   const updateError = () => {
     const isValid = iti.isValidNumber() || isEmpty();
     if (errorMsg) {
-      const msg = isValid ? '' : 'Phone number format is invalid (either correct it or remove it)';
+      const msg = isValid
+        ? ""
+        : "Phone number format is invalid (either correct it or remove it)";
       errorMsg.textContent = msg;
       input.setCustomValidity(msg);
     }
     errorShown = !isValid;
   };
 
-
   const onInput = debounce(() => {
-    if (errorShown) updateError();
+    if (errorShown) {
+      updateError();
+    }
   });
 
   iti.promise.then(() => {
-    input.addEventListener('blur', updateError);
-    input.addEventListener('countrychange', updateError);
-    input.addEventListener('input', onInput);
+    input.addEventListener("blur", updateError);
+    input.addEventListener("countrychange", updateError);
+    input.addEventListener("input", onInput);
   });
 
-
-
-  
-  return () => iti.getNumber();          // returns "" when empty/invalid
-
-  
-
-
-
+  return () => iti.getNumber(); // returns "" when empty/invalid
 }

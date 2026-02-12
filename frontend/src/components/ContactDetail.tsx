@@ -1,5 +1,5 @@
-import type { FC } from 'react';
-import type { Contact } from '../types/contact';
+import type { FC } from "react";
+import type { Contact } from "../types/contact";
 
 interface ContactDetailProps {
   contact: Contact | null;
@@ -36,7 +36,9 @@ export const ContactDetail: FC<ContactDetailProps> = ({ contact }) => {
     <div>
       <h2>Detail kontaktu</h2>
       <p>TODO: Implementovat zobrazení detailu</p>
-      <p>Vybraný kontakt: {contact.firstName} {contact.lastName}</p>
+      <p>
+        Vybraný kontakt: {contact.firstName} {contact.lastName}
+      </p>
     </div>
   );
 };
