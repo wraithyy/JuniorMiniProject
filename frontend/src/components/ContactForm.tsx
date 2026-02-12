@@ -4,22 +4,25 @@ import '../main.css';
 import TextArea from "./TextArea.tsx";
 import FieldSet from "./FieldSet.tsx";
 import InputComponent from "./InputComponent.tsx";
-import {useState} from "react";
 
 import type z from "zod"
 import {ContactSchema} from "./ContactSchema.tsx";
 import RadioGroup from "./RadioGroup.tsx";
 
+import { FormProvider, useForm, useWatch} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+
+type FormData = z.infer<typeof ContactSchema>
+
 
 
 type ContactFormProps = {
-    onSubmit: (contact: Omit<Contact, 'create_date'>) => void;
+    onSubmitForm: (contact: FormData) => Promise<boolean>;
     initialData?: Contact | null,
-    saving: boolean,
     errorMessage: string,
 }
 
-export const ContactForm = ({ onSubmit, initialData, saving, errorMessage  } : ContactFormProps) => {
+export const ContactForm = ({ onSubmitForm, initialData,  errorMessage  } : ContactFormProps) => {
 
     const emptyValues = {
         _id: "",
@@ -36,91 +39,28 @@ export const ContactForm = ({ onSubmit, initialData, saving, errorMessage  } : C
         birthDate: "",
     }
 
-    const [value, setValue] = useState<Contact>(
-        initialData ? initialData : emptyValues
-    );
 
 
-    const [errors, setErrors] = useState({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        note: "",
-        gender: "",
-        city: "",
-        street: "",
-        houseNumber: "",
-        zipCode: "",
-        birthDate: "",
 
+
+    const methods = useForm<FormData>({
+        resolver: zodResolver(ContactSchema),
+        mode: "onTouched",
+        defaultValues: initialData ?? emptyValues,
     });
 
-    //tohle funguje, ale nechápu jak
-    const fieldSchema = <K extends keyof z.infer<typeof ContactSchema>>(key: K) =>
-        ContactSchema.shape[key];
+    const { handleSubmit, formState: { errors, isSubmitting }, reset, control } = methods;
 
 
-    function validate(name: keyof Omit<Contact, "_id" | "create_date">, data: string | number){
 
-        const result = fieldSchema(name).safeParse(data);
-
-        if (!result.success) {
-            setErrors({
-                ...errors,
-                [name] : result.error.issues[0].message,
-            });
-        } else {
-            setErrors({
-                ...errors,
-                [name] : "",
-            })
-        }
-
-
+    const onSubmit = async (values: FormData) => {
+        console.log(values)
+        await onSubmitForm(values)
+        reset()
     }
 
+    const neco = useWatch({control})
 
-    function handleOnBlur(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>){
-        e.preventDefault();
-        validate(e.target.name, e.target.value)
-
-    }
-
-    function handleInputChange(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) {
-        const data = e.target.name === "zipCode" ? parseInt(e.target.value) : e.target.value;
-
-        setValue({
-            ...value,
-            [e.target.name]: data,
-        })
-
-    }
-
-    //submit working like this nice
-    function handleSubmit() {
-
-        const result = ContactSchema.safeParse(value)
-
-        if (!result.success) {
-            console.log("not okay")
-
-            result.error.issues.forEach((element) => {
-                setErrors(errors => ({
-                    ...errors,
-                    [element.path[0]] : element.message,
-                }));
-            })
-
-
-
-        } else {
-            console.log("submitting")
-
-            onSubmit(value);
-
-        }
-    }
 
 
     const options = [
@@ -131,107 +71,140 @@ export const ContactForm = ({ onSubmit, initialData, saving, errorMessage  } : C
 
     ]
 
+    //odstraněny všechny errory
   return (
       <div>
           <h2>{initialData ? 'Editovat kontakt' : 'Vytvořit nový kontakt'}</h2>
 
           <div className="form-group">
-              <form className="form-horizontal" id="contactForm" action={handleSubmit}>
 
-                  { value._id ? (<InputComponent id={"_id"} type={"hidden"} name={"_id"} label={"ID:"} />) : null }
+              <FormProvider {...methods} >
 
-                  <InputComponent
-                      id={"firstName"} label={"First Name"} type={"text"} name={"firstName"} placeholder={"John"} error={errors?.firstName}
-                      value={value?.firstName} onChange={(e) => handleInputChange(e)}
-                      onBlur={(e) => handleOnBlur(e)}
-                       />
+              <form className="form-horizontal" id="contactForm" onSubmit={handleSubmit(onSubmit)} noValidate>
 
-                  <InputComponent
-                      id={"lastName"} label={"Last Name"} type={"text"} name={"lastName"} placeholder={"Smith"} error={errors?.lastName}
-                      value={value?.lastName} onChange={(e) => handleInputChange(e)}
-                      onBlur={(e) => handleOnBlur(e)}
-                      />
-
-                  <InputComponent
-                      id={"email"} label={"Email"} type={"email"} name={"email"} placeholder={"john.smith@tardis.uk"} error={errors?.email}
-                      value={value?.email} onChange={(e) => handleInputChange(e)}
-                      onBlur={(e) => handleOnBlur(e)}
-                      />
+                  {/* TODO Při úpravě se nemaže, ale změna funguje */}
 
 
                   <InputComponent
-                      id={"phone"} label={"Phone"} type={"tel"} name={"phone"} placeholder={"+420 123 456 789"} error={errors?.phone}
-                      value={value?.phone} onChange={(e) => handleInputChange(e)}
-                      onBlur={(e) => handleOnBlur(e)}
+                      label="First Name"
+                      id={"firstName"}
+                      type={"text"}
+                      name={"firstName"}
+                      placeholder={"John"}
+
+                  />
+
+                  <InputComponent
+                      label="Last Name"
+                      id={"lastName"}
+                      type={"text"}
+                      name={"lastName"}
+                      placeholder={"Smith"}
+
                   />
 
 
-                  <TextArea
-                      idName={"note"} name={"Note"} placeholder={"Enter some notes about your new contact..."} error={errors?.note}
-                      value={value?.note} onChange={(e) => handleInputChange(e)}
-                      onBlur={(e) => handleOnBlur(e)}
+                  <InputComponent
+                      label="Email"
+                      id={"email"}
+                      type={"text"}
+                      name={"email"}
+                      placeholder={"example@example.com"}
+
+                  />
+
+
+                  <InputComponent
+                      label="Phone"
+                      id={"phone"}
+                      type={"text"}
+                      name={"phone"}
+                      placeholder={"123 456 789"}
+
+                  />
+
+                  <TextArea id={"note"}
+                            name={"note"}
+                            label={"Note"}
+                            placeholder={"Write bitch!"}
+
                   />
 
 
 
 
-                  <FieldSet id={"gender"} legend={"Gender"} className={"gender"} >
-
-                      <RadioGroup options={options}
-                                  value={value?.gender}
-                                  onChange={(e) => handleInputChange(e)}
-                                  onBlur={(e) => handleOnBlur(e)}
-                      />
-
-
-                  </FieldSet>
-
-                  <FieldSet id={"address"} legend={"Address"} >
-
-                      <InputComponent
-                          id={"city"} label={"City"} type={"text"} name={"city"} placeholder={"Gotham"} error={errors?.city}
-                          value={value?.city} onChange={(e) => handleInputChange(e)}
-                          onBlur={(e) => handleOnBlur(e)}
-                      />
-
-                      <InputComponent
-                          id={"street"} label={"Street"} type={"text"} name={"street"} placeholder={"Batstreet"} error={errors?.street}
-                          value={value?.street} onChange={(e) => handleInputChange(e)}
-                          onBlur={(e) => handleOnBlur(e)}
-                      />
-
-                      <InputComponent
-                          id={"houseNumber"} label={"House Number"} type={"text"} name={"houseNumber"} placeholder={"47"} error={errors?.houseNumber}
-                          value={value?.houseNumber} onChange={(e) => handleInputChange(e)}
-                          onBlur={(e) => handleOnBlur(e)}
-                      />
-
-                      <InputComponent
-                          id={"zipCode"} label={"Zip Code"} type={"number"} name={"zipCode"} error={errors?.zipCode}
-                          value={value?.zipCode} onChange={(e) => handleInputChange(e)}
-                          onBlur={(e) => handleOnBlur(e)}
-                      />
+                  <FieldSet id={"gender"}
+                            legend={"Gender"} >
+                                      <RadioGroup options={options} name={"gender"} />
 
                   </FieldSet>
 
 
+                  <FieldSet id={"address"}
+                            legend={"Address"} >
+
+                          <InputComponent
+                              label="City"
+                              id={"city"}
+                              type={"text"}
+                              name={"city"}
+                              placeholder={"Gotham"}
+
+                          />
+
+                          <InputComponent
+                              label="Street"
+                              id={"street"}
+                              type={"text"}
+                              name={"street"}
+                              placeholder={"Batstreet"}
+
+                          />
+
+                          <InputComponent
+                              label="House Number"
+                              id={"houseNumber"}
+                              type={"text"}
+                              name={"houseNumber"}
+                              placeholder={"42"}
+
+                          />
+
+
+                          <InputComponent
+                              label="Zip Code"
+                              id={"zipCode"}
+                              type={"number"}
+                              name={"zipCode"}
+                              placeholder={"47"}
+
+                          />
+
+
+                  </FieldSet>
+
 
                   <InputComponent
-                      id={"birthDate"} label={"Birthday"} type={"date"} name={"birthDate"} error={errors?.birthDate}
-                      value={value?.birthDate} onChange={(e) => handleInputChange(e)}
-                      onBlur={(e) => handleOnBlur(e)}
+                      label="Birth Date"
+                      id={"birthDate"}
+                      type={"date"}
+                      name={"birthDate"}
+
                   />
+
 
                   {/*TODO eventuelně odstranit*/}
-                  <button type="button" onClick={() => console.log(value)} >Console.Log(value)</button>
+                  <button type="button" onClick={() => console.log(neco)} >Console.Log(value)</button>
                   <button type="button" onClick={() => console.log(errors)}> Console.log(errors) </button>
 
 
-                  <button type="submit" className="submit" disabled={saving}>{ saving ? "Saving..." : "Submit"}</button>
+                  <button type="submit" className="submit" disabled={isSubmitting}>{ isSubmitting ? "Saving..." : "Submit"}</button>
                   <br/>
                   <small style={{color: "red"}}>{errorMessage}</small>
 
               </form>
+
+              </FormProvider>
 
           </div>
 

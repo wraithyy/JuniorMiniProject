@@ -5,6 +5,7 @@ import { ContactDetail } from './components/ContactDetail';
 import type { Contact } from './types/contact';
 import './App.css';
 import { contactsApi } from './api/contactsApi'
+import {ContactSchema} from "./components/ContactSchema.tsx";
 
 type Page = 'form' | 'list';
 
@@ -14,7 +15,6 @@ function App() {
   const [reload, setReload] = useState(0);
   const [initialData, setInitialData] = useState<Contact | null>(null);
   const [errorMessage, setErrorMessage] = useState("")
-  const [saving, setSaving] = useState(false);
 
 
 
@@ -38,12 +38,12 @@ function App() {
     }
 
 
-    function onSubmit (contact: Contact) {
+    async function onSubmit (contact: Contact) {
+
         if(contact._id){
 
-            setSaving(() => true)
-             contactsApi.updateContact(contact._id, contact).then(r => {
-                console.log(r);
+            await contactsApi.updateContact(contact._id, contact).then(r => {
+                 console.log(r);
                  setCurrentPage("list");
                  setSelectedContact(r)
                  setErrorMessage("")
@@ -55,17 +55,16 @@ function App() {
 
             }).finally(() => {
                 console.log("je možné znova upravovat");
-                setSaving(false)
+
             })
 
         } else {
 
-            setSaving(() => true)
-             contactsApi.createContact(contact).then(r => {
+            await contactsApi.createContact(contact).then(r => {
                 console.log(r);
                 setCurrentPage("list");
                 setSelectedContact(r)
-                 setErrorMessage("")
+                setErrorMessage("")
 
 
              }).catch(error => {
@@ -75,9 +74,10 @@ function App() {
 
             }).finally(() => {
                 console.log("je možné znova upravovat");
-                setSaving(false)
+
             })
         }
+        return true
     }
 
   return (
@@ -96,8 +96,8 @@ function App() {
       <main>
         {currentPage === 'form' ? (
           <ContactForm
-            onSubmit={(contact) => {onSubmit(contact)}}
-            initialData={initialData} saving={saving} errorMessage={errorMessage}
+            onSubmitForm={onSubmit}
+            initialData={initialData} errorMessage={errorMessage}
           />
         ) : (
           <div className="list-view">

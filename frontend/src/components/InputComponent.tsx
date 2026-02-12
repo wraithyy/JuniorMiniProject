@@ -1,4 +1,4 @@
-import type {ChangeEvent} from "react";
+import {Controller, useFormContext} from "react-hook-form";
 
 type InputComponentProps = {
 
@@ -7,32 +7,37 @@ type InputComponentProps = {
     type: string,
     name: string,
     placeholder?: string
-    value?: string | number ,
     required?: boolean,
-    error?: string,
-
-    onChange?: (e: ChangeEvent<HTMLInputElement>) => void,
-    onBlur?: (e: ChangeEvent<HTMLInputElement>) => void,
 
 
 }
 
-export default function InputComponent({id, label, type, name, placeholder, value, error, onChange, onBlur }: InputComponentProps) {
+export default function InputComponent({id, label, type, name, placeholder}: InputComponentProps) {
 
     //TODO kontrola pokud type=date, tak kontrola, že se člověk nenarodil v budoucnosti
 
 
-    if (type === "date") {
-        value = String(value).substring(0, 10)
-    }
+    const {control, formState: {errors}} = useFormContext()
 
 
 
     return (
-        <div className={name === "gender" ? "singleGender" : undefined}>
-            {type === "hidden" ? null : <label htmlFor={id}>{label}</label>}
-            <input type={type} name={name} id={id} value={value} placeholder={placeholder} onChange={onChange}  onBlur={onBlur}/>
-            { error && <div style={{color: "red"}}>{error}</div> }
-        </div>
+
+        <Controller name={name}
+                    control={control}
+                    render={({field}) => (
+                        <div>
+                            {type === "hidden" ? null : <label htmlFor={id}>{label}</label>}
+                            <input type={type} name={name} id={id}  placeholder={placeholder}
+                                   onChange={field.onChange}  onBlur={field.onBlur}
+                                   value={type==="date" ? String(field.value).substring(0 ,10) : field.value}
+                            />
+                            { errors[id] && <div style={{color: "red"}}>{errors[id]?.message as string}</div> }
+                        </div>
+                    )}
+        />
+
+
+
     )
 }
