@@ -1,4 +1,5 @@
 import type {ChangeEvent} from "react";
+import {Controller, useFormContext} from "react-hook-form";
 
 type InputComponentProps = {
 
@@ -17,15 +18,28 @@ type InputComponentProps = {
 
 }
 
-export default function RadioComponent({id, label, name, value, error, onChange, onBlur, checked }: InputComponentProps) {
+export default function RadioComponent({id, label, name, checked, value }: InputComponentProps) {
+
+    const {control} = useFormContext()
 
     return (
-        <div className={"singleGender"}>
-            <label htmlFor={id}>{label}</label>
-            <input type={"radio"} name={name} id={id} value={value}  onChange={onChange}  onBlur={onBlur}
-                   checked={checked}
+
+
+            <Controller  name={name}
+                         control={control}
+                         render={({field}) => (
+                             <div className={"singleGender"}>
+
+                                 <label htmlFor={id}>{label}</label>
+
+                                 <input type={"radio"} name={name} id={id} checked={checked}
+                                        value={value}  onChange={field.onChange}  onBlur={field.onBlur}
+
+                                 />
+                             </div>
+                         )}
             />
-            { error && <div style={{color: "red"}}>{error}</div> }
-        </div>
+
+
         )
 }

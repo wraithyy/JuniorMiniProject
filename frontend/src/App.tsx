@@ -41,10 +41,9 @@ function App() {
     async function onSubmit (contact: Contact) {
 
         if(contact._id){
-            console.log(contact._id)
 
             await contactsApi.updateContact(contact._id, contact).then(r => {
-                console.log(r);
+                 console.log(r);
                  setCurrentPage("list");
                  setSelectedContact(r)
                  setErrorMessage("")

@@ -4,13 +4,12 @@ import '../main.css';
 import TextArea from "./TextArea.tsx";
 import FieldSet from "./FieldSet.tsx";
 import InputComponent from "./InputComponent.tsx";
-import {useState} from "react";
 
 import type z from "zod"
 import {ContactSchema} from "./ContactSchema.tsx";
 import RadioGroup from "./RadioGroup.tsx";
 
-import {Controller, useForm, useWatch} from "react-hook-form";
+import { FormProvider, useForm, useWatch} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 
 type FormData = z.infer<typeof ContactSchema>
@@ -41,17 +40,17 @@ export const ContactForm = ({ onSubmitForm, initialData,  errorMessage  } : Cont
     }
 
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting},
-        reset,
-        control,
-    } = useForm<FormData>({
+
+
+
+    const methods = useForm<FormData>({
         resolver: zodResolver(ContactSchema),
         mode: "onTouched",
-        defaultValues: initialData ? initialData : emptyValues
+        defaultValues: initialData ?? emptyValues,
     });
+
+    const { handleSubmit, formState: { errors, isSubmitting }, reset, control } = methods;
+
 
 
     const onSubmit = async (values: FormData) => {
@@ -78,168 +77,119 @@ export const ContactForm = ({ onSubmitForm, initialData,  errorMessage  } : Cont
           <h2>{initialData ? 'Editovat kontakt' : 'Vytvořit nový kontakt'}</h2>
 
           <div className="form-group">
+
+              <FormProvider {...methods} >
+
               <form className="form-horizontal" id="contactForm" onSubmit={handleSubmit(onSubmit)} noValidate>
 
                   {/* TODO Při úpravě se nemaže, ale změna funguje */}
 
 
-                  <Controller control={control} name={"firstName"}
-                              render={({ field }) => (
-                                  <InputComponent
-                                      label="First Name"
-                                      value={field.value}
-                                      onChange={field.onChange}
-                                      onBlur={field.onBlur}
-                                      id={"firstName"} type={"text"} name={"firstName"} placeholder={"John"}
-                                      error={errors.firstName?.message}
+                  <InputComponent
+                      label="First Name"
+                      id={"firstName"}
+                      type={"text"}
+                      name={"firstName"}
+                      placeholder={"John"}
 
-                                  />
-                              )}
                   />
 
-                  <Controller control={control} name={"lastName"}
-                              render={({ field }) => (
-                                  <InputComponent
-                                      label="Last Name"
-                                      value={field.value}
-                                      onChange={field.onChange}
-                                      onBlur={field.onBlur}
-                                      id={"lastName"} type={"text"} name={"lastName"} placeholder={"Smith"}
-                                      error={errors.lastName?.message}
+                  <InputComponent
+                      label="Last Name"
+                      id={"lastName"}
+                      type={"text"}
+                      name={"lastName"}
+                      placeholder={"Smith"}
 
-                                  />
-                              )}
-                  />
-
-                  <Controller control={control} name={"email"}
-                              render={({ field }) => (
-                                  <InputComponent
-                                      label="Email"
-                                      value={field.value}
-                                      onChange={field.onChange}
-                                      onBlur={field.onBlur}
-                                      id={"email"} type={"text"} name={"email"} placeholder={"example@example.com"}
-                                      error={errors.email?.message}
-
-                                  />
-                              )}
-                  />
-
-                  <Controller control={control} name={"phone"}
-                              render={({ field }) => (
-                                  <InputComponent
-                                      label="Phone"
-                                      value={field.value}
-                                      onChange={field.onChange}
-                                      onBlur={field.onBlur}
-                                      id={"phone"} type={"text"} name={"phone"} placeholder={"123 456 789"}
-                                      error={errors.phone?.message}
-
-                                  />
-                              )}
                   />
 
 
-                  <Controller control={control} name={"note"}
-                              render={({ field }) => (
-                                  <TextArea id={"note"} name={"note"} label={"Note"} placeholder={"Write something..."} rows={5}
-                                            value={field.value}
-                                            onChange={field.onChange}
-                                            onBlur={field.onBlur}
-                                            error={errors.note?.message}
-                                  />
-                              )}
+                  <InputComponent
+                      label="Email"
+                      id={"email"}
+                      type={"text"}
+                      name={"email"}
+                      placeholder={"example@example.com"}
+
                   />
 
 
-                  <FieldSet id={"gender"} legend={"Gender"} >
+                  <InputComponent
+                      label="Phone"
+                      id={"phone"}
+                      type={"text"}
+                      name={"phone"}
+                      placeholder={"123 456 789"}
 
-                      <Controller control={control}  name={"gender"} render={({field}) => (
-                          <RadioGroup options={options}
-                                      value={field?.value}
-                                      onChange={field.onChange} onBlur={field.onBlur}
+                  />
+
+                  <TextArea id={"note"}
+                            name={"note"}
+                            label={"Note"}
+                            placeholder={"Write bitch!"}
+
+                  />
+
+
+
+
+                  <FieldSet id={"gender"}
+                            legend={"Gender"} >
+                                      <RadioGroup options={options} name={"gender"} />
+
+                  </FieldSet>
+
+
+                  <FieldSet id={"address"}
+                            legend={"Address"} >
+
+                          <InputComponent
+                              label="City"
+                              id={"city"}
+                              type={"text"}
+                              name={"city"}
+                              placeholder={"Gotham"}
+
                           />
-                      )}
-                      />
 
-                  </FieldSet>
+                          <InputComponent
+                              label="Street"
+                              id={"street"}
+                              type={"text"}
+                              name={"street"}
+                              placeholder={"Batstreet"}
 
+                          />
 
-                  <FieldSet id={"address"} legend={"Address"} >
+                          <InputComponent
+                              label="House Number"
+                              id={"houseNumber"}
+                              type={"text"}
+                              name={"houseNumber"}
+                              placeholder={"42"}
 
-                      <Controller control={control} name={"city"}
-                                  render={({ field }) => (
-                                      <InputComponent
-                                          label="City"
-                                          value={field.value}
-                                          onChange={field.onChange}
-                                          onBlur={field.onBlur}
-                                          id={"city"} type={"text"} name={"city"} placeholder={"Gotham"}
-                                          error={errors.city?.message}
-
-                                      />
-                                  )}
-                      />
-
-                      <Controller control={control} name={"street"}
-                                  render={({ field }) => (
-                                      <InputComponent
-                                          label="Street"
-                                          value={field.value}
-                                          onChange={field.onChange}
-                                          onBlur={field.onBlur}
-                                          id={"street"} type={"text"} name={"street"} placeholder={"Batstreet"}
-                                          error={errors.street?.message}
-
-                                      />
-                                  )}
-                      />
-
-                      <Controller control={control} name={"houseNumber"}
-                                  render={({ field }) => (
-                                      <InputComponent
-                                          label="House Number"
-                                          value={field.value}
-                                          onChange={field.onChange}
-                                          onBlur={field.onBlur}
-                                          id={"houseNumber"} type={"text"} name={"houseNumber"} placeholder={"42"}
-                                          error={errors.houseNumber?.message}
-
-                                      />
-                                  )}
-                      />
+                          />
 
 
-                      <Controller control={control} name={"zipCode"}
-                                  render={({ field }) => (
-                                      <InputComponent
-                                          label="Zip Code"
-                                          value={field.value}
-                                          onChange={field.onChange}
-                                          onBlur={field.onBlur}
-                                          id={"zipCode"} type={"number"} name={"zipCode"} placeholder={"47"}
-                                          error={errors.zipCode?.message}
+                          <InputComponent
+                              label="Zip Code"
+                              id={"zipCode"}
+                              type={"number"}
+                              name={"zipCode"}
+                              placeholder={"47"}
 
-                                      />
-                                  )}
-                      />
+                          />
 
 
                   </FieldSet>
 
 
-                  <Controller control={control} name={"birthDate"}
-                              render={({ field }) => (
-                                  <InputComponent
-                                      label="Birth Date"
-                                      value={field.value}
-                                      onChange={field.onChange}
-                                      onBlur={field.onBlur}
-                                      id={"birthDate"} type={"date"} name={"birthDate"}
-                                      error={errors.birthDate?.message}
+                  <InputComponent
+                      label="Birth Date"
+                      id={"birthDate"}
+                      type={"date"}
+                      name={"birthDate"}
 
-                                  />
-                              )}
                   />
 
 
@@ -253,6 +203,8 @@ export const ContactForm = ({ onSubmitForm, initialData,  errorMessage  } : Cont
                   <small style={{color: "red"}}>{errorMessage}</small>
 
               </form>
+
+              </FormProvider>
 
           </div>
 
