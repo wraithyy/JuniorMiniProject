@@ -15,9 +15,16 @@ export function useContactFormInputs(initialData: Contact | null) {
     formSchema.shape.nonEmpty
   );
 
+    const noteProps = useInput(
+    initialData,
+    "note",
+    formSchema.shape.text
+  );
+
   return {
     emailProps,
     firstNameProps,
     lastNameProps,
+    noteProps
   };
 }

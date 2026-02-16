@@ -5,6 +5,7 @@ import { useContactFormInputs } from "../hooks/useContactFormInputs";
 import type { Contact } from "../types/contact";
 import type { UseInputReturn } from "../types/input";
 import FormInput from "./FormInput";
+import FormTextArea from "./FormTextArea";
 
 interface ContactFormProps {
   onSubmit: (contact: Contact) => void;
@@ -47,7 +48,7 @@ export const ContactForm: FC<ContactFormProps> = ({
   // - Použít připravený contactsApi.createContact() nebo contactsApi.updateContact()
   // - Pro přístup k API klientu: import { contactsApi } from '../api/contactsApi'
   const contactInputProps = useContactFormInputs(initialData);
-  const { firstNameProps, lastNameProps, emailProps } = contactInputProps;
+  const { firstNameProps, lastNameProps, emailProps, noteProps } = contactInputProps;
 
   const updating = initialData?._id;
 
@@ -83,6 +84,7 @@ export const ContactForm: FC<ContactFormProps> = ({
         firstName: firstNameProps.value,
         lastName: lastNameProps.value,
         email: emailProps.value,
+        note: noteProps.value,
       };
 
       const fetchedContact = await fetchContact(formContact);
@@ -124,6 +126,13 @@ export const ContactForm: FC<ContactFormProps> = ({
         name="email"
         required
         type="email"
+      />
+
+        <FormTextArea
+        formprops={noteProps}
+        id="note"
+        label="Note"
+        name="note"
       />
 
       <button className="submit-btn" type="submit">

@@ -3,6 +3,8 @@ import type { ZodType } from "zod";
 import type { Contact } from "../types/contact";
 import type { UseInputReturn } from "../types/input";
 
+type InputElement = HTMLInputElement | HTMLTextAreaElement;
+
 function findDefaultValue(
   prefilledInputs: Contact | null,
   inputType: keyof Contact
@@ -31,7 +33,7 @@ export function useInput(
     : (parsed.error.issues[0]?.message ?? "Špatný vstup");
   const displayedErrorMessage = didEdit && !valueIsValid ? errorMsg : "";
 
-  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function handleInputChange(event: React.ChangeEvent<InputElement>) {
     setEnteredValue(event.target.value);
     setDidEdit(false);
   }
