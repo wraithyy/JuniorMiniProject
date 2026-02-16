@@ -10,7 +10,7 @@ function findDefaultValue(
   prefilledInputs: Contact | null,
   inputType: keyof Contact
 ) {
-  const prefilledInput =  prefilledInputs?.[inputType]?.toString() ?? "";
+  const prefilledInput = prefilledInputs?.[inputType]?.toString() ?? "";
   if (inputType in inputFormatters) {
     const key = inputType as keyof typeof inputFormatters;
     return inputFormatters[key](prefilledInput);

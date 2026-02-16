@@ -15,13 +15,12 @@ const phoneSchema = z
     { message: "Číslo musí být ve formátu E.164 (+420...) nebo mít 9 cifer." }
   );
 
-  const zipCodeSchema = z
+const zipCodeSchema = z
   .string()
   .trim()
-  .refine(
-    (value) => value === "" || fiveDigits.test(value),
-    { message: "PSČ musí mít 6 číslic" }
-  );
+  .refine((value) => value === "" || fiveDigits.test(value), {
+    message: "PSČ musí mít 6 číslic",
+  });
 
 const houseNumberSchema = z
   .string()

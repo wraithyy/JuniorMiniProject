@@ -20,10 +20,21 @@ export function useContactFormInputs(initialData: Contact | null) {
   const phoneProps = useInput(initialData, "phone", formSchema.shape.phone);
   const cityProps = useInput(initialData, "city", formSchema.shape.text);
   const streetProps = useInput(initialData, "street", formSchema.shape.text);
-  const houseNumberProps = useInput(initialData, "houseNumber", formSchema.shape.houseNumber);
-  const zipCodeProps = useInput(initialData, "zipCode", formSchema.shape.zipCode);
-  const birthDateProps = useInput(initialData, "birthDate", formSchema.shape.text);
-  
+  const houseNumberProps = useInput(
+    initialData,
+    "houseNumber",
+    formSchema.shape.houseNumber
+  );
+  const zipCodeProps = useInput(
+    initialData,
+    "zipCode",
+    formSchema.shape.zipCode
+  );
+  const birthDateProps = useInput(
+    initialData,
+    "birthDate",
+    formSchema.shape.text
+  );
 
   return {
     emailProps,
