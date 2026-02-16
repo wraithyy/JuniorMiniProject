@@ -20,7 +20,7 @@ export default function FormRadioGroup({
 }: FormRadioGroupProps) {
   const { value, handleInputChange, setAsTouched, errorMsg } = formProps;
   return (
-    <fieldset>
+    <fieldset className="form-control">
       <legend>{label}</legend>
       {options.map((option) => (
         <label key={option.value}>
