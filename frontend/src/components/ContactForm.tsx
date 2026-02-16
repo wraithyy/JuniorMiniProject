@@ -146,6 +146,7 @@ export const ContactForm: FC<ContactFormProps> = ({
         formprops={birthDateProps}
         id="birthDate"
         label="Datum narození"
+        max={new Date().toISOString().split("T")[0]}
         name="birthDate"
         type="date"
       />
