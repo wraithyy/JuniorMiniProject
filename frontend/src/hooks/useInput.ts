@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { ZodType } from "zod";
 import type { Contact } from "../types/contact";
 import type { UseInputReturn } from "../types/input";
-import { formatters } from "../utils/formatters";
+import { inputFormatters } from "../utils/inputFormatters";
 
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
 
@@ -11,9 +11,9 @@ function findDefaultValue(
   inputType: keyof Contact
 ) {
   const prefilledInput =  prefilledInputs?.[inputType]?.toString() ?? "";
-  if (inputType in formatters) {
-    const key = inputType as keyof typeof formatters;
-    return formatters[key](prefilledInput);
+  if (inputType in inputFormatters) {
+    const key = inputType as keyof typeof inputFormatters;
+    return inputFormatters[key](prefilledInput);
   }
   return prefilledInput;
 }

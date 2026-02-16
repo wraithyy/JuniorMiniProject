@@ -2,7 +2,7 @@ import { type FC, useEffect, useState } from "react";
 import { useDeleteContact } from "../../hooks/fetching/useDeleteContact.ts";
 import type { Contact } from "../../types/contact";
 import type { AppStateProps } from "../../types/state";
-import { formatters } from "../../utils/formatters.ts";
+import { outputFormatters } from "../../utils/outputFormatters.ts";
 
 interface ContactDetailProps extends AppStateProps {
   setContacts: React.Dispatch<React.SetStateAction<Contact[]>>;
@@ -90,7 +90,7 @@ export const ContactDetail: FC<ContactDetailProps> = ({
           {selectedContact.gender && 
           <tr>
             <td>Pohlaví:</td>
-            <td>{formatters.gender(selectedContact.gender)}</td>
+            <td>{outputFormatters.gender(selectedContact.gender)}</td>
           </tr>
           }
           {selectedContact.phone && 
