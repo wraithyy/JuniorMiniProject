@@ -142,7 +142,13 @@ export const ContactForm: FC<ContactFormProps> = ({
         type="email"
       />
 
-      <FormTextArea formprops={noteProps} id="note" label="Note" name="note" />
+      <FormInput
+        formprops={birthDateProps}
+        id="birthDate"
+        label="Datum narození"
+        name="birthDate"
+        type="date"
+      />
 
       <FormRadioGroup
         formProps={genderProps}
@@ -189,13 +195,7 @@ export const ContactForm: FC<ContactFormProps> = ({
         name="zipCode"
         type="number"
       />
-      <FormInput
-        formprops={birthDateProps}
-        id="birthDate"
-        label="Datum narození"
-        name="birthDate"
-        type="date"
-      />
+      <FormTextArea formprops={noteProps} id="note" label="Note" name="note" />
 
       <button className="submit-btn" type="submit">
         {initialData ? "Potvrdit změny" : "Přidat kontakt"}
