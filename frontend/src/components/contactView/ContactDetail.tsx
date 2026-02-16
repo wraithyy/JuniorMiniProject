@@ -1,6 +1,7 @@
 import type { FC } from "react";
 import type { Contact } from "../../types/contact";
 import type { AppStateProps } from "../../types/state";
+import { useDeleteContact } from "../../hooks/fetching/useDeleteContact.ts";
 
 interface ContactDetailProps extends AppStateProps {
   setContacts: React.Dispatch<React.SetStateAction<Contact[]>>;
@@ -45,6 +46,7 @@ export const ContactDetail: FC<ContactDetailProps> = ({
   function handleDelete() {
     setContacts((prev) => prev.filter((c) => c._id !== selectedContact?._id));
     setSelectedContact(null);
+    useDeleteContact(selectedContact?._id)
     // call API delete
     // if error, rollback (restore DOM)
   }
