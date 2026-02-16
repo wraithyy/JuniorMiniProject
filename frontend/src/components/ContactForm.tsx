@@ -103,7 +103,7 @@ export const ContactForm: FC<ContactFormProps> = ({
         city: cityProps.value,
         street: streetProps.value,
         houseNumber: houseNumberProps.value,
-        zipCode: Number(zipCodeProps.value),
+        zipCode: zipCodeProps.value ? Number(zipCodeProps.value) : undefined,
         birthDate: birthDateProps.value,
       };
 
