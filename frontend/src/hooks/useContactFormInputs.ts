@@ -17,10 +17,13 @@ export function useContactFormInputs(initialData: Contact | null) {
 
   const noteProps = useInput(initialData, "note", formSchema.shape.text);
 
+  const genderProps = useInput(initialData, "gender", formSchema.shape.text)
+
   return {
     emailProps,
     firstNameProps,
     lastNameProps,
     noteProps,
+    genderProps,
   };
 }

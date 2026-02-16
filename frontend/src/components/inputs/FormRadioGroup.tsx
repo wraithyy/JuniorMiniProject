@@ -6,7 +6,6 @@ interface RadioOption {
 }
 
 interface FormRadioGroupProps {
-  id: string;
   label: string;
   name: string;
   options: RadioOption[];

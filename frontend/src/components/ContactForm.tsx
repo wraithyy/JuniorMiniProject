@@ -6,6 +6,7 @@ import type { Contact } from "../types/contact";
 import type { UseInputReturn } from "../types/input";
 import FormInput from "./inputs/FormInput";
 import FormTextArea from "./inputs/FormTextArea";
+import FormRadioGroup from "./inputs/FormRadioGroup";
 
 interface ContactFormProps {
   onSubmit: (contact: Contact) => void;
@@ -48,7 +49,7 @@ export const ContactForm: FC<ContactFormProps> = ({
   // - Použít připravený contactsApi.createContact() nebo contactsApi.updateContact()
   // - Pro přístup k API klientu: import { contactsApi } from '../api/contactsApi'
   const contactInputProps = useContactFormInputs(initialData);
-  const { firstNameProps, lastNameProps, emailProps, noteProps } =
+  const { firstNameProps, lastNameProps, emailProps, noteProps, genderProps } =
     contactInputProps;
 
   const updating = initialData?._id;
@@ -130,6 +131,9 @@ export const ContactForm: FC<ContactFormProps> = ({
       />
 
       <FormTextArea formprops={noteProps} id="note" label="Note" name="note" />
+
+      <FormRadioGroup label="gender" name="gender" options={[{label: 'muž', value:'male'}, {label: 'žena', value:'female'}]} formProps={genderProps}/>
+
 
       <button className="submit-btn" type="submit">
         {initialData ? "Potvrdit změny" : "Přidat kontakt"}
