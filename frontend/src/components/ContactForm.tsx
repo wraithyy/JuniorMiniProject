@@ -49,8 +49,19 @@ export const ContactForm: FC<ContactFormProps> = ({
   // - Použít připravený contactsApi.createContact() nebo contactsApi.updateContact()
   // - Pro přístup k API klientu: import { contactsApi } from '../api/contactsApi'
   const contactInputProps = useContactFormInputs(initialData);
-  const { firstNameProps, lastNameProps, emailProps, noteProps, genderProps } =
-    contactInputProps;
+  const {
+    firstNameProps,
+    lastNameProps,
+    emailProps,
+    noteProps,
+    genderProps,
+    phoneProps,
+    cityProps,
+    streetProps,
+    houseNumberProps,
+    zipCodeProps,
+    birthDateProps,
+  } = contactInputProps;
 
   const updating = initialData?._id;
 
@@ -140,7 +151,50 @@ export const ContactForm: FC<ContactFormProps> = ({
         options={[
           { label: "muž", value: "male" },
           { label: "žena", value: "female" },
+          { label: "jiné", value: "other" },
         ]}
+      />
+      <FormInput
+        formprops={phoneProps}
+        id="phone"
+        label="Telefon"
+        name="phone"
+        type="number"
+      />
+      <FormInput
+        formprops={cityProps}
+        id="city"
+        label="Město"
+        name="city"
+        type="text"
+      />
+      <FormInput
+        formprops={streetProps}
+        id="street"
+        label="Ulice"
+        name="street"
+        type="text"
+      />
+      <FormInput
+        formprops={houseNumberProps}
+        id="houseNumber"
+        label="Číslo popisné"
+        name="houseNumber"
+        type="text"
+      />
+      <FormInput
+        formprops={zipCodeProps}
+        id="zipCode"
+        label="PSČ"
+        name="zipCode"
+        type="number"
+      />
+      <FormInput
+        formprops={birthDateProps}
+        id="birthDate"
+        label="Datum narození"
+        name="birthDate"
+        type="date"
       />
 
       <button className="submit-btn" type="submit">
