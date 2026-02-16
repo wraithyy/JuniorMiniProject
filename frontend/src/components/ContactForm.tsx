@@ -159,7 +159,7 @@ export const ContactForm: FC<ContactFormProps> = ({
         id="phone"
         label="Telefon"
         name="phone"
-        type="number"
+        type="text"
       />
       <FormInput
         formprops={cityProps}
