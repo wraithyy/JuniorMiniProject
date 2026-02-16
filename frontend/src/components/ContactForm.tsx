@@ -5,8 +5,8 @@ import { useContactFormInputs } from "../hooks/useContactFormInputs";
 import type { Contact } from "../types/contact";
 import type { UseInputReturn } from "../types/input";
 import FormInput from "./inputs/FormInput";
-import FormTextArea from "./inputs/FormTextArea";
 import FormRadioGroup from "./inputs/FormRadioGroup";
+import FormTextArea from "./inputs/FormTextArea";
 
 interface ContactFormProps {
   onSubmit: (contact: Contact) => void;
@@ -87,6 +87,7 @@ export const ContactForm: FC<ContactFormProps> = ({
         lastName: lastNameProps.value,
         email: emailProps.value,
         note: noteProps.value,
+        gender: genderProps.value,
       };
 
       const fetchedContact = await fetchContact(formContact);
@@ -132,8 +133,15 @@ export const ContactForm: FC<ContactFormProps> = ({
 
       <FormTextArea formprops={noteProps} id="note" label="Note" name="note" />
 
-      <FormRadioGroup label="gender" name="gender" options={[{label: 'muž', value:'male'}, {label: 'žena', value:'female'}]} formProps={genderProps}/>
-
+      <FormRadioGroup
+        formProps={genderProps}
+        label="gender"
+        name="gender"
+        options={[
+          { label: "muž", value: "male" },
+          { label: "žena", value: "female" },
+        ]}
+      />
 
       <button className="submit-btn" type="submit">
         {initialData ? "Potvrdit změny" : "Přidat kontakt"}
