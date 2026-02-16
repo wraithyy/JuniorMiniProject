@@ -1,16 +1,16 @@
-import type { FormTextAreaProps } from "../types/input";
-export default function FormTextArea({
+import type { FormInputProps } from "../../types/input";
+export default function FormInput({
   label,
   id,
   formprops,
   ...props
-}: FormTextAreaProps) {
+}: FormInputProps) {
   const { value, handleInputChange, setAsTouched, errorMsg } = formprops;
 
   return (
     <div>
       <label htmlFor={id}>{label}</label>
-      <textarea
+      <input
         className="form-control"
         id={id}
         onBlur={setAsTouched}
