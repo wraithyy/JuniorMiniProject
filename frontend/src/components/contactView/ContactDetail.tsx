@@ -2,6 +2,7 @@ import { type FC, useEffect, useState } from "react";
 import { useDeleteContact } from "../../hooks/fetching/useDeleteContact.ts";
 import type { Contact } from "../../types/contact";
 import type { AppStateProps } from "../../types/state";
+import { formatters } from "../../utils/formatters.ts";
 
 interface ContactDetailProps extends AppStateProps {
   setContacts: React.Dispatch<React.SetStateAction<Contact[]>>;
@@ -80,6 +81,54 @@ export const ContactDetail: FC<ContactDetailProps> = ({
             <td>E-mail:</td>
             <td>{selectedContact.email}</td>
           </tr>
+          {selectedContact.birthDate && 
+          <tr>
+            <td>Datum narození:</td>
+            <td>{(new Date(selectedContact.birthDate)).toLocaleDateString('cs-CZ')}</td>
+          </tr>
+          }
+          {selectedContact.gender && 
+          <tr>
+            <td>Pohlaví:</td>
+            <td>{formatters.gender(selectedContact.gender)}</td>
+          </tr>
+          }
+          {selectedContact.phone && 
+          <tr>
+            <td>Telefon:</td>
+            <td>{selectedContact.phone}</td>
+          </tr>
+          }
+          {selectedContact.city && 
+          <tr>
+            <td>Město:</td>
+            <td>{selectedContact.city}</td>
+          </tr>
+          }
+          {selectedContact.street && 
+          <tr>
+            <td>Ulice:</td>
+            <td>{selectedContact.street}</td>
+          </tr>
+          }
+          {selectedContact.houseNumber && 
+          <tr>
+            <td>Číslo popisné:</td>
+            <td>{selectedContact.houseNumber}</td>
+          </tr>
+          }
+          {selectedContact.zipCode && 
+          <tr>
+            <td>PSČ:</td>
+            <td>{selectedContact.zipCode}</td>
+          </tr>
+          }
+          {selectedContact.note && 
+          <tr>
+            <td>Poznámka:</td>
+            <td>{selectedContact.note}</td>
+          </tr>
+          }
         </tbody>
       </table>
       <div className="contact-detail-buttons">
