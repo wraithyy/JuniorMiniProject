@@ -9,9 +9,7 @@ interface UseDeleteContactResult {
 export function useDeleteContact(): UseDeleteContactResult {
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
-  const deleteContact = async (
-    id: string,
-  ): Promise<void> => {
+  const deleteContact = async (id: string): Promise<void> => {
     try {
       setIsFetching(true);
       await contactsApi.deleteContact(id);
@@ -24,7 +22,3 @@ export function useDeleteContact(): UseDeleteContactResult {
 
   return { deleteContact, isFetching };
 }
-
-
-
-

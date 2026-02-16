@@ -1,7 +1,7 @@
-import { FC, useEffect, useState } from "react";
+import { type FC, useEffect, useState } from "react";
+import { useDeleteContact } from "../../hooks/fetching/useDeleteContact.ts";
 import type { Contact } from "../../types/contact";
 import type { AppStateProps } from "../../types/state";
-import { useDeleteContact } from "../../hooks/fetching/useDeleteContact.ts";
 
 interface ContactDetailProps extends AppStateProps {
   setContacts: React.Dispatch<React.SetStateAction<Contact[]>>;
@@ -30,15 +30,15 @@ export const ContactDetail: FC<ContactDetailProps> = ({
   // Bonusový úkol:
   // - Tlačítko "Editovat" které otevře formulář s předvyplněnými daty
   const { deleteContact, isFetching } = useDeleteContact();
-  const [errorMsg, setErrorMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
-    if (selectedContact?._id){
-      setErrorMsg('');
+    if (selectedContact?._id) {
+      setErrorMsg("");
     }
   }, [selectedContact?._id]);
 
-    if (!selectedContact) {
+  if (!selectedContact) {
     return (
       <div>
         <p>Vyberte kontakt ze seznamu pro zobrazení detailu</p>
@@ -56,11 +56,11 @@ export const ContactDetail: FC<ContactDetailProps> = ({
       try {
         await deleteContact(selectedContact._id);
         setContacts((prev) =>
-          prev.filter((c) => c._id !== selectedContact._id),
+          prev.filter((c) => c._id !== selectedContact._id)
         );
         setSelectedContact(null);
       } catch {
-        setErrorMsg("Nepodařilo se smazat kontakt.")
+        setErrorMsg("Nepodařilo se smazat kontakt.");
       }
     }
   }
