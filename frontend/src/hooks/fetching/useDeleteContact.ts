@@ -1,14 +1,12 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { contactsApi } from "../../api/contactsApi";
 
 interface UseDeleteContactResult {
   deleteContact: (id: string) => Promise<void>;
-  error: string | null;
   isFetching: boolean;
 }
 
 export function useDeleteContact(): UseDeleteContactResult {
-  const [error, setError] = useState<string | null>(null);
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const deleteContact = async (
@@ -16,15 +14,17 @@ export function useDeleteContact(): UseDeleteContactResult {
   ): Promise<void> => {
     try {
       setIsFetching(true);
-      setError(null);
-      const data = await contactsApi.deleteContact(id);
-      return data;
+      await contactsApi.deleteContact(id);
     } catch {
-      setError("Nepodařilo se smazat kontakt.");
+      throw new Error("Nepodařilo se smazat kontakt.");
     } finally {
       setIsFetching(false);
     }
   };
 
-  return { deleteContact, error, isFetching };
+  return { deleteContact, isFetching };
 }
+
+
+
+

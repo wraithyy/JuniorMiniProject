@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import type { Contact } from "../../types/contact";
 import type { AppStateProps } from "../../types/state";
 import { useDeleteContact } from "../../hooks/fetching/useDeleteContact.ts";
@@ -29,8 +29,16 @@ export const ContactDetail: FC<ContactDetailProps> = ({
   //
   // Bonusový úkol:
   // - Tlačítko "Editovat" které otevře formulář s předvyplněnými daty
+  const { deleteContact, isFetching } = useDeleteContact();
+  const [errorMsg, setErrorMsg] = useState('');
 
-  if (!selectedContact) {
+  useEffect(() => {
+    if (selectedContact?._id){
+      setErrorMsg('');
+    }
+  }, [selectedContact?._id]);
+
+    if (!selectedContact) {
     return (
       <div>
         <p>Vyberte kontakt ze seznamu pro zobrazení detailu</p>
@@ -43,12 +51,18 @@ export const ContactDetail: FC<ContactDetailProps> = ({
     setCurrentPage("form");
   }
 
-  function handleDelete() {
-    setContacts((prev) => prev.filter((c) => c._id !== selectedContact?._id));
-    setSelectedContact(null);
-    useDeleteContact(selectedContact?._id)
-    // call API delete
-    // if error, rollback (restore DOM)
+  async function handleDelete() {
+    if (selectedContact?._id) {
+      try {
+        await deleteContact(selectedContact._id);
+        setContacts((prev) =>
+          prev.filter((c) => c._id !== selectedContact._id),
+        );
+        setSelectedContact(null);
+      } catch {
+        setErrorMsg("Nepodařilo se smazat kontakt.")
+      }
+    }
   }
 
   return (
@@ -72,10 +86,17 @@ export const ContactDetail: FC<ContactDetailProps> = ({
         <button className="update-btn" onClick={handleUpdate} type="button">
           Upravit
         </button>
-        <button className="delete-btn" onClick={handleDelete} type="button">
+        <button
+          className="delete-btn"
+          disabled={isFetching}
+          onClick={handleDelete}
+          type="button"
+        >
           Smazat
         </button>
       </div>
+      {isFetching && <p>Probíhá mazání kontaktu</p>}
+      {errorMsg && <p className="state-error">{errorMsg}</p>}
     </div>
   );
 };
