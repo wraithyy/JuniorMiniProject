@@ -99,6 +99,12 @@ export const ContactForm: FC<ContactFormProps> = ({
         email: emailProps.value,
         note: noteProps.value,
         gender: genderProps.value,
+        phone: phoneProps.value,
+        city: cityProps.value,
+        street: streetProps.value,
+        houseNumber: houseNumberProps.value,
+        zipCode: Number(zipCodeProps.value),
+        birthDate: birthDateProps.value,
       };
 
       const fetchedContact = await fetchContact(formContact);
