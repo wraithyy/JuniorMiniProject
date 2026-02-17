@@ -1,11 +1,14 @@
-import { type FC, useState } from "react";
+import { type FC, useState, type Dispatch, type SetStateAction } from "react";
 import { useDeleteContact } from "../../hooks/fetching/useDeleteContact.ts";
 import type { Contact } from "../../types/contact";
-import type { AppStateProps } from "../../types/state";
+import type { Page } from "../../types/page";
 import { outputFormatters } from "../../utils/outputFormatters.ts";
 
-interface ContactDetailProps extends AppStateProps {
+interface ContactDetailProps {
   setContacts: React.Dispatch<React.SetStateAction<Contact[]>>;
+    setCurrentPage: Dispatch<SetStateAction<Page>>;
+    selectedContact: Contact | null;
+    setSelectedContact: Dispatch<SetStateAction<Contact | null>>;
 }
 export const ContactDetail: FC<ContactDetailProps> = ({
   selectedContact,

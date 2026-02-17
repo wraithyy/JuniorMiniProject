@@ -6,21 +6,3 @@ export interface UseInputReturn {
   errorMsg: string;
   isValid: boolean;
 }
-
-export type FormInputProps = Omit<
-  React.ComponentProps<"input">,
-  "value" | "onChange" | "onBlur"
-> & {
-  label: string;
-  id: string;
-  formProps: UseInputReturn;
-};
-
-export type FormTextAreaProps = Omit<
-  React.ComponentProps<"textarea">,
-  "value" | "onChange" | "onBlur"
-> & {
-  label: string;
-  id: string;
-  formProps: UseInputReturn;
-};

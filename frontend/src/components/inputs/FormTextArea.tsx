@@ -1,4 +1,14 @@
-import type { FormTextAreaProps } from "../../types/input";
+import type { UseInputReturn } from "../../types/input";
+
+type FormTextAreaProps = Omit<
+  React.ComponentProps<"textarea">,
+  "value" | "onChange" | "onBlur"
+> & {
+  label: string;
+  id: string;
+  formProps: UseInputReturn;
+};
+
 export default function FormTextArea({
   label,
   id,

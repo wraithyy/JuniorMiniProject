@@ -1,0 +1,1 @@
+export type Page = "form" | "list";

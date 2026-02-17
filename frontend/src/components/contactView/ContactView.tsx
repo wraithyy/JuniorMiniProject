@@ -1,13 +1,21 @@
+import type { Dispatch, SetStateAction } from "react";
 import { useGetAllContacts } from "../../hooks/fetching/useGetAllContacts";
-import type { AppStateProps } from "../../types/state";
 import { ContactDetail } from "./ContactDetail";
 import ContactList  from "./ContactList";
+import type { Contact } from "../../types/contact";
+import type {  Page } from "../../types/page";
+
+interface ContactViewProps{
+  setCurrentPage: Dispatch<SetStateAction<Page>>;
+  selectedContact: Contact | null;
+  setSelectedContact: Dispatch<SetStateAction<Contact | null>>;
+}
 
 export default function ContactView({
   selectedContact,
   setSelectedContact,
   setCurrentPage,
-}: AppStateProps) {
+}: ContactViewProps) {
   const { contacts, setContacts, error, isFetching } = useGetAllContacts();
 
   return (

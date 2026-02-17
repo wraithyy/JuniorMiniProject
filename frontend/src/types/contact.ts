@@ -28,4 +28,4 @@ export interface ContactResponse {
 
 export type OnContactSelect = (contact: Contact) => void;
 
-export type Page = "form" | "list";
+

@@ -1,4 +1,13 @@
-import type { FormInputProps } from "../../types/input";
+import type { UseInputReturn } from "../../types/input";
+
+type FormInputProps = Omit<
+  React.ComponentProps<"input">,
+  "value" | "onChange" | "onBlur"
+> & {
+  label: string;
+  id: string;
+  formProps: UseInputReturn;
+};
 export default function FormInput({
   label,
   id,
