@@ -79,7 +79,7 @@ export default function ContactForm ({
     }
   }
 
-  async function fetchContact(formContact: Contact) {
+  async function saveContact(formContact: Contact) {
     if (initialData?._id) {
       return await update.updateContact(initialData._id, formContact);
     }
@@ -106,10 +106,10 @@ export default function ContactForm ({
         birthDate: birthDateProps.value,
       };
 
-      const fetchedContact = await fetchContact(formContact);
+      const savedContact = await saveContact(formContact);
 
-      if (fetchedContact) {
-        onSubmit(fetchedContact);
+      if (savedContact) {
+        onSubmit(savedContact);
       }
     } else {
       triggerErrors(contactInputProps);
