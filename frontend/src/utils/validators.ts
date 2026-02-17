@@ -19,7 +19,7 @@ const zipCodeSchema = z
   .string()
   .trim()
   .refine((value) => value === "" || fiveDigits.test(value), {
-    message: "PSČ musí mít 6 číslic",
+    message: "PSČ musí mít 5 číslic",
   });
 
 const houseNumberSchema = z
@@ -42,5 +42,7 @@ export const formSchema = z.object({
   gender: textSchema,
   city: textSchema,
   street: textSchema,
-  birthDate: textSchema,
+  birthDate: textSchema
 });
+
+   

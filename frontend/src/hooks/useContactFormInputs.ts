@@ -5,8 +5,7 @@ import { useInput } from "./useInput";
 type FormKey = keyof typeof formSchema.shape;
 
 export function useContactFormInputs(initialData: Contact | null) {
-  
-   function useMakeInput<K extends FormKey>(key: K) {
+  function useMakeInput<K extends FormKey>(key: K) {
     return useInput(initialData, key, formSchema.shape[key]);
   }
 

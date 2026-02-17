@@ -3,6 +3,7 @@ import { useUpdateContact } from "../hooks/fetching/useUpdateContact";
 import { useContactFormInputs } from "../hooks/useContactFormInputs";
 import type { Contact } from "../types/contact";
 import type { UseInputReturn } from "../types/input";
+import { formSchema } from "../utils/validators";
 import FormInput from "./inputs/FormInput";
 import FormRadioGroup from "./inputs/FormRadioGroup";
 import FormTextArea from "./inputs/FormTextArea";
@@ -69,10 +70,6 @@ export default function ContactForm({
 
   const { error, isFetching } = updating ? update : create;
 
-  function allInputsValid(inputProps: Record<string, UseInputReturn>): boolean {
-    return Object.values(inputProps).every(({ isValid }) => isValid);
-  }
-
   function triggerErrors(inputProps: Record<string, UseInputReturn>): void {
     for (const inputProp of Object.values(inputProps)) {
       inputProp.setAsTouched();
@@ -91,28 +88,29 @@ export default function ContactForm({
   ): Promise<void> {
     event.preventDefault();
 
-    if (allInputsValid(contactInputProps)) {
-      const formContact: Contact = {
-        firstName: firstNameProps.value,
-        lastName: lastNameProps.value,
-        email: emailProps.value,
-        note: noteProps.value,
-        gender: genderProps.value,
-        phone: phoneProps.value,
-        city: cityProps.value,
-        street: streetProps.value,
-        houseNumber: houseNumberProps.value,
-        zipCode: zipCodeProps.value ? Number(zipCodeProps.value) : null,
-        birthDate: birthDateProps.value,
-      };
+    const rawContact: Contact = {
+      firstName: firstNameProps.value,
+      lastName: lastNameProps.value,
+      email: emailProps.value,
+      note: noteProps.value,
+      gender: genderProps.value,
+      phone: phoneProps.value,
+      city: cityProps.value,
+      street: streetProps.value,
+      houseNumber: houseNumberProps.value,
+      zipCode: zipCodeProps.value,
+      birthDate: birthDateProps.value,
+    };
 
-      const savedContact = await saveContact(formContact);
-
-      if (savedContact) {
-        onSubmit(savedContact);
-      }
-    } else {
+    const parsed = formSchema.safeParse(rawContact);
+    if (!parsed.success) {
       triggerErrors(contactInputProps);
+      return;
+    }
+
+    const savedContact = await saveContact(rawContact);
+    if (savedContact) {
+      onSubmit(savedContact);
     }
   }
 

@@ -9,7 +9,7 @@ export interface Contact {
   city?: string | null;
   street?: string | null;
   houseNumber?: string | null;
-  zipCode?: number | null;
+  zipCode?: number | string| null;
   birthDate?: Date | string | null;
   create_date?: Date | string | null;
 }
