@@ -42,7 +42,5 @@ export const formSchema = z.object({
   gender: textSchema,
   city: textSchema,
   street: textSchema,
-  birthDate: textSchema
+  birthDate: textSchema,
 });
-
-   
