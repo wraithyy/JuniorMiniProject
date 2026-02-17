@@ -27,11 +27,20 @@ const houseNumberSchema = z
   .trim()
   .regex(houseNumberRegex, "Použijte formáty jako 123, 123/7, 123-7a");
 
+const nonEmptySchema = z.string().min(1, "Pole je povinné");
+
+const textSchema = z.string("Zadejte textový vstup");
+
 export const formSchema = z.object({
+  firstName: nonEmptySchema,
+  lastName: nonEmptySchema,
   email: z.email("Zadejte platný e-mail"),
-  nonEmpty: z.string().min(1, "Pole je povinné"),
-  text: z.string("Zadejte textový vstup"),
   phone: phoneSchema,
   zipCode: zipCodeSchema,
   houseNumber: houseNumberSchema,
+  note: textSchema,
+  gender: textSchema,
+  city: textSchema,
+  street: textSchema,
+  birthDate: textSchema,
 });

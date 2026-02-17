@@ -12,7 +12,7 @@ interface ContactformProps {
   initialData: Contact | null;
 }
 
-export default function ContactForm ({
+export default function ContactForm({
   onSubmit,
   initialData,
 }: ContactformProps) {
@@ -210,4 +210,4 @@ export default function ContactForm ({
       {isFetching && <p>Odesílám data</p>}
     </form>
   );
-};
+}

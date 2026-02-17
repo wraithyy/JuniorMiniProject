@@ -9,13 +9,13 @@ interface ContactListProps {
   selectedContact: Contact | null;
 }
 
-export default function ContactList ({
+export default function ContactList({
   onContactSelect,
   isFetching,
   error,
   contacts,
   selectedContact,
-}:ContactListProps)  {
+}: ContactListProps) {
   return (
     <div>
       <h2>Seznam kontaktů</h2>
@@ -35,7 +35,7 @@ export default function ContactList ({
       )}
     </div>
   );
-};
+}
 
 // TODO: Implementovat seznam kontaktů:
 //

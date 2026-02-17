@@ -1,22 +1,22 @@
+import type { Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 import { useDeleteContact } from "../../hooks/fetching/useDeleteContact.ts";
 import type { Contact } from "../../types/contact";
 import type { Page } from "../../types/page";
 import { outputFormatters } from "../../utils/outputFormatters.ts";
-import type { Dispatch, SetStateAction } from "react";
-import { useState } from "react";
 
 interface ContactDetailProps {
   setContacts: React.Dispatch<React.SetStateAction<Contact[]>>;
-    setCurrentPage: Dispatch<SetStateAction<Page>>;
-    selectedContact: Contact | null;
-    setSelectedContact: Dispatch<SetStateAction<Contact | null>>;
+  setCurrentPage: Dispatch<SetStateAction<Page>>;
+  selectedContact: Contact | null;
+  setSelectedContact: Dispatch<SetStateAction<Contact | null>>;
 }
-export default function ContactDetail ({
+export default function ContactDetail({
   selectedContact,
   setCurrentPage,
   setSelectedContact,
   setContacts,
-}: ContactDetailProps)  {
+}: ContactDetailProps) {
   // TODO: Implementovat detail kontaktu:
   //
   // 1. Zobrazit všechny informace o kontaktu
@@ -155,4 +155,4 @@ export default function ContactDetail ({
       {errorMsg && <p className="state-error">{errorMsg}</p>}
     </div>
   );
-};
+}

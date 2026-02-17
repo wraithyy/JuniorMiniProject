@@ -27,5 +27,3 @@ export interface ContactResponse {
 }
 
 export type OnContactSelect = (contact: Contact) => void;
-
-

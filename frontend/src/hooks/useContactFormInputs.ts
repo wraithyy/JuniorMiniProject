@@ -2,39 +2,25 @@ import type { Contact } from "../types/contact";
 import { formSchema } from "../utils/validators";
 import { useInput } from "./useInput";
 
-export function useContactFormInputs(initialData: Contact | null) {
-  const emailProps = useInput(initialData, "email", formSchema.shape.email);
-  const firstNameProps = useInput(
-    initialData,
-    "firstName",
-    formSchema.shape.nonEmpty
-  );
-  const lastNameProps = useInput(
-    initialData,
-    "lastName",
-    formSchema.shape.nonEmpty
-  );
+type FormKey = keyof typeof formSchema.shape;
 
-  const noteProps = useInput(initialData, "note", formSchema.shape.text);
-  const genderProps = useInput(initialData, "gender", formSchema.shape.text);
-  const phoneProps = useInput(initialData, "phone", formSchema.shape.phone);
-  const cityProps = useInput(initialData, "city", formSchema.shape.text);
-  const streetProps = useInput(initialData, "street", formSchema.shape.text);
-  const houseNumberProps = useInput(
-    initialData,
-    "houseNumber",
-    formSchema.shape.houseNumber
-  );
-  const zipCodeProps = useInput(
-    initialData,
-    "zipCode",
-    formSchema.shape.zipCode
-  );
-  const birthDateProps = useInput(
-    initialData,
-    "birthDate",
-    formSchema.shape.text
-  );
+export function useContactFormInputs(initialData: Contact | null) {
+  
+   function useMakeInput<K extends FormKey>(key: K) {
+    return useInput(initialData, key, formSchema.shape[key]);
+  }
+
+  const firstNameProps = useMakeInput("firstName");
+  const lastNameProps = useMakeInput("lastName");
+  const emailProps = useMakeInput("email");
+  const noteProps = useMakeInput("note");
+  const genderProps = useMakeInput("gender");
+  const phoneProps = useMakeInput("phone");
+  const cityProps = useMakeInput("city");
+  const streetProps = useMakeInput("street");
+  const houseNumberProps = useMakeInput("houseNumber");
+  const zipCodeProps = useMakeInput("zipCode");
+  const birthDateProps = useMakeInput("birthDate");
 
   return {
     emailProps,
