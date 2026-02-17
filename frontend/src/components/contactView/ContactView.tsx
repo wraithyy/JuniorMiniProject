@@ -25,6 +25,7 @@ export default function ContactView({
       </div>
       <div className="detail-panel">
         <ContactDetail
+          key={ selectedContact?._id ?? "empty"}
           selectedContact={selectedContact}
           setContacts={setContacts}
           setCurrentPage={setCurrentPage}

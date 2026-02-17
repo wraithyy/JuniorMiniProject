@@ -1,4 +1,4 @@
-import { type FC, useEffect, useState } from "react";
+import { type FC, useState } from "react";
 import { useDeleteContact } from "../../hooks/fetching/useDeleteContact.ts";
 import type { Contact } from "../../types/contact";
 import type { AppStateProps } from "../../types/state";
@@ -32,12 +32,6 @@ export const ContactDetail: FC<ContactDetailProps> = ({
   // - Tlačítko "Editovat" které otevře formulář s předvyplněnými daty
   const { deleteContact, isFetching } = useDeleteContact();
   const [errorMsg, setErrorMsg] = useState("");
-
-  useEffect(() => {
-    if (selectedContact?._id) {
-      setErrorMsg("");
-    }
-  }, [selectedContact?._id]);
 
   if (!selectedContact) {
     return (
