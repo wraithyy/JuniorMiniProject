@@ -204,7 +204,7 @@ export const ContactForm: FC<ContactFormProps> = ({
       />
       <FormTextArea formprops={noteProps} id="note" label="Note" name="note" />
 
-      <button className="submit-btn" type="submit">
+      <button className="submit-btn" disabled={isFetching} type="submit">
         {initialData ? "Potvrdit změny" : "Přidat kontakt"}
       </button>
       {error && <p className="state-error">{error}</p>}
