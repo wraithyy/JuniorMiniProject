@@ -7,9 +7,11 @@ export default function FormInput({
 }: FormInputProps) {
   const { value, handleInputChange, setAsTouched, errorMsg } = formprops;
 
+  const reqiredAsterisk = props.required ? <span>*</span> : null
+
   return (
     <div>
-      <label htmlFor={id}>{label}</label>
+      <label htmlFor={id}>{label} {reqiredAsterisk}</label>
       <input
         className="form-control"
         id={id}
