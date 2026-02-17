@@ -2,10 +2,10 @@ import type { FormInputProps } from "../../types/input";
 export default function FormInput({
   label,
   id,
-  formprops,
+  formProps,
   ...props
 }: FormInputProps) {
-  const { value, handleInputChange, setAsTouched, errorMsg } = formprops;
+  const { value, handleInputChange, setAsTouched, errorMsg } = formProps;
 
   const reqiredAsterisk = props.required ? <span>*</span> : null;
 

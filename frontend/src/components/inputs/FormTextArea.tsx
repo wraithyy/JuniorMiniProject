@@ -2,10 +2,10 @@ import type { FormTextAreaProps } from "../../types/input";
 export default function FormTextArea({
   label,
   id,
-  formprops,
+  formProps,
   ...props
 }: FormTextAreaProps) {
-  const { value, handleInputChange, setAsTouched, errorMsg } = formprops;
+  const { value, handleInputChange, setAsTouched, errorMsg } = formProps;
 
   return (
     <div>

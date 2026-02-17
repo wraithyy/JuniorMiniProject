@@ -7,7 +7,7 @@ import FormInput from "./inputs/FormInput";
 import FormRadioGroup from "./inputs/FormRadioGroup";
 import FormTextArea from "./inputs/FormTextArea";
 
-interface ContactFormProps {
+interface ContactformProps {
   onSubmit: (contact: Contact) => void;
   initialData: Contact | null;
 }
@@ -15,7 +15,7 @@ interface ContactFormProps {
 export default function ContactForm ({
   onSubmit,
   initialData,
-}: ContactFormProps) {
+}: ContactformProps) {
   // TODO: Implementovat formulář s těmito prvky:
   //
   // Povinná pole:
@@ -121,7 +121,7 @@ export default function ContactForm ({
       <h2>{initialData ? "Editace kontaktu" : "Nový kontakt"}</h2>
 
       <FormInput
-        formprops={firstNameProps}
+        formProps={firstNameProps}
         id="firstName"
         label="Jméno"
         name="firstName"
@@ -130,7 +130,7 @@ export default function ContactForm ({
       />
 
       <FormInput
-        formprops={lastNameProps}
+        formProps={lastNameProps}
         id="lastName"
         label="Příjmení"
         name="lastName"
@@ -139,7 +139,7 @@ export default function ContactForm ({
       />
 
       <FormInput
-        formprops={emailProps}
+        formProps={emailProps}
         id="email"
         label="E-mail"
         name="email"
@@ -148,7 +148,7 @@ export default function ContactForm ({
       />
 
       <FormInput
-        formprops={birthDateProps}
+        formProps={birthDateProps}
         id="birthDate"
         label="Datum narození"
         max={new Date().toISOString().split("T")[0]}
@@ -167,41 +167,41 @@ export default function ContactForm ({
         ]}
       />
       <FormInput
-        formprops={phoneProps}
+        formProps={phoneProps}
         id="phone"
         label="Telefon"
         name="phone"
         type="text"
       />
       <FormInput
-        formprops={cityProps}
+        formProps={cityProps}
         id="city"
         label="Město"
         name="city"
         type="text"
       />
       <FormInput
-        formprops={streetProps}
+        formProps={streetProps}
         id="street"
         label="Ulice"
         name="street"
         type="text"
       />
       <FormInput
-        formprops={houseNumberProps}
+        formProps={houseNumberProps}
         id="houseNumber"
         label="Číslo popisné"
         name="houseNumber"
         type="text"
       />
       <FormInput
-        formprops={zipCodeProps}
+        formProps={zipCodeProps}
         id="zipCode"
         label="PSČ"
         name="zipCode"
         type="number"
       />
-      <FormTextArea formprops={noteProps} id="note" label="Note" name="note" />
+      <FormTextArea formProps={noteProps} id="note" label="Note" name="note" />
 
       <button className="submit-btn" disabled={isFetching} type="submit">
         {initialData ? "Potvrdit změny" : "Přidat kontakt"}

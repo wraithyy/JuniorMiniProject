@@ -13,7 +13,7 @@ export type FormInputProps = Omit<
 > & {
   label: string;
   id: string;
-  formprops: UseInputReturn;
+  formProps: UseInputReturn;
 };
 
 export type FormTextAreaProps = Omit<
@@ -22,5 +22,5 @@ export type FormTextAreaProps = Omit<
 > & {
   label: string;
   id: string;
-  formprops: UseInputReturn;
+  formProps: UseInputReturn;
 };
