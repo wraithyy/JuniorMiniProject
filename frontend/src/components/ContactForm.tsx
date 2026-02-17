@@ -1,4 +1,3 @@
-import type { FC } from "react";
 import { useCreateContact } from "../hooks/fetching/useCreateContact";
 import { useUpdateContact } from "../hooks/fetching/useUpdateContact";
 import { useContactFormInputs } from "../hooks/useContactFormInputs";
@@ -13,10 +12,10 @@ interface ContactFormProps {
   initialData: Contact | null;
 }
 
-export const ContactForm: FC<ContactFormProps> = ({
+export default function ContactForm ({
   onSubmit,
   initialData,
-}) => {
+}: ContactFormProps) {
   // TODO: Implementovat formulář s těmito prvky:
   //
   // Povinná pole:

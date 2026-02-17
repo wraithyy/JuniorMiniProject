@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ContactForm } from "./components/ContactForm";
+import ContactForm  from "./components/ContactForm";
 import ContactView from "./components/contactView/ContactView";
 import type { Contact, Page } from "./types/contact";
 import "./App.css";

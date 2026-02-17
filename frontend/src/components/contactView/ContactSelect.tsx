@@ -1,4 +1,3 @@
-import type { FC } from "react";
 import type { Contact, OnContactSelect } from "../../types/contact";
 
 interface ContactSelectProps {
@@ -7,11 +6,11 @@ interface ContactSelectProps {
   selectedContact: Contact | null;
 }
 
-const ContactSelect: FC<ContactSelectProps> = ({
+export default function ContactSelect({
   contact,
   onContactSelect,
   selectedContact,
-}) => {
+}: ContactSelectProps) {
   return (
     <li>
       <button
@@ -26,5 +25,3 @@ const ContactSelect: FC<ContactSelectProps> = ({
     </li>
   );
 };
-
-export default ContactSelect;

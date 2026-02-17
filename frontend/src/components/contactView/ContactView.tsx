@@ -1,7 +1,7 @@
 import { useGetAllContacts } from "../../hooks/fetching/useGetAllContacts";
 import type { AppStateProps } from "../../types/state";
 import { ContactDetail } from "./ContactDetail";
-import { ContactList } from "./ContactList";
+import ContactList  from "./ContactList";
 
 export default function ContactView({
   selectedContact,

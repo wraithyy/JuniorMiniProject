@@ -1,4 +1,3 @@
-import type { FC } from "react";
 import type { Contact, OnContactSelect } from "../../types/contact";
 import ContactSelect from "./ContactSelect";
 
@@ -10,13 +9,13 @@ interface ContactListProps {
   selectedContact: Contact | null;
 }
 
-export const ContactList: FC<ContactListProps> = ({
+export default function ContactList ({
   onContactSelect,
   isFetching,
   error,
   contacts,
   selectedContact,
-}) => {
+}:ContactListProps)  {
   return (
     <div>
       <h2>Seznam kontaktů</h2>
