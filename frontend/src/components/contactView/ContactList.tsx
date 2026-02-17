@@ -7,6 +7,7 @@ interface ContactListProps {
   isFetching: boolean;
   error: string | null;
   contacts: Contact[];
+  selectedContact: Contact | null;
 }
 
 export const ContactList: FC<ContactListProps> = ({
@@ -14,6 +15,7 @@ export const ContactList: FC<ContactListProps> = ({
   isFetching,
   error,
   contacts,
+  selectedContact,
 }) => {
   return (
     <div>
@@ -27,6 +29,7 @@ export const ContactList: FC<ContactListProps> = ({
               contact={contact}
               key={contact._id}
               onContactSelect={onContactSelect}
+              selectedContact={selectedContact}
             />
           ))}
         </ul>

@@ -20,6 +20,7 @@ export default function ContactView({
           onContactSelect={(contact) => {
             setSelectedContact(contact);
           }}
+          selectedContact={selectedContact}
         />
       </div>
       <div className="detail-panel">

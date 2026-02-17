@@ -136,7 +136,12 @@ export const ContactDetail: FC<ContactDetailProps> = ({
         </tbody>
       </table>
       <div className="contact-detail-buttons">
-        <button className="update-btn" disabled={isFetching} onClick={handleUpdate} type="button">
+        <button
+          className="update-btn"
+          disabled={isFetching}
+          onClick={handleUpdate}
+          type="button"
+        >
           Upravit
         </button>
         <button

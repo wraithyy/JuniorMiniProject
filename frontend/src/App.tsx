@@ -20,6 +20,7 @@ function App() {
         <h1>Správa kontaktů</h1>
         <nav>
           <button
+            className={currentPage === "form" ? "selected-btn" : undefined}
             onClick={() => {
               setCurrentPage("form");
               setSelectedContact(null);
@@ -28,7 +29,11 @@ function App() {
           >
             Vytvořit kontakt
           </button>
-          <button onClick={() => setCurrentPage("list")} type="button">
+          <button
+            className={currentPage === "list" ? "selected-btn" : undefined}
+            onClick={() => setCurrentPage("list")}
+            type="button"
+          >
             Seznam kontaktů
           </button>
         </nav>

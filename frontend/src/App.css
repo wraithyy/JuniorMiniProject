@@ -28,6 +28,10 @@ nav button:hover {
   background: #e0e0e0;
 }
 
+.selected-btn {
+  background: #8f999270 !important;
+}
+
 .list-view {
   display: grid;
   grid-template-columns: 1fr 1fr;
