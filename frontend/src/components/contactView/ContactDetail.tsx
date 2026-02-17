@@ -1,8 +1,9 @@
-import { type FC, useState, type Dispatch, type SetStateAction } from "react";
 import { useDeleteContact } from "../../hooks/fetching/useDeleteContact.ts";
 import type { Contact } from "../../types/contact";
 import type { Page } from "../../types/page";
 import { outputFormatters } from "../../utils/outputFormatters.ts";
+import type { Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 
 interface ContactDetailProps {
   setContacts: React.Dispatch<React.SetStateAction<Contact[]>>;
@@ -10,12 +11,12 @@ interface ContactDetailProps {
     selectedContact: Contact | null;
     setSelectedContact: Dispatch<SetStateAction<Contact | null>>;
 }
-export const ContactDetail: FC<ContactDetailProps> = ({
+export default function ContactDetail ({
   selectedContact,
   setCurrentPage,
   setSelectedContact,
   setContacts,
-}) => {
+}: ContactDetailProps)  {
   // TODO: Implementovat detail kontaktu:
   //
   // 1. Zobrazit všechny informace o kontaktu

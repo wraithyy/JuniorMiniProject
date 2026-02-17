@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from "react";
 import { useGetAllContacts } from "../../hooks/fetching/useGetAllContacts";
-import { ContactDetail } from "./ContactDetail";
+import ContactDetail  from "./ContactDetail";
 import ContactList  from "./ContactList";
 import type { Contact } from "../../types/contact";
 import type {  Page } from "../../types/page";
