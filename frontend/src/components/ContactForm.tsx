@@ -6,7 +6,7 @@ import { formSchema } from "../utils/validators";
 import FormInput from "./inputs/FormInput";
 import FormRadioGroup from "./inputs/FormRadioGroup";
 import FormTextArea from "./inputs/FormTextArea";
-import {useForm} from 'react-hook-form'
+import { useForm } from "react-hook-form";
 
 interface FormFields {
   firstName: string;
@@ -23,8 +23,7 @@ export default function ContactForm({
   onSubmit,
   initialData,
 }: ContactformProps) {
-  const {register} = useForm<FormFields>();
-
+  const { register, handleSubmit } = useForm<FormFields>();
 
   const updating = initialData?._id;
 
@@ -46,41 +45,32 @@ export default function ContactForm({
     return await create.createContact(formContact);
   }
 
-  // async function handleSubmit(
-  //   event: React.FormEvent<HTMLFormElement>
-  // ): Promise<void> {
-  //   event.preventDefault();
-
-  //   const rawContact: Contact = {
-  //     firstName: firstNameProps.value,
-  //     lastName: lastNameProps.value,
-  //     email: emailProps.value,
-  //     note: noteProps.value,
-  //     gender: genderProps.value,
-  //     phone: phoneProps.value,
-  //     city: cityProps.value,
-  //     street: streetProps.value,
-  //     houseNumber: houseNumberProps.value,
-  //     zipCode: zipCodeProps.value,
-  //     birthDate: birthDateProps.value,
-  //   };
-
-  //   const parsed = formSchema.safeParse(rawContact);
-  //   if (!parsed.success) {
-  //     triggerErrors(contactInputProps);
-  //     return;
-  //   }
-
-  //   const savedContact = await saveContact(rawContact);
-  //   if (savedContact) {
-  //     onSubmit(savedContact);
-  //   }
-  // }
+  function onSubmit(data: FormFields) {
+    console.log(data);
+  }
 
   return (
-    <form >
+    <form onSubmit={handleSubmit(onSubmit)}>
       <h2>{initialData ? "Editace kontaktu" : "Nový kontakt"}</h2>
-{/* 
+      <input
+        {...register("firstName")}
+        className="form-control"
+        placeholder="First Name"
+        type="text"
+      />
+      <input
+        {...register("lastName")}
+        className="form-control"
+        placeholder="Last Name"
+        type="text"
+      />
+      <input
+        {...register("email")}
+        className="form-control"
+        placeholder="Email"
+        type="text"
+      />
+      {/* 
       <FormInput
         formProps={firstNameProps}
         id="firstName"
