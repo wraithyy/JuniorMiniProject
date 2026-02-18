@@ -1,27 +1,24 @@
-import type {
-  FieldError,
-  FieldValues,
-  Path,
-  UseFormRegister,
-} from "react-hook-form";
-
-type FormInputProps<TFieldValues extends FieldValues> = Omit<
+type FormInputProps = Omit<
   React.ComponentProps<"input">,
-  "value" | "onChange" | "onBlur" | "name"
+  "value" | "onChange" | "onBlur"
 > & {
   label: string;
-  id: Path<TFieldValues>;
-  register: UseFormRegister<TFieldValues>;
-  error?: FieldError;
+  id: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur: () => void;
+  errorMsg?: string;
 };
 
-export default function FormInput<TFieldValues extends FieldValues>({
+export default function FormInput({
   label,
   id,
-  register,
-  error,
+  value,
+  onChange,
+  onBlur,
+  errorMsg,
   ...props
-}: FormInputProps<TFieldValues>) {
+}: FormInputProps) {
   const requiredAsterisk = props.required ? <span>*</span> : null;
 
   return (
@@ -29,8 +26,16 @@ export default function FormInput<TFieldValues extends FieldValues>({
       <label htmlFor={id}>
         {label} {requiredAsterisk}
       </label>
-      <input className="form-control" id={id} {...props} {...register(id)} />
-      {error?.message && <p className="control-error">{error.message}</p>}
+      <input
+        className="form-control"
+        id={id}
+        {...props}
+        onBlur={onBlur}
+        onChange={onChange}
+        value={value}
+        {...props}
+      />
+      {errorMsg && <p className="control-error">{errorMsg}</p>}
     </div>
   );
 }

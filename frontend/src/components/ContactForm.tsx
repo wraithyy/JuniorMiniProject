@@ -1,13 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateContact } from "../hooks/fetching/useCreateContact";
-import { useUpdateContact } from "../hooks/fetching/useUpdateContact";
+import { Controller, useForm } from "react-hook-form";
+import type { z } from "zod";
 import type { Contact } from "../types/contact";
 import { formSchema } from "../utils/zodSchema";
 import FormInput from "./inputs/FormInput";
-import FormRadioGroup from "./inputs/FormRadioGroup";
-import FormTextArea from "./inputs/FormTextArea";
-import { useForm } from "react-hook-form";
-import type{ z } from "zod";
 
 type FormFields = z.infer<typeof formSchema>;
 
@@ -20,29 +16,28 @@ export default function ContactForm({
   onSubmit,
   initialData,
 }: ContactformProps) {
+  const defaultValues = {
+    firstName: initialData?.firstName ?? "",
+    lastName: initialData?.lastName ?? "",
+    email: initialData?.email ?? "",
+  };
+
   const {
-    register,
+    control,
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
   } = useForm<FormFields>({
-    defaultValues: initialData ?? {},
+    defaultValues,
     resolver: zodResolver(formSchema),
   });
 
-  async function saveContact(formContact: Contact) {
-    if (initialData?._id) {
-      return await update.updateContact(initialData._id, formContact);
-    }
-    return await create.createContact(formContact);
-  }
-
   async function handleFormSubmit(data: FormFields) {
-    try{
+    try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      throw new Error('gh');
-    } catch{
-      setError("root", {message: 'server issue',})
+      throw new Error("gh");
+    } catch {
+      setError("root", { message: "server issue" });
     }
   }
 
@@ -60,34 +55,48 @@ export default function ContactForm({
     <form onSubmit={handleSubmit(handleFormSubmit)}>
       <h2>{initialData ? "Editace kontaktu" : "Nový kontakt"}</h2>
 
-      <FormInput
+      <Controller
+        control={control}
+        name="firstName"
+        render={({ field, fieldState }) => (
+          <FormInput
+            errorMsg={fieldState.error?.message}
+            id="firstName"
+            label="Jméno"
+            onBlur={field.onBlur}
+            onChange={field.onChange}
+            required
+            type="text"
+            value={field.value ?? ""}
+          />
+        )}
+      />
+
+      {/* <FormInput
         error={errors.firstName}
         id="firstName"
         label="Jméno"
-        name="firstName"
         register={register}
         required
         type="text"
       />
-      
-       <FormInput
+
+      <FormInput
         error={errors.lastName}
         id="lastName"
         label="Příjmení"
-        name="lastName"
         register={register}
         required
         type="text"
       />
-       <FormInput
+      <FormInput
         error={errors.email}
         id="email"
         label="E-mail"
-        name="email"
         register={register}
         required
-        type="text"
-      />
+        type="email"
+      /> */}
 
       <button className="submit-btn" disabled={isSubmitting} type="submit">
         {submitBtnText()}
