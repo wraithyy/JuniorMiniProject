@@ -24,20 +24,7 @@ export default function ContactForm({
   initialData,
 }: ContactformProps) {
   const {register} = useForm<FormFields>();
-  const contactInputProps = useContactFormInputs(initialData);
-  const {
-    firstNameProps,
-    lastNameProps,
-    emailProps,
-    noteProps,
-    genderProps,
-    phoneProps,
-    cityProps,
-    streetProps,
-    houseNumberProps,
-    zipCodeProps,
-    birthDateProps,
-  } = contactInputProps;
+
 
   const updating = initialData?._id;
 
@@ -59,41 +46,41 @@ export default function ContactForm({
     return await create.createContact(formContact);
   }
 
-  async function handleSubmit(
-    event: React.FormEvent<HTMLFormElement>
-  ): Promise<void> {
-    event.preventDefault();
+  // async function handleSubmit(
+  //   event: React.FormEvent<HTMLFormElement>
+  // ): Promise<void> {
+  //   event.preventDefault();
 
-    const rawContact: Contact = {
-      firstName: firstNameProps.value,
-      lastName: lastNameProps.value,
-      email: emailProps.value,
-      note: noteProps.value,
-      gender: genderProps.value,
-      phone: phoneProps.value,
-      city: cityProps.value,
-      street: streetProps.value,
-      houseNumber: houseNumberProps.value,
-      zipCode: zipCodeProps.value,
-      birthDate: birthDateProps.value,
-    };
+  //   const rawContact: Contact = {
+  //     firstName: firstNameProps.value,
+  //     lastName: lastNameProps.value,
+  //     email: emailProps.value,
+  //     note: noteProps.value,
+  //     gender: genderProps.value,
+  //     phone: phoneProps.value,
+  //     city: cityProps.value,
+  //     street: streetProps.value,
+  //     houseNumber: houseNumberProps.value,
+  //     zipCode: zipCodeProps.value,
+  //     birthDate: birthDateProps.value,
+  //   };
 
-    const parsed = formSchema.safeParse(rawContact);
-    if (!parsed.success) {
-      triggerErrors(contactInputProps);
-      return;
-    }
+  //   const parsed = formSchema.safeParse(rawContact);
+  //   if (!parsed.success) {
+  //     triggerErrors(contactInputProps);
+  //     return;
+  //   }
 
-    const savedContact = await saveContact(rawContact);
-    if (savedContact) {
-      onSubmit(savedContact);
-    }
-  }
+  //   const savedContact = await saveContact(rawContact);
+  //   if (savedContact) {
+  //     onSubmit(savedContact);
+  //   }
+  // }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form >
       <h2>{initialData ? "Editace kontaktu" : "Nový kontakt"}</h2>
-
+{/* 
       <FormInput
         formProps={firstNameProps}
         id="firstName"
@@ -119,63 +106,7 @@ export default function ContactForm({
         name="email"
         required
         type="email"
-      />
-
-      <FormInput
-        formProps={birthDateProps}
-        id="birthDate"
-        label="Datum narození"
-        max={new Date().toISOString().split("T")[0]}
-        name="birthDate"
-        type="date"
-      />
-
-      <FormRadioGroup
-        formProps={genderProps}
-        label="gender"
-        name="gender"
-        options={[
-          { label: "muž", value: "male" },
-          { label: "žena", value: "female" },
-          { label: "jiné", value: "other" },
-        ]}
-      />
-      <FormInput
-        formProps={phoneProps}
-        id="phone"
-        label="Telefon"
-        name="phone"
-        type="text"
-      />
-      <FormInput
-        formProps={cityProps}
-        id="city"
-        label="Město"
-        name="city"
-        type="text"
-      />
-      <FormInput
-        formProps={streetProps}
-        id="street"
-        label="Ulice"
-        name="street"
-        type="text"
-      />
-      <FormInput
-        formProps={houseNumberProps}
-        id="houseNumber"
-        label="Číslo popisné"
-        name="houseNumber"
-        type="text"
-      />
-      <FormInput
-        formProps={zipCodeProps}
-        id="zipCode"
-        label="PSČ"
-        name="zipCode"
-        type="number"
-      />
-      <FormTextArea formProps={noteProps} id="note" label="Note" name="note" />
+      /> */}
 
       <button className="submit-btn" disabled={isFetching} type="submit">
         {initialData ? "Potvrdit změny" : "Přidat kontakt"}
