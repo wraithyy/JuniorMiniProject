@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useDeleteContact } from "../../hooks/fetching/useDeleteContact.ts";
 import type { Contact } from "../../types/contact";
 import type { Page } from "../../types/page";
-import { outputFormatters } from "../../utils/outputFormatters.ts";
+import { formatGender } from "../../utils/formatters.ts";
 
 interface ContactDetailProps {
   setContacts: React.Dispatch<React.SetStateAction<Contact[]>>;
@@ -92,7 +92,7 @@ export default function ContactDetail({
           {selectedContact.gender && (
             <tr>
               <td>Pohlaví:</td>
-              <td>{outputFormatters.gender(selectedContact.gender)}</td>
+              <td>{formatGender(selectedContact.gender)}</td>
             </tr>
           )}
           {selectedContact.phone && (

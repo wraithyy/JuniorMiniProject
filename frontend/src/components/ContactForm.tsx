@@ -1,10 +1,13 @@
-import { contactsApi } from "../api/contactsApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import type { z } from "zod";
+import { contactsApi } from "../api/contactsApi";
 import type { Contact } from "../types/contact";
+import { formatDate } from "../utils/formatters";
 import { formSchema } from "../utils/zodSchema";
 import FormInput from "./inputs/FormInput";
+import FormRadioGroup from "./inputs/FormRadioGroup";
+import FormTextArea from "./inputs/FormTextArea";
 
 type FormFields = z.infer<typeof formSchema>;
 
@@ -17,11 +20,18 @@ export default function ContactForm({
   onSubmit,
   initialData,
 }: ContactformProps) {
-
   const defaultValues = {
     firstName: initialData?.firstName ?? "",
     lastName: initialData?.lastName ?? "",
     email: initialData?.email ?? "",
+    birthDate: initialData?.birthDate ? formatDate(initialData.birthDate) : "",
+    gender: initialData?.gender ?? "",
+    phone: initialData?.phone ?? "",
+    city: initialData?.city ?? "",
+    street: initialData?.street ?? "",
+    houseNumber: initialData?.houseNumber ?? "",
+    zipCode: initialData?.zipCode ? String(initialData.zipCode) : "",
+    note: initialData?.note ?? "",
   };
 
   const {
@@ -41,7 +51,7 @@ export default function ContactForm({
         : await contactsApi.createContact(data);
       savedContact && onSubmit(savedContact);
     } catch {
-      console.log('catch');
+      console.log("catch");
       setError("root", { message: "Nepodařilo se odeslat data." });
     }
   }
@@ -106,6 +116,138 @@ export default function ContactForm({
             onChange={field.onChange}
             required
             type="email"
+            value={field.value ?? ""}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="birthDate"
+        render={({ field, fieldState }) => (
+          <FormInput
+            errorMsg={fieldState.error?.message}
+            id="birthDate"
+            label="Datum narození"
+            max={formatDate(new Date().toISOString())}
+            onBlur={field.onBlur}
+            onChange={field.onChange}
+            type="date"
+            value={field.value ?? ""}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="gender"
+        render={({ field, fieldState }) => (
+          <FormRadioGroup
+            errorMsg={fieldState.error?.message}
+            id="gender"
+            label="Pohlaví"
+            onBlur={field.onBlur}
+            onChange={field.onChange}
+            options={[
+              { label: "muž", value: "male" },
+              { label: "žena", value: "female" },
+              { label: "jiné", value: "other" },
+            ]}
+            value={field.value}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="phone"
+        render={({ field, fieldState }) => (
+          <FormInput
+            errorMsg={fieldState.error?.message}
+            id="phone"
+            label="Telefon"
+            onBlur={field.onBlur}
+            onChange={field.onChange}
+            type="text"
+            value={field.value ?? ""}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="city"
+        render={({ field, fieldState }) => (
+          <FormInput
+            errorMsg={fieldState.error?.message}
+            id="city"
+            label="Město"
+            onBlur={field.onBlur}
+            onChange={field.onChange}
+            type="text"
+            value={field.value ?? ""}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="street"
+        render={({ field, fieldState }) => (
+          <FormInput
+            errorMsg={fieldState.error?.message}
+            id="street"
+            label="Ulice"
+            onBlur={field.onBlur}
+            onChange={field.onChange}
+            type="text"
+            value={field.value ?? ""}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="houseNumber"
+        render={({ field, fieldState }) => (
+          <FormInput
+            errorMsg={fieldState.error?.message}
+            id="houseNumber"
+            label="Číslo popisné"
+            onBlur={field.onBlur}
+            onChange={field.onChange}
+            type="text"
+            value={field.value ?? ""}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="zipCode"
+        render={({ field, fieldState }) => (
+          <FormInput
+            errorMsg={fieldState.error?.message}
+            id="zipCode"
+            label="PSČ"
+            onBlur={field.onBlur}
+            onChange={field.onChange}
+            type="number"
+            value={field.value ?? ""}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="note"
+        render={({ field, fieldState }) => (
+          <FormTextArea
+            errorMsg={fieldState.error?.message}
+            id="note"
+            label="Poznámka"
+            onBlur={field.onBlur}
+            onChange={field.onChange}
             value={field.value ?? ""}
           />
         )}

@@ -6,7 +6,7 @@ interface RadioOption {
 interface FormRadioGroupProps {
   label: string;
   id: string;
-  value: string;
+  value: string | undefined;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: () => void;
   errorMsg?: string;

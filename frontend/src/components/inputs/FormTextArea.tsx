@@ -19,7 +19,6 @@ export default function FormTextArea({
   errorMsg,
   ...props
 }: FormTextAreaProps) {
-
   return (
     <div>
       <label htmlFor={id}>{label}</label>
