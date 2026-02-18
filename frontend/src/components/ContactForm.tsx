@@ -1,12 +1,18 @@
 import { useCreateContact } from "../hooks/fetching/useCreateContact";
 import { useUpdateContact } from "../hooks/fetching/useUpdateContact";
-import { useContactFormInputs } from "../hooks/useContactFormInputs";
 import type { Contact } from "../types/contact";
 import type { UseInputReturn } from "../types/input";
 import { formSchema } from "../utils/validators";
 import FormInput from "./inputs/FormInput";
 import FormRadioGroup from "./inputs/FormRadioGroup";
 import FormTextArea from "./inputs/FormTextArea";
+import {useForm} from 'react-hook-form'
+
+interface FormFields {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
 
 interface ContactformProps {
   onSubmit: (contact: Contact) => void;
@@ -17,37 +23,7 @@ export default function ContactForm({
   onSubmit,
   initialData,
 }: ContactformProps) {
-  // TODO: Implementovat formulář s těmito prvky:
-  //
-  // Povinná pole:
-  // - firstName (text input)
-  // - lastName (text input)
-  // - email (email input)
-  //
-  // Radio buttons pro pohlaví:
-  // - gender (mužské/ženské/jiné)
-  //
-  // Volitelná pole:
-  // - phone (tel input)
-  // - note (textarea)
-  // - city (text input)
-  // - street (text input)
-  // - houseNumber (text input)
-  // - zipCode (number input)
-  // - birthDate (date input) - hezky naformátované
-  //
-  // Funkcionality:
-  // - Validace (povinná pole, validní email)
-  // - Zobrazení chybových hlášek
-  // - Styling pomocí CSS/SCSS
-  //
-  // Bonusové úkoly:
-  // - Loading indikátor při odesílání
-  // - Zobrazení úspěšné/chybové hlášky po odeslání
-  //
-  // Použití:
-  // - Použít připravený contactsApi.createContact() nebo contactsApi.updateContact()
-  // - Pro přístup k API klientu: import { contactsApi } from '../api/contactsApi'
+  const {register} = useForm<FormFields>();
   const contactInputProps = useContactFormInputs(initialData);
   const {
     firstNameProps,
