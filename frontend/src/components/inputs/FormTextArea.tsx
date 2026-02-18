@@ -1,21 +1,24 @@
-import type { UseInputReturn } from "../../types/input";
-
 type FormTextAreaProps = Omit<
   React.ComponentProps<"textarea">,
   "value" | "onChange" | "onBlur"
 > & {
   label: string;
   id: string;
-  formProps: UseInputReturn;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onBlur: () => void;
+  errorMsg?: string;
 };
 
 export default function FormTextArea({
   label,
   id,
-  formProps,
+  value,
+  onChange,
+  onBlur,
+  errorMsg,
   ...props
 }: FormTextAreaProps) {
-  const { value, handleInputChange, setAsTouched, errorMsg } = formProps;
 
   return (
     <div>
@@ -23,8 +26,9 @@ export default function FormTextArea({
       <textarea
         className="form-control"
         id={id}
-        onBlur={setAsTouched}
-        onChange={handleInputChange}
+        {...props}
+        onBlur={onBlur}
+        onChange={onChange}
         value={value}
         {...props}
       />

@@ -1,5 +1,3 @@
-import type { UseInputReturn } from "../../types/input";
-
 interface RadioOption {
   value: string;
   label: string;
@@ -7,18 +5,23 @@ interface RadioOption {
 
 interface FormRadioGroupProps {
   label: string;
-  name: string;
+  id: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur: () => void;
+  errorMsg?: string;
   options: RadioOption[];
-  formProps: UseInputReturn;
 }
 
 export default function FormRadioGroup({
   label,
-  name,
+  id,
+  value,
+  onChange,
+  onBlur,
+  errorMsg,
   options,
-  formProps,
 }: FormRadioGroupProps) {
-  const { value, handleInputChange, setAsTouched, errorMsg } = formProps;
   return (
     <fieldset className="form-control">
       <legend>{label}</legend>
@@ -26,9 +29,9 @@ export default function FormRadioGroup({
         <label key={option.value}>
           <input
             checked={value === option.value}
-            name={name}
-            onBlur={setAsTouched}
-            onChange={handleInputChange}
+            id={id}
+            onBlur={onBlur}
+            onChange={onChange}
             type="radio"
             value={option.value}
           />

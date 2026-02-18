@@ -44,6 +44,7 @@ function App() {
         {currentPage === "form" ? (
           <ContactForm
             initialData={selectedContact}
+            key={selectedContact?._id}
             onSubmit={(contact) => {
               setSelectedContact(contact);
               setCurrentPage("list");

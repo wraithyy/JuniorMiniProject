@@ -32,13 +32,17 @@ export default function ContactForm({
     resolver: zodResolver(formSchema),
   });
 
-  async function handleFormSubmit(data: FormFields) {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      throw new Error("gh");
-    } catch {
-      setError("root", { message: "server issue" });
-    }
+  // async function handleFormSubmit(data: FormFields) {
+  //   try {
+  //     await new Promise((resolve) => setTimeout(resolve, 1000));
+  //     throw new Error("gh");
+  //   } catch {
+  //     setError("root", { message: "server issue" });
+  //   }
+  // }
+
+   function handleFormSubmit(data: FormFields) {
+    console.log(data);
   }
 
   function submitBtnText() {
@@ -52,7 +56,7 @@ export default function ContactForm({
   }
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)}>
+    <form onSubmit={handleSubmit(handleFormSubmit) }>
       <h2>{initialData ? "Editace kontaktu" : "Nový kontakt"}</h2>
 
       <Controller
@@ -72,31 +76,39 @@ export default function ContactForm({
         )}
       />
 
-      {/* <FormInput
-        error={errors.firstName}
-        id="firstName"
-        label="Jméno"
-        register={register}
-        required
-        type="text"
+      <Controller
+        control={control}
+        name="lastName"
+        render={({ field, fieldState }) => (
+          <FormInput
+            errorMsg={fieldState.error?.message}
+            id="lastName"
+            label="Příjmení"
+            onBlur={field.onBlur}
+            onChange={field.onChange}
+            required
+            type="text"
+            value={field.value ?? ""}
+          />
+        )}
       />
 
-      <FormInput
-        error={errors.lastName}
-        id="lastName"
-        label="Příjmení"
-        register={register}
-        required
-        type="text"
+      <Controller
+        control={control}
+        name="email"
+        render={({ field, fieldState }) => (
+          <FormInput
+            errorMsg={fieldState.error?.message}
+            id="email"
+            label="Email"
+            onBlur={field.onBlur}
+            onChange={field.onChange}
+            required
+            type="email"
+            value={field.value ?? ""}
+          />
+        )}
       />
-      <FormInput
-        error={errors.email}
-        id="email"
-        label="E-mail"
-        register={register}
-        required
-        type="email"
-      /> */}
 
       <button className="submit-btn" disabled={isSubmitting} type="submit">
         {submitBtnText()}
