@@ -1,3 +1,4 @@
+import { contactsApi } from "../api/contactsApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import type { z } from "zod";
@@ -16,6 +17,7 @@ export default function ContactForm({
   onSubmit,
   initialData,
 }: ContactformProps) {
+
   const defaultValues = {
     firstName: initialData?.firstName ?? "",
     lastName: initialData?.lastName ?? "",
@@ -32,17 +34,16 @@ export default function ContactForm({
     resolver: zodResolver(formSchema),
   });
 
-  // async function handleFormSubmit(data: FormFields) {
-  //   try {
-  //     await new Promise((resolve) => setTimeout(resolve, 1000));
-  //     throw new Error("gh");
-  //   } catch {
-  //     setError("root", { message: "server issue" });
-  //   }
-  // }
-
-   function handleFormSubmit(data: FormFields) {
-    console.log(data);
+  async function handleFormSubmit(data: FormFields) {
+    try {
+      const savedContact = initialData?._id
+        ? await contactsApi.updateContact(initialData._id, data)
+        : await contactsApi.createContact(data);
+      savedContact && onSubmit(savedContact);
+    } catch {
+      console.log('catch');
+      setError("root", { message: "Nepodařilo se odeslat data." });
+    }
   }
 
   function submitBtnText() {
@@ -56,7 +57,7 @@ export default function ContactForm({
   }
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit) }>
+    <form onSubmit={handleSubmit(handleFormSubmit)}>
       <h2>{initialData ? "Editace kontaktu" : "Nový kontakt"}</h2>
 
       <Controller
