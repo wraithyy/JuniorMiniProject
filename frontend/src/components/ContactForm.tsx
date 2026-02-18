@@ -23,14 +23,10 @@ export default function ContactForm({
   onSubmit,
   initialData,
 }: ContactformProps) {
-  const { register, handleSubmit, formState: {errors}, } = useForm<FormFields>();
+  const { register, handleSubmit, formState: {errors, isSubmitting}, } = useForm<FormFields>();
 
-  const updating = initialData?._id;
+ 
 
-  const create = useCreateContact();
-  const update = useUpdateContact();
-
-  const { error, isFetching } = updating ? update : create;
 
   function triggerErrors(inputProps: Record<string, UseInputReturn>): void {
     for (const inputProp of Object.values(inputProps)) {
@@ -45,8 +41,19 @@ export default function ContactForm({
     return await create.createContact(formContact);
   }
 
-  function handleFormSubmit(data: FormFields) {
+  async function handleFormSubmit(data: FormFields) {
+    await new Promise((resolve => setTimeout(resolve, 1000)))
     console.log(data);
+  }
+
+  function submitBtnText(){
+    if (isSubmitting){
+      return "Odesílám data..."
+    } 
+    if (initialData) {
+      return "Potvrdit změny"
+    }
+    return "Přidat kontakt"
   }
 
   return (
@@ -112,11 +119,9 @@ export default function ContactForm({
         type="email"
       /> */}
 
-      <button className="submit-btn" disabled={isFetching} type="submit">
-        {initialData ? "Potvrdit změny" : "Přidat kontakt"}
+      <button className="submit-btn" disabled={isSubmitting} type="submit">
+        {submitBtnText()}
       </button>
-      {error && <p className="state-error">{error}</p>}
-      {isFetching && <p>Odesílám data</p>}
     </form>
   );
 }
