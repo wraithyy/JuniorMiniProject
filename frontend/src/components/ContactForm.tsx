@@ -12,7 +12,7 @@ interface FormFields {
   firstName: string;
   lastName: string;
   email: string;
-} 
+}
 
 interface ContactformProps {
   onSubmit: (contact: Contact) => void;
@@ -23,16 +23,14 @@ export default function ContactForm({
   onSubmit,
   initialData,
 }: ContactformProps) {
-  const { register, handleSubmit, formState: {errors, isSubmitting}, } = useForm<FormFields>();
-
- 
-
-
-  function triggerErrors(inputProps: Record<string, UseInputReturn>): void {
-    for (const inputProp of Object.values(inputProps)) {
-      inputProp.setAsTouched();
-    }
-  }
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<FormFields>({
+    defaultValues: initialData ?? {},
+  });
 
   async function saveContact(formContact: Contact) {
     if (initialData?._id) {
@@ -42,18 +40,22 @@ export default function ContactForm({
   }
 
   async function handleFormSubmit(data: FormFields) {
-    await new Promise((resolve => setTimeout(resolve, 1000)))
-    console.log(data);
+    try{
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      throw new Error('gh');
+    } catch{
+      setError("root", {message: 'server issue',})
+    }
   }
 
-  function submitBtnText(){
-    if (isSubmitting){
-      return "Odesílám data..."
-    } 
-    if (initialData) {
-      return "Potvrdit změny"
+  function submitBtnText() {
+    if (isSubmitting) {
+      return "Odesílám data...";
     }
-    return "Přidat kontakt"
+    if (initialData) {
+      return "Potvrdit změny";
+    }
+    return "Přidat kontakt";
   }
 
   return (
@@ -61,30 +63,34 @@ export default function ContactForm({
       <h2>{initialData ? "Editace kontaktu" : "Nový kontakt"}</h2>
       <input
         {...register("firstName", {
-          required: 'firstName is reqired',
+          required: "firstName is reqired",
         })}
         className="form-control"
         placeholder="First Name"
         type="text"
       />
-      {errors.firstName && <p className="control-error">{errors.firstName.message}</p>}
+      {errors.firstName && (
+        <p className="control-error">{errors.firstName.message}</p>
+      )}
       <input
         {...register("lastName", {
-          required: 'lastName is reqired'
+          required: "lastName is reqired",
         })}
         className="form-control"
         placeholder="Last Name"
         type="text"
       />
-      {errors.lastName && <p className="control-error">{errors.lastName.message}</p>}
+      {errors.lastName && (
+        <p className="control-error">{errors.lastName.message}</p>
+      )}
       <input
         {...register("email", {
-          required: 'Email is reqired',
+          required: "Email is reqired",
           validate: (value) => {
-            if (!value.includes('@')){
+            if (!value.includes("@")) {
               return "email must contain @";
             }
-          }
+          },
         })}
         className="form-control"
         placeholder="Email"
@@ -122,6 +128,7 @@ export default function ContactForm({
       <button className="submit-btn" disabled={isSubmitting} type="submit">
         {submitBtnText()}
       </button>
+      {errors.root && <p>{errors.root.message}</p>}
     </form>
   );
 }
