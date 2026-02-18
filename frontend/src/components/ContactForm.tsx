@@ -2,13 +2,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateContact } from "../hooks/fetching/useCreateContact";
 import { useUpdateContact } from "../hooks/fetching/useUpdateContact";
 import type { Contact } from "../types/contact";
-import type { UseInputReturn } from "../types/input";
 import { formSchema } from "../utils/zodSchema";
 import FormInput from "./inputs/FormInput";
 import FormRadioGroup from "./inputs/FormRadioGroup";
 import FormTextArea from "./inputs/FormTextArea";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import type{ z } from "zod";
 
 type FormFields = z.infer<typeof formSchema>;
 
