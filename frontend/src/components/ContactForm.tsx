@@ -12,7 +12,7 @@ interface FormFields {
   firstName: string;
   lastName: string;
   email: string;
-}
+} 
 
 interface ContactformProps {
   onSubmit: (contact: Contact) => void;
@@ -23,7 +23,7 @@ export default function ContactForm({
   onSubmit,
   initialData,
 }: ContactformProps) {
-  const { register, handleSubmit } = useForm<FormFields>();
+  const { register, handleSubmit, formState: {errors}, } = useForm<FormFields>();
 
   const updating = initialData?._id;
 
@@ -45,31 +45,45 @@ export default function ContactForm({
     return await create.createContact(formContact);
   }
 
-  function onSubmit(data: FormFields) {
+  function handleFormSubmit(data: FormFields) {
     console.log(data);
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(handleFormSubmit)}>
       <h2>{initialData ? "Editace kontaktu" : "Nový kontakt"}</h2>
       <input
-        {...register("firstName")}
+        {...register("firstName", {
+          required: 'firstName is reqired',
+        })}
         className="form-control"
         placeholder="First Name"
         type="text"
       />
+      {errors.firstName && <p className="control-error">{errors.firstName.message}</p>}
       <input
-        {...register("lastName")}
+        {...register("lastName", {
+          required: 'lastName is reqired'
+        })}
         className="form-control"
         placeholder="Last Name"
         type="text"
       />
+      {errors.lastName && <p className="control-error">{errors.lastName.message}</p>}
       <input
-        {...register("email")}
+        {...register("email", {
+          required: 'Email is reqired',
+          validate: (value) => {
+            if (!value.includes('@')){
+              return "email must contain @";
+            }
+          }
+        })}
         className="form-control"
         placeholder="Email"
         type="text"
       />
+      {errors.email && <p className="control-error">{errors.email.message}</p>}
       {/* 
       <FormInput
         formProps={firstNameProps}
