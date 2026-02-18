@@ -10,6 +10,7 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.71.1",

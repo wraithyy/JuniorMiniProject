@@ -1,18 +1,16 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateContact } from "../hooks/fetching/useCreateContact";
 import { useUpdateContact } from "../hooks/fetching/useUpdateContact";
 import type { Contact } from "../types/contact";
 import type { UseInputReturn } from "../types/input";
-import { formSchema } from "../utils/validators";
+import { formSchema } from "../utils/zodSchema";
 import FormInput from "./inputs/FormInput";
 import FormRadioGroup from "./inputs/FormRadioGroup";
 import FormTextArea from "./inputs/FormTextArea";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-interface FormFields {
-  firstName: string;
-  lastName: string;
-  email: string;
-}
+type FormFields = z.infer<typeof formSchema>;
 
 interface ContactformProps {
   onSubmit: (contact: Contact) => void;
@@ -30,6 +28,7 @@ export default function ContactForm({
     formState: { errors, isSubmitting },
   } = useForm<FormFields>({
     defaultValues: initialData ?? {},
+    resolver: zodResolver(formSchema),
   });
 
   async function saveContact(formContact: Contact) {
@@ -62,9 +61,7 @@ export default function ContactForm({
     <form onSubmit={handleSubmit(handleFormSubmit)}>
       <h2>{initialData ? "Editace kontaktu" : "Nový kontakt"}</h2>
       <input
-        {...register("firstName", {
-          required: "firstName is reqired",
-        })}
+        {...register("firstName")}
         className="form-control"
         placeholder="First Name"
         type="text"
@@ -73,9 +70,7 @@ export default function ContactForm({
         <p className="control-error">{errors.firstName.message}</p>
       )}
       <input
-        {...register("lastName", {
-          required: "lastName is reqired",
-        })}
+        {...register("lastName")}
         className="form-control"
         placeholder="Last Name"
         type="text"
@@ -84,14 +79,7 @@ export default function ContactForm({
         <p className="control-error">{errors.lastName.message}</p>
       )}
       <input
-        {...register("email", {
-          required: "Email is reqired",
-          validate: (value) => {
-            if (!value.includes("@")) {
-              return "email must contain @";
-            }
-          },
-        })}
+        {...register("email")}
         className="form-control"
         placeholder="Email"
         type="text"
