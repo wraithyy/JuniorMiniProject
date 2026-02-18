@@ -68,29 +68,30 @@ exports.update = async (req, res) => {
       return res.status(404).send({ message: "Contact not found" });
     }
 
-    contact.firstName = req.body.firstName
-      ? req.body.firstName
-      : contact.firstName;
-    contact.lastName = req.body.lastName ? req.body.lastName : contact.lastName;
-    contact.gender = req.body.gender || contact.gender;
-    contact.email = req.body.email || contact.email;
-    contact.phone = req.body.phone || contact.phone;
-    contact.note = req.body.note || contact.note;
-    contact.city = req.body.city || contact.city;
-    contact.street = req.body.street || contact.street;
-    contact.houseNumber = req.body.houseNumber || contact.houseNumber;
-    contact.zipCode = req.body.zipCode || contact.zipCode;
-    contact.birthDate = req.body.birthDate || contact.birthDate;
+    const allowed = [
+      "firstName",
+      "lastName",
+      "gender",
+      "email",
+      "phone",
+      "note",
+      "city",
+      "street",
+      "houseNumber",
+      "zipCode",
+      "birthDate",
+    ];
 
-    // save the contact and check for errors
-    await contact.save();
+    for (const key of allowed) {
+      if (req.body[key] !== undefined) {
+        contact[key] = req.body[key];
+      }
+    }
 
-    res.json({
-      message: "Contact Info updated",
-      data: contact,
-    });
+    const updated = await contact.save();
+    return res.json({ message: "Contact Info updated", data: updated });
   } catch (err) {
-    res.status(400).json(err);
+    return res.status(500).send({ message: err.message });
   }
 };
 // Handle delete contact

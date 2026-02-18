@@ -1,18 +1,22 @@
-import type { FC } from "react";
+import { useCreateContact } from "../hooks/fetching/useCreateContact";
+import { useUpdateContact } from "../hooks/fetching/useUpdateContact";
 import { useContactFormInputs } from "../hooks/useContactFormInputs";
 import type { Contact } from "../types/contact";
 import type { UseInputReturn } from "../types/input";
-import FormInput from "./FormInput";
+import { formSchema } from "../utils/validators";
+import FormInput from "./inputs/FormInput";
+import FormRadioGroup from "./inputs/FormRadioGroup";
+import FormTextArea from "./inputs/FormTextArea";
 
-interface ContactFormProps {
-  onSubmit: (contact: Omit<Contact, "_id" | "create_date">) => void;
-  initialData?: Contact;
+interface ContactformProps {
+  onSubmit: (contact: Contact) => void;
+  initialData: Contact | null;
 }
 
-export const ContactForm: FC<ContactFormProps> = ({
+export default function ContactForm({
   onSubmit,
   initialData,
-}) => {
+}: ContactformProps) {
   // TODO: Implementovat formulář s těmito prvky:
   //
   // Povinná pole:
@@ -45,32 +49,68 @@ export const ContactForm: FC<ContactFormProps> = ({
   // - Použít připravený contactsApi.createContact() nebo contactsApi.updateContact()
   // - Pro přístup k API klientu: import { contactsApi } from '../api/contactsApi'
   const contactInputProps = useContactFormInputs(initialData);
-  const { firstNameProps, lastNameProps, emailProps } = contactInputProps;
+  const {
+    firstNameProps,
+    lastNameProps,
+    emailProps,
+    noteProps,
+    genderProps,
+    phoneProps,
+    cityProps,
+    streetProps,
+    houseNumberProps,
+    zipCodeProps,
+    birthDateProps,
+  } = contactInputProps;
 
-  function allInputsValid(inputProps: Record<string, UseInputReturn>): boolean {
-    return Object.values(inputProps).every(({ isValid }) => isValid);
-  }
+  const updating = initialData?._id;
 
-  function triggerErrors(
-    inputProps: Record<string, UseInputReturn>
-  ): void {
+  const create = useCreateContact();
+  const update = useUpdateContact();
+
+  const { error, isFetching } = updating ? update : create;
+
+  function triggerErrors(inputProps: Record<string, UseInputReturn>): void {
     for (const inputProp of Object.values(inputProps)) {
       inputProp.setAsTouched();
     }
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
+  async function saveContact(formContact: Contact) {
+    if (initialData?._id) {
+      return await update.updateContact(initialData._id, formContact);
+    }
+    return await create.createContact(formContact);
+  }
+
+  async function handleSubmit(
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> {
     event.preventDefault();
 
-    if (allInputsValid(contactInputProps)) {
-      const formContact: Contact = {
-        firstName: firstNameProps.value,
-        lastName: lastNameProps.value,
-        email: emailProps.value,
-      };
-      onSubmit(formContact);
-    } else {
+    const rawContact: Contact = {
+      firstName: firstNameProps.value,
+      lastName: lastNameProps.value,
+      email: emailProps.value,
+      note: noteProps.value,
+      gender: genderProps.value,
+      phone: phoneProps.value,
+      city: cityProps.value,
+      street: streetProps.value,
+      houseNumber: houseNumberProps.value,
+      zipCode: zipCodeProps.value,
+      birthDate: birthDateProps.value,
+    };
+
+    const parsed = formSchema.safeParse(rawContact);
+    if (!parsed.success) {
       triggerErrors(contactInputProps);
+      return;
+    }
+
+    const savedContact = await saveContact(rawContact);
+    if (savedContact) {
+      onSubmit(savedContact);
     }
   }
 
@@ -79,7 +119,7 @@ export const ContactForm: FC<ContactFormProps> = ({
       <h2>{initialData ? "Editace kontaktu" : "Nový kontakt"}</h2>
 
       <FormInput
-        formprops={firstNameProps}
+        formProps={firstNameProps}
         id="firstName"
         label="Jméno"
         name="firstName"
@@ -88,7 +128,7 @@ export const ContactForm: FC<ContactFormProps> = ({
       />
 
       <FormInput
-        formprops={lastNameProps}
+        formProps={lastNameProps}
         id="lastName"
         label="Příjmení"
         name="lastName"
@@ -97,7 +137,7 @@ export const ContactForm: FC<ContactFormProps> = ({
       />
 
       <FormInput
-        formprops={emailProps}
+        formProps={emailProps}
         id="email"
         label="E-mail"
         name="email"
@@ -105,9 +145,67 @@ export const ContactForm: FC<ContactFormProps> = ({
         type="email"
       />
 
-      <button className="submit-btn" type="submit">
+      <FormInput
+        formProps={birthDateProps}
+        id="birthDate"
+        label="Datum narození"
+        max={new Date().toISOString().split("T")[0]}
+        name="birthDate"
+        type="date"
+      />
+
+      <FormRadioGroup
+        formProps={genderProps}
+        label="gender"
+        name="gender"
+        options={[
+          { label: "muž", value: "male" },
+          { label: "žena", value: "female" },
+          { label: "jiné", value: "other" },
+        ]}
+      />
+      <FormInput
+        formProps={phoneProps}
+        id="phone"
+        label="Telefon"
+        name="phone"
+        type="text"
+      />
+      <FormInput
+        formProps={cityProps}
+        id="city"
+        label="Město"
+        name="city"
+        type="text"
+      />
+      <FormInput
+        formProps={streetProps}
+        id="street"
+        label="Ulice"
+        name="street"
+        type="text"
+      />
+      <FormInput
+        formProps={houseNumberProps}
+        id="houseNumber"
+        label="Číslo popisné"
+        name="houseNumber"
+        type="text"
+      />
+      <FormInput
+        formProps={zipCodeProps}
+        id="zipCode"
+        label="PSČ"
+        name="zipCode"
+        type="number"
+      />
+      <FormTextArea formProps={noteProps} id="note" label="Note" name="note" />
+
+      <button className="submit-btn" disabled={isFetching} type="submit">
         {initialData ? "Potvrdit změny" : "Přidat kontakt"}
       </button>
+      {error && <p className="state-error">{error}</p>}
+      {isFetching && <p>Odesílám data</p>}
     </form>
   );
-};
+}

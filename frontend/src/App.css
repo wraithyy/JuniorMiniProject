@@ -28,6 +28,10 @@ nav button:hover {
   background: #e0e0e0;
 }
 
+.selected-btn {
+  background: #8f999270 !important;
+}
+
 .list-view {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -41,11 +45,15 @@ nav button:hover {
   border-radius: 5px;
 }
 
-/* TODO: Junioři přidají vlastní styling podle zadání */
-
 .control-error {
   color: #b00020;
   font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+.state-error {
+  color: #b00020;
+  font-size: 1.1rem;
   margin-top: 4px;
 }
 
@@ -63,7 +71,6 @@ label {
   width: 50%;
   padding: 12px;
   margin: 8px 0;
-  display: inline-block;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
@@ -81,4 +88,61 @@ label {
 
 .submit-btn:hover {
   background-color: #45a049;
+}
+
+.contact-list {
+  list-style-type: none;
+}
+.contact-list button {
+  width: 50%;
+  font-size: 0.9rem;
+  padding: 0.3rem;
+  margin-top: 0.5rem;
+  border: 1px solid #ccc;
+  background: #f0f0f0;
+  cursor: pointer;
+}
+.contact-list button:hover {
+  background: #e0e0e0;
+}
+
+.contact-detail td:first-child {
+  padding-right: 1.5rem;
+}
+
+.delete-btn {
+  padding: 5px 10px;
+  border: 1px solid #d00;
+  background: #fee;
+  color: #d00;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.delete-btn:hover {
+  background: #fdd;
+}
+.update-btn {
+  padding: 5px 10px;
+  border: 1px solid #007bff;
+  background: #eef;
+  color: #007bff;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.update-btn:hover {
+  background: #ddf;
+}
+
+.contact-detail-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.contact-detail-buttons {
+  margin-top: auto;
+  display: flex;
+  gap: 1rem;
 }

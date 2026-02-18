@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { ContactDetail } from "./components/ContactDetail";
-import { ContactForm } from "./components/ContactForm";
-import { ContactList } from "./components/ContactList";
+import ContactForm from "./components/ContactForm";
+import ContactView from "./components/contactView/ContactView";
 import type { Contact } from "./types/contact";
+import type { Page } from "./types/page";
 import "./App.css";
-
-type Page = "form" | "list";
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>("form");
@@ -17,16 +15,26 @@ function App() {
   //
   // Tato kostra ukazuje základní strukturu aplikace.
   // Junioři mohou implementovat detaily podle zadání.
-
   return (
     <div className="app">
       <header>
         <h1>Správa kontaktů</h1>
         <nav>
-          <button onClick={() => setCurrentPage("form")} type="button">
+          <button
+            className={currentPage === "form" ? "selected-btn" : undefined}
+            onClick={() => {
+              setCurrentPage("form");
+              setSelectedContact(null);
+            }}
+            type="button"
+          >
             Vytvořit kontakt
           </button>
-          <button onClick={() => setCurrentPage("list")} type="button">
+          <button
+            className={currentPage === "list" ? "selected-btn" : undefined}
+            onClick={() => setCurrentPage("list")}
+            type="button"
+          >
             Seznam kontaktů
           </button>
         </nav>
@@ -35,23 +43,18 @@ function App() {
       <main>
         {currentPage === "form" ? (
           <ContactForm
+            initialData={selectedContact}
             onSubmit={(contact) => {
-              console.log("TODO: Implementovat vytvoření kontaktu", contact);
+              setSelectedContact(contact);
+              setCurrentPage("list");
             }}
           />
         ) : (
-          <div className="list-view">
-            <div className="list-panel">
-              <ContactList
-                onContactSelect={(contact) => {
-                  setSelectedContact(contact);
-                }}
-              />
-            </div>
-            <div className="detail-panel">
-              <ContactDetail contact={selectedContact} />
-            </div>
-          </div>
+          <ContactView
+            selectedContact={selectedContact}
+            setCurrentPage={setCurrentPage}
+            setSelectedContact={setSelectedContact}
+          />
         )}
       </main>
     </div>

@@ -3,15 +3,15 @@ export interface Contact {
   firstName: string;
   lastName: string;
   email: string;
-  gender?: string;
-  phone?: string;
-  note?: string;
-  city?: string;
-  street?: string;
-  houseNumber?: string;
-  zipCode?: number;
-  birthDate?: Date | string;
-  create_date?: Date | string;
+  gender?: string | null;
+  phone?: string | null;
+  note?: string | null;
+  city?: string | null;
+  street?: string | null;
+  houseNumber?: string | null;
+  zipCode?: number | string | null;
+  birthDate?: Date | string | null;
+  create_date?: Date | string | null;
 }
 
 export interface ContactsResponse {
@@ -25,3 +25,5 @@ export interface ContactResponse {
   message: string;
   data: Contact;
 }
+
+export type OnContactSelect = (contact: Contact) => void;
