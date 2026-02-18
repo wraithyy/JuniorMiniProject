@@ -60,58 +60,35 @@ export default function ContactForm({
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)}>
       <h2>{initialData ? "Editace kontaktu" : "Nový kontakt"}</h2>
-      <input
-        {...register("firstName")}
-        className="form-control"
-        placeholder="First Name"
-        type="text"
-      />
-      {errors.firstName && (
-        <p className="control-error">{errors.firstName.message}</p>
-      )}
-      <input
-        {...register("lastName")}
-        className="form-control"
-        placeholder="Last Name"
-        type="text"
-      />
-      {errors.lastName && (
-        <p className="control-error">{errors.lastName.message}</p>
-      )}
-      <input
-        {...register("email")}
-        className="form-control"
-        placeholder="Email"
-        type="text"
-      />
-      {errors.email && <p className="control-error">{errors.email.message}</p>}
-      {/* 
+
       <FormInput
-        formProps={firstNameProps}
+        error={errors.firstName}
         id="firstName"
         label="Jméno"
         name="firstName"
+        register={register}
         required
         type="text"
       />
-
-      <FormInput
-        formProps={lastNameProps}
+      
+       <FormInput
+        error={errors.lastName}
         id="lastName"
         label="Příjmení"
         name="lastName"
+        register={register}
         required
         type="text"
       />
-
-      <FormInput
-        formProps={emailProps}
+       <FormInput
+        error={errors.email}
         id="email"
         label="E-mail"
         name="email"
+        register={register}
         required
-        type="email"
-      /> */}
+        type="text"
+      />
 
       <button className="submit-btn" disabled={isSubmitting} type="submit">
         {submitBtnText()}

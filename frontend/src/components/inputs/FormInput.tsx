@@ -1,4 +1,4 @@
-import type { UseInputReturn } from "../../types/input";
+import type { UseFormRegister } from "react-hook-form";
 
 type FormInputProps = Omit<
   React.ComponentProps<"input">,
@@ -6,15 +6,18 @@ type FormInputProps = Omit<
 > & {
   label: string;
   id: string;
-  formProps: UseInputReturn;
+  register: UseFormRegister<any>;
+  error: FieldErrors;
+  
+  
 };
 export default function FormInput({
   label,
   id,
-  formProps,
+  register,
+  error,
   ...props
 }: FormInputProps) {
-  const { value, handleInputChange, setAsTouched, errorMsg } = formProps;
 
   const reqiredAsterisk = props.required ? <span>*</span> : null;
 
@@ -26,12 +29,10 @@ export default function FormInput({
       <input
         className="form-control"
         id={id}
-        onBlur={setAsTouched}
-        onChange={handleInputChange}
-        value={value}
         {...props}
+        {...register(id)}
       />
-      <div className="control-error">{errorMsg && <p>{errorMsg}</p>}</div>
+      <div className="control-error">  {error && <p className="control-error">{error.message}</p>}</div>
     </div>
   );
 }
