@@ -1,13 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import { contactsApi } from "../api/contactsApi";
 import type { Contact } from "../types/contact";
 import { formatDate } from "../utils/formatters";
 import { formSchema } from "../utils/zodSchema";
 import FormInputController from "./controllers/FormInputController";
-import FormRadioGroup from "./inputs/FormRadioGroup";
-import FormTextArea from "./inputs/FormTextArea";
+import FormRadioGroupController from "./controllers/FormRadioGroupController";
+import FormTextAreaController from "./controllers/FormTextAreaController";
 
 type FormFields = z.infer<typeof formSchema>;
 
@@ -102,24 +102,15 @@ export default function ContactForm({
         type="date"
       />
 
-      <Controller
+      <FormRadioGroupController
         control={control}
+        label="Pohlaví"
         name="gender"
-        render={({ field, fieldState }) => (
-          <FormRadioGroup
-            errorMsg={fieldState.error?.message}
-            id="gender"
-            label="Pohlaví"
-            onBlur={field.onBlur}
-            onChange={field.onChange}
-            options={[
-              { label: "muž", value: "male" },
-              { label: "žena", value: "female" },
-              { label: "jiné", value: "other" },
-            ]}
-            value={field.value}
-          />
-        )}
+        options={[
+          { label: "muž", value: "male" },
+          { label: "žena", value: "female" },
+          { label: "jiné", value: "other" },
+        ]}
       />
 
       <FormInputController control={control} label="Telefon" name="phone" />
@@ -136,20 +127,7 @@ export default function ContactForm({
 
       <FormInputController control={control} label="PSČ" name="zipCode" />
 
-      <Controller
-        control={control}
-        name="note"
-        render={({ field, fieldState }) => (
-          <FormTextArea
-            errorMsg={fieldState.error?.message}
-            id="note"
-            label="Poznámka"
-            onBlur={field.onBlur}
-            onChange={field.onChange}
-            value={field.value ?? ""}
-          />
-        )}
-      />
+      <FormTextAreaController control={control} label="Poznámka" name="note" />
 
       <button className="submit-btn" disabled={isSubmitting} type="submit">
         {submitBtnText()}

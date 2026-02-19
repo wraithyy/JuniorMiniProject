@@ -1,37 +1,36 @@
+import type { ControllerRenderProps, FieldValues, Path } from "react-hook-form";
+
 interface RadioOption {
   value: string;
   label: string;
 }
 
-interface FormRadioGroupProps {
+type FormRadioGroupProps<T extends FieldValues> = Omit<
+  React.ComponentProps<"input">,
+  "value" | "onChange" | "onBlur" | "name"
+> & {
   label: string;
-  id: string;
-  value: string | undefined;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur: () => void;
+  field: ControllerRenderProps<T, Path<T>>;
   errorMsg?: string;
   options: RadioOption[];
-}
+};
 
-export default function FormRadioGroup({
+export default function FormRadioGroup<T extends FieldValues>({
   label,
-  id,
-  value,
-  onChange,
-  onBlur,
+  field,
   errorMsg,
   options,
-}: FormRadioGroupProps) {
+  ...props
+}: FormRadioGroupProps<T>) {
   return (
     <fieldset className="form-control">
       <legend>{label}</legend>
       {options.map((option) => (
         <label key={option.value}>
           <input
-            checked={value === option.value}
-            id={id}
-            onBlur={onBlur}
-            onChange={onChange}
+            {...props}
+            {...field}
+            checked={field.value === option.value}
             type="radio"
             value={option.value}
           />

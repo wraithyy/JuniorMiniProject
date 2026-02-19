@@ -1,35 +1,28 @@
-type FormTextAreaProps = Omit<
+import type { ControllerRenderProps, FieldValues, Path } from "react-hook-form";
+
+type FormTextAreaProps<T extends FieldValues> = Omit<
   React.ComponentProps<"textarea">,
-  "value" | "onChange" | "onBlur"
+  "value" | "onChange" | "onBlur" | "name"
 > & {
   label: string;
-  id: string;
-  value: string;
-  onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  onBlur: () => void;
+  field: ControllerRenderProps<T, Path<T>>;
   errorMsg?: string;
 };
 
-export default function FormTextArea({
+export default function FormTextArea<T extends FieldValues>({
   label,
-  id,
-  value,
-  onChange,
-  onBlur,
+  field,
   errorMsg,
   ...props
-}: FormTextAreaProps) {
+}: FormTextAreaProps<T>) {
   return (
     <div>
-      <label htmlFor={id}>{label}</label>
+      <label htmlFor={field.name}>{label}</label>
       <textarea
         className="form-control"
-        id={id}
+        id={field.name}
         {...props}
-        onBlur={onBlur}
-        onChange={onChange}
-        value={value}
-        {...props}
+        {...field}
       />
       <div className="control-error">{errorMsg && <p>{errorMsg}</p>}</div>
     </div>
