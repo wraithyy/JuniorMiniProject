@@ -29,8 +29,11 @@ export default function FormRadioGroup<T extends FieldValues>({
         <label key={option.value}>
           <input
             {...props}
-            {...field}
             checked={field.value === option.value}
+            name={field.name}
+            onBlur={field.onBlur}
+            onChange={field.onChange}
+            ref={field.ref}
             type="radio"
             value={option.value}
           />
