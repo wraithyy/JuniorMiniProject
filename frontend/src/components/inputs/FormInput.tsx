@@ -1,40 +1,28 @@
-type FormInputProps = Omit<
+import type { ControllerRenderProps, FieldValues, Path } from "react-hook-form";
+
+type FormInputProps<T extends FieldValues> = Omit<
   React.ComponentProps<"input">,
-  "value" | "onChange" | "onBlur"
+  "value" | "onChange" | "onBlur" | "name"
 > & {
   label: string;
-  id: string;
-  value: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur: () => void;
+  field: ControllerRenderProps<T, Path<T>>;
   errorMsg?: string;
 };
 
-export default function FormInput({
+export default function FormInput<T extends FieldValues>({
+  field,
   label,
-  id,
-  value,
-  onChange,
-  onBlur,
   errorMsg,
   ...props
-}: FormInputProps) {
+}: FormInputProps<T>) {
   const requiredAsterisk = props.required ? <span>*</span> : null;
 
   return (
     <div>
-      <label htmlFor={id}>
+      <label htmlFor={field.name}>
         {label} {requiredAsterisk}
       </label>
-      <input
-        className="form-control"
-        id={id}
-        {...props}
-        onBlur={onBlur}
-        onChange={onChange}
-        value={value}
-        {...props}
-      />
+      <input className="form-control" id={field.name} {...props} {...field} />
       {errorMsg && <p className="control-error">{errorMsg}</p>}
     </div>
   );

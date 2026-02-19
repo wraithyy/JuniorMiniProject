@@ -5,7 +5,7 @@ import { contactsApi } from "../api/contactsApi";
 import type { Contact } from "../types/contact";
 import { formatDate } from "../utils/formatters";
 import { formSchema } from "../utils/zodSchema";
-import FormInput from "./inputs/FormInput";
+import FormInputController from "./controllers/FormInputController";
 import FormRadioGroup from "./inputs/FormRadioGroup";
 import FormTextArea from "./inputs/FormTextArea";
 
@@ -42,6 +42,8 @@ export default function ContactForm({
   } = useForm<FormFields>({
     defaultValues,
     resolver: zodResolver(formSchema),
+    mode: "onBlur",
+    reValidateMode: "onChange",
   });
 
   async function handleFormSubmit(data: FormFields) {
@@ -70,72 +72,34 @@ export default function ContactForm({
     <form onSubmit={handleSubmit(handleFormSubmit)}>
       <h2>{initialData ? "Editace kontaktu" : "Nový kontakt"}</h2>
 
-      <Controller
+      <FormInputController
         control={control}
+        label="Jméno"
         name="firstName"
-        render={({ field, fieldState }) => (
-          <FormInput
-            errorMsg={fieldState.error?.message}
-            id="firstName"
-            label="Jméno"
-            onBlur={field.onBlur}
-            onChange={field.onChange}
-            required
-            type="text"
-            value={field.value ?? ""}
-          />
-        )}
+        required
       />
 
-      <Controller
+      <FormInputController
         control={control}
+        label="Příjmení"
         name="lastName"
-        render={({ field, fieldState }) => (
-          <FormInput
-            errorMsg={fieldState.error?.message}
-            id="lastName"
-            label="Příjmení"
-            onBlur={field.onBlur}
-            onChange={field.onChange}
-            required
-            type="text"
-            value={field.value ?? ""}
-          />
-        )}
+        required
       />
 
-      <Controller
+      <FormInputController
         control={control}
+        label="E-mail"
         name="email"
-        render={({ field, fieldState }) => (
-          <FormInput
-            errorMsg={fieldState.error?.message}
-            id="email"
-            label="Email"
-            onBlur={field.onBlur}
-            onChange={field.onChange}
-            required
-            type="email"
-            value={field.value ?? ""}
-          />
-        )}
+        required
+        type="email"
       />
 
-      <Controller
+      <FormInputController
         control={control}
+        label="Datum narození"
+        max={formatDate(new Date().toISOString())}
         name="birthDate"
-        render={({ field, fieldState }) => (
-          <FormInput
-            errorMsg={fieldState.error?.message}
-            id="birthDate"
-            label="Datum narození"
-            max={formatDate(new Date().toISOString())}
-            onBlur={field.onBlur}
-            onChange={field.onChange}
-            type="date"
-            value={field.value ?? ""}
-          />
-        )}
+        type="date"
       />
 
       <Controller
@@ -158,85 +122,19 @@ export default function ContactForm({
         )}
       />
 
-      <Controller
-        control={control}
-        name="phone"
-        render={({ field, fieldState }) => (
-          <FormInput
-            errorMsg={fieldState.error?.message}
-            id="phone"
-            label="Telefon"
-            onBlur={field.onBlur}
-            onChange={field.onChange}
-            type="text"
-            value={field.value ?? ""}
-          />
-        )}
-      />
+      <FormInputController control={control} label="Telefon" name="phone" />
 
-      <Controller
-        control={control}
-        name="city"
-        render={({ field, fieldState }) => (
-          <FormInput
-            errorMsg={fieldState.error?.message}
-            id="city"
-            label="Město"
-            onBlur={field.onBlur}
-            onChange={field.onChange}
-            type="text"
-            value={field.value ?? ""}
-          />
-        )}
-      />
+      <FormInputController control={control} label="Město" name="city" />
 
-      <Controller
-        control={control}
-        name="street"
-        render={({ field, fieldState }) => (
-          <FormInput
-            errorMsg={fieldState.error?.message}
-            id="street"
-            label="Ulice"
-            onBlur={field.onBlur}
-            onChange={field.onChange}
-            type="text"
-            value={field.value ?? ""}
-          />
-        )}
-      />
+      <FormInputController control={control} label="Ulice" name="street" />
 
-      <Controller
+      <FormInputController
         control={control}
+        label="Číslo popisné"
         name="houseNumber"
-        render={({ field, fieldState }) => (
-          <FormInput
-            errorMsg={fieldState.error?.message}
-            id="houseNumber"
-            label="Číslo popisné"
-            onBlur={field.onBlur}
-            onChange={field.onChange}
-            type="text"
-            value={field.value ?? ""}
-          />
-        )}
       />
 
-      <Controller
-        control={control}
-        name="zipCode"
-        render={({ field, fieldState }) => (
-          <FormInput
-            errorMsg={fieldState.error?.message}
-            id="zipCode"
-            label="PSČ"
-            onBlur={field.onBlur}
-            onChange={field.onChange}
-            type="number"
-            value={field.value ?? ""}
-          />
-        )}
-      />
+      <FormInputController control={control} label="PSČ" name="zipCode" />
 
       <Controller
         control={control}
