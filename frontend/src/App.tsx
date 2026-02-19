@@ -8,13 +8,7 @@ import "./App.css";
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>("form");
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
-
-  // TODO: Implementovat navigaci mezi stránkami
-  // TODO: Implementovat handlery pro vytvoření/editaci kontaktu
-  // TODO: Implementovat výběr kontaktu ze seznamu
-  //
-  // Tato kostra ukazuje základní strukturu aplikace.
-  // Junioři mohou implementovat detaily podle zadání.
+  
   return (
     <div className="app">
       <header>

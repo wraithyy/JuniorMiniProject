@@ -53,7 +53,6 @@ export default function ContactForm({
         : await contactsApi.createContact(data);
       savedContact && onSubmit(savedContact);
     } catch {
-      console.log("catch");
       setError("root", { message: "Nepodařilo se odeslat data." });
     }
   }
