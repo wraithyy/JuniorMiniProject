@@ -1,13 +1,13 @@
 import type { ControllerRenderProps, FieldValues, Path } from "react-hook-form";
 
 type FormTextAreaProps<T extends FieldValues> = Omit<
-  React.ComponentProps<"textarea">,
+  {
+    label: string;
+    field: ControllerRenderProps<T, Path<T>>;
+    errorMsg?: string;
+  } & React.ComponentProps<"textarea">,
   "value" | "onChange" | "onBlur" | "name"
-> & {
-  label: string;
-  field: ControllerRenderProps<T, Path<T>>;
-  errorMsg?: string;
-};
+>;
 
 export default function FormTextArea<T extends FieldValues>({
   label,

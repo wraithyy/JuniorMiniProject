@@ -5,15 +5,15 @@ interface RadioOption {
   label: string;
 }
 
-type FormRadioGroupProps<T extends FieldValues> = Omit<
-  React.ComponentProps<"input">,
-  "value" | "onChange" | "onBlur" | "name"
-> & {
+type FormRadioGroupProps<T extends FieldValues> = {
   label: string;
   field: ControllerRenderProps<T, Path<T>>;
   errorMsg?: string;
   options: RadioOption[];
-};
+} & Omit<
+  React.ComponentProps<"input">,
+  "value" | "onChange" | "onBlur" | "name"
+>;
 
 export default function FormRadioGroup<T extends FieldValues>({
   label,

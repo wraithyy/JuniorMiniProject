@@ -1,13 +1,13 @@
 import type { ControllerRenderProps, FieldValues, Path } from "react-hook-form";
 
-type FormInputProps<T extends FieldValues> = Omit<
-  React.ComponentProps<"input">,
-  "value" | "onChange" | "onBlur" | "name"
-> & {
+type FormInputProps<T extends FieldValues> = {
   label: string;
   field: ControllerRenderProps<T, Path<T>>;
   errorMsg?: string;
-};
+} & Omit<
+  React.ComponentProps<"input">,
+  "value" | "onChange" | "onBlur" | "name"
+>;
 
 export default function FormInput<T extends FieldValues>({
   field,

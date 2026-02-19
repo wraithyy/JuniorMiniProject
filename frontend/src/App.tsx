@@ -8,7 +8,7 @@ import "./App.css";
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>("form");
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
-  
+
   return (
     <div className="app">
       <header>
