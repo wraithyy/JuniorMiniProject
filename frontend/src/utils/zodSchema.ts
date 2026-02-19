@@ -29,7 +29,7 @@ const houseNumberSchema = z
 
 const nonEmptySchema = z.string().min(1, "Pole je povinné");
 
-const textSchema = z.string("Zadejte textový vstup");
+const textSchema = z.string();
 
 export const formSchema = z.object({
   firstName: nonEmptySchema,

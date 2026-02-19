@@ -10,7 +10,7 @@ export interface Contact {
   street?: string | null;
   houseNumber?: string | null;
   zipCode?: number | string | null;
-  birthDate?: Date | string | null;
+  birthDate?: string | null;
   create_date?: Date | string | null;
 }
 
