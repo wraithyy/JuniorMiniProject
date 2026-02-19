@@ -42,7 +42,7 @@ export default function ContactForm({
   } = useForm<FormFields>({
     defaultValues,
     resolver: zodResolver(formSchema),
-    mode: "onBlur",
+    mode: "onTouched",
     reValidateMode: "onChange",
   });
 
