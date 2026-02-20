@@ -4,7 +4,6 @@ import {
   type Path,
   useController,
 } from "react-hook-form";
-import FormTextArea from "../inputs/FormTextArea";
 
 type FormTextAreaControllerProps<T extends FieldValues> = {
   control: Control<T>;
@@ -23,11 +22,15 @@ export default function FormTextAreaController<T extends FieldValues>({
 }: FormTextAreaControllerProps<T>) {
   const { field, fieldState } = useController({ control, name });
   return (
-    <FormTextArea
-      errorMsg={fieldState.error?.message}
-      field={field}
-      label={label}
-      {...inputProps}
-    />
+    <div>
+      <label htmlFor={field.name}>{label}</label>
+      <textarea
+        className="form-control"
+        id={field.name}
+        {...inputProps}
+        {...field}
+      />
+      <div className="control-error">{fieldState.error && <p>{fieldState.error.message}</p>}</div>
+    </div>
   );
 }

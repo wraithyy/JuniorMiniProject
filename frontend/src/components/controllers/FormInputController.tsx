@@ -4,7 +4,6 @@ import {
   type Path,
   useController,
 } from "react-hook-form";
-import FormInput from "../inputs/FormInput";
 
 type FormInputControllerProps<T extends FieldValues> = {
   control: Control<T>;
@@ -23,13 +22,14 @@ export default function FormInputController<T extends FieldValues>({
   ...inputProps
 }: FormInputControllerProps<T>) {
   const { field, fieldState } = useController({ control, name });
+  const requiredAsterisk = inputProps.required ? <span>*</span> : null;
   return (
-    <FormInput
-      errorMsg={fieldState.error?.message}
-      field={field}
-      label={label}
-      type={type}
-      {...inputProps}
-    />
+    <div>
+      <label htmlFor={field.name}>
+        {label} {requiredAsterisk}
+      </label>
+      <input className="form-control" id={field.name} type={type} {...inputProps} {...field} />
+      {fieldState.error && <p className="control-error">{fieldState.error.message}</p>}
+    </div>
   );
 }
