@@ -29,18 +29,18 @@ const houseNumberSchema = z
 
 const nonEmptySchema = z.string().min(1, "Pole je povinné");
 
-const textSchema = z.string("Zadejte textový vstup");
+const textSchema = z.string();
 
 export const formSchema = z.object({
   firstName: nonEmptySchema,
   lastName: nonEmptySchema,
   email: z.email("Zadejte platný e-mail"),
-  phone: phoneSchema,
-  zipCode: zipCodeSchema,
-  houseNumber: houseNumberSchema,
-  note: textSchema,
-  gender: textSchema,
-  city: textSchema,
-  street: textSchema,
-  birthDate: textSchema,
+  phone: phoneSchema.optional(),
+  zipCode: zipCodeSchema.optional(),
+  houseNumber: houseNumberSchema.optional(),
+  note: textSchema.optional(),
+  gender: textSchema.optional(),
+  city: textSchema.optional(),
+  street: textSchema.optional(),
+  birthDate: textSchema.optional(),
 });

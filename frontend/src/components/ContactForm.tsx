@@ -1,12 +1,15 @@
-import { useCreateContact } from "../hooks/fetching/useCreateContact";
-import { useUpdateContact } from "../hooks/fetching/useUpdateContact";
-import { useContactFormInputs } from "../hooks/useContactFormInputs";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import type { z } from "zod";
+import { contactsApi } from "../api/contactsApi";
 import type { Contact } from "../types/contact";
-import type { UseInputReturn } from "../types/input";
-import { formSchema } from "../utils/validators";
-import FormInput from "./inputs/FormInput";
-import FormRadioGroup from "./inputs/FormRadioGroup";
-import FormTextArea from "./inputs/FormTextArea";
+import { formatDate } from "../utils/formatters";
+import { formSchema } from "../utils/zodSchema";
+import FormInputController from "./controllers/FormInputController";
+import FormRadioGroupController from "./controllers/FormRadioGroupController";
+import FormTextAreaController from "./controllers/FormTextAreaController";
+
+type FormFields = z.infer<typeof formSchema>;
 
 interface ContactformProps {
   onSubmit: (contact: Contact) => void;
@@ -17,146 +20,90 @@ export default function ContactForm({
   onSubmit,
   initialData,
 }: ContactformProps) {
-  // TODO: Implementovat formulář s těmito prvky:
-  //
-  // Povinná pole:
-  // - firstName (text input)
-  // - lastName (text input)
-  // - email (email input)
-  //
-  // Radio buttons pro pohlaví:
-  // - gender (mužské/ženské/jiné)
-  //
-  // Volitelná pole:
-  // - phone (tel input)
-  // - note (textarea)
-  // - city (text input)
-  // - street (text input)
-  // - houseNumber (text input)
-  // - zipCode (number input)
-  // - birthDate (date input) - hezky naformátované
-  //
-  // Funkcionality:
-  // - Validace (povinná pole, validní email)
-  // - Zobrazení chybových hlášek
-  // - Styling pomocí CSS/SCSS
-  //
-  // Bonusové úkoly:
-  // - Loading indikátor při odesílání
-  // - Zobrazení úspěšné/chybové hlášky po odeslání
-  //
-  // Použití:
-  // - Použít připravený contactsApi.createContact() nebo contactsApi.updateContact()
-  // - Pro přístup k API klientu: import { contactsApi } from '../api/contactsApi'
-  const contactInputProps = useContactFormInputs(initialData);
+  const defaultValues = {
+    firstName: initialData?.firstName ?? "",
+    lastName: initialData?.lastName ?? "",
+    email: initialData?.email ?? "",
+    birthDate: initialData?.birthDate ? formatDate(initialData.birthDate) : "",
+    gender: initialData?.gender ?? "",
+    phone: initialData?.phone ?? "",
+    city: initialData?.city ?? "",
+    street: initialData?.street ?? "",
+    houseNumber: initialData?.houseNumber ?? "",
+    zipCode: initialData?.zipCode ? String(initialData.zipCode) : "",
+    note: initialData?.note ?? "",
+  };
+
   const {
-    firstNameProps,
-    lastNameProps,
-    emailProps,
-    noteProps,
-    genderProps,
-    phoneProps,
-    cityProps,
-    streetProps,
-    houseNumberProps,
-    zipCodeProps,
-    birthDateProps,
-  } = contactInputProps;
+    control,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<FormFields>({
+    defaultValues,
+    resolver: zodResolver(formSchema),
+    mode: "onTouched",
+    reValidateMode: "onChange",
+  });
 
-  const updating = initialData?._id;
-
-  const create = useCreateContact();
-  const update = useUpdateContact();
-
-  const { error, isFetching } = updating ? update : create;
-
-  function triggerErrors(inputProps: Record<string, UseInputReturn>): void {
-    for (const inputProp of Object.values(inputProps)) {
-      inputProp.setAsTouched();
+  async function handleFormSubmit(data: FormFields) {
+    try {
+      const savedContact = initialData?._id
+        ? await contactsApi.updateContact(initialData._id, data)
+        : await contactsApi.createContact(data);
+      savedContact && onSubmit(savedContact);
+    } catch {
+      setError("root", { message: "Nepodařilo se odeslat data." });
     }
   }
 
-  async function saveContact(formContact: Contact) {
-    if (initialData?._id) {
-      return await update.updateContact(initialData._id, formContact);
+  function getSubmitBtnText() {
+    if (isSubmitting) {
+      return "Odesílám data...";
     }
-    return await create.createContact(formContact);
-  }
-
-  async function handleSubmit(
-    event: React.FormEvent<HTMLFormElement>
-  ): Promise<void> {
-    event.preventDefault();
-
-    const rawContact: Contact = {
-      firstName: firstNameProps.value,
-      lastName: lastNameProps.value,
-      email: emailProps.value,
-      note: noteProps.value,
-      gender: genderProps.value,
-      phone: phoneProps.value,
-      city: cityProps.value,
-      street: streetProps.value,
-      houseNumber: houseNumberProps.value,
-      zipCode: zipCodeProps.value,
-      birthDate: birthDateProps.value,
-    };
-
-    const parsed = formSchema.safeParse(rawContact);
-    if (!parsed.success) {
-      triggerErrors(contactInputProps);
-      return;
+    if (initialData) {
+      return "Potvrdit změny";
     }
-
-    const savedContact = await saveContact(rawContact);
-    if (savedContact) {
-      onSubmit(savedContact);
-    }
+    return "Přidat kontakt";
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(handleFormSubmit)}>
       <h2>{initialData ? "Editace kontaktu" : "Nový kontakt"}</h2>
 
-      <FormInput
-        formProps={firstNameProps}
-        id="firstName"
+      <FormInputController
+        control={control}
         label="Jméno"
         name="firstName"
         required
-        type="text"
       />
 
-      <FormInput
-        formProps={lastNameProps}
-        id="lastName"
+      <FormInputController
+        control={control}
         label="Příjmení"
         name="lastName"
         required
-        type="text"
       />
 
-      <FormInput
-        formProps={emailProps}
-        id="email"
+      <FormInputController
+        control={control}
         label="E-mail"
         name="email"
         required
         type="email"
       />
 
-      <FormInput
-        formProps={birthDateProps}
-        id="birthDate"
+      <FormInputController
+        control={control}
         label="Datum narození"
-        max={new Date().toISOString().split("T")[0]}
+        max={formatDate(new Date().toISOString())}
         name="birthDate"
         type="date"
       />
 
-      <FormRadioGroup
-        formProps={genderProps}
-        label="gender"
+      <FormRadioGroupController
+        control={control}
+        label="Pohlaví"
         name="gender"
         options={[
           { label: "muž", value: "male" },
@@ -164,48 +111,27 @@ export default function ContactForm({
           { label: "jiné", value: "other" },
         ]}
       />
-      <FormInput
-        formProps={phoneProps}
-        id="phone"
-        label="Telefon"
-        name="phone"
-        type="text"
-      />
-      <FormInput
-        formProps={cityProps}
-        id="city"
-        label="Město"
-        name="city"
-        type="text"
-      />
-      <FormInput
-        formProps={streetProps}
-        id="street"
-        label="Ulice"
-        name="street"
-        type="text"
-      />
-      <FormInput
-        formProps={houseNumberProps}
-        id="houseNumber"
+
+      <FormInputController control={control} label="Telefon" name="phone" />
+
+      <FormInputController control={control} label="Město" name="city" />
+
+      <FormInputController control={control} label="Ulice" name="street" />
+
+      <FormInputController
+        control={control}
         label="Číslo popisné"
         name="houseNumber"
-        type="text"
       />
-      <FormInput
-        formProps={zipCodeProps}
-        id="zipCode"
-        label="PSČ"
-        name="zipCode"
-        type="number"
-      />
-      <FormTextArea formProps={noteProps} id="note" label="Note" name="note" />
 
-      <button className="submit-btn" disabled={isFetching} type="submit">
-        {initialData ? "Potvrdit změny" : "Přidat kontakt"}
+      <FormInputController control={control} label="PSČ" name="zipCode" />
+
+      <FormTextAreaController control={control} label="Poznámka" name="note" />
+
+      <button className="submit-btn" disabled={isSubmitting} type="submit">
+        {getSubmitBtnText()}
       </button>
-      {error && <p className="state-error">{error}</p>}
-      {isFetching && <p>Odesílám data</p>}
+      {errors.root && <p>{errors.root.message}</p>}
     </form>
   );
 }
