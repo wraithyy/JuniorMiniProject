@@ -57,7 +57,7 @@ export default function ContactForm({
     }
   }
 
-  function submitBtnText() {
+  function getSubmitBtnText() {
     if (isSubmitting) {
       return "Odesílám data...";
     }
@@ -129,7 +129,7 @@ export default function ContactForm({
       <FormTextAreaController control={control} label="Poznámka" name="note" />
 
       <button className="submit-btn" disabled={isSubmitting} type="submit">
-        {submitBtnText()}
+        {getSubmitBtnText()}
       </button>
       {errors.root && <p>{errors.root.message}</p>}
     </form>
